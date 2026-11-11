@@ -16,6 +16,7 @@
   --bg:#f2f3f7; --surface:#ffffff; --surface-2:#f7f8fb; --ink:#141722; --muted:#5d6376; --line:#dfe2ea;
   --accent:#3b3fd8; --accent-ink:#ffffff; --accent-soft:#e8e9fd;
   --good:#1d8350; --good-soft:#e2f4ea; --warn:#a86a12; --warn-soft:#fbf0dc; --bad:#c3303a; --bad-soft:#fbe5e6;
+  --veu:rgba(242,243,247,.9); --marca-bg:#0d0d24;
   --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
   --f-body:"IBM Plex Sans","Segoe UI",Roboto,sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
@@ -24,11 +25,11 @@
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0e1016; --surface:#171a24; --surface-2:#1d2130; --ink:#e8eaf2; --muted:#9aa0b4; --line:#2a2f3f;
   --accent:#8f92ff; --accent-ink:#0e1016; --accent-soft:#25284a;
-  --good:#4cc488; --good-soft:#163527; --warn:#e2a64a; --warn-soft:#3a2c14; --bad:#ff7a82; --bad-soft:#3d1c21; color-scheme:dark}}
+  --good:#4cc488; --good-soft:#163527; --warn:#e2a64a; --warn-soft:#3a2c14; --bad:#ff7a82; --bad-soft:#3d1c21; --veu:rgba(12,12,28,.74); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0e1016; --surface:#171a24; --surface-2:#1d2130; --ink:#e8eaf2; --muted:#9aa0b4; --line:#2a2f3f;
   --accent:#8f92ff; --accent-ink:#0e1016; --accent-soft:#25284a;
-  --good:#4cc488; --good-soft:#163527; --warn:#e2a64a; --warn-soft:#3a2c14; --bad:#ff7a82; --bad-soft:#3d1c21; color-scheme:dark}
+  --good:#4cc488; --good-soft:#163527; --warn:#e2a64a; --warn-soft:#3a2c14; --bad:#ff7a82; --bad-soft:#3d1c21; --veu:rgba(12,12,28,.74); color-scheme:dark}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}
@@ -186,6 +187,12 @@ td.r,th.r{text-align:right}
 .preco-s{text-decoration:line-through;color:var(--muted);font-size:11.5px;display:block;text-align:right}
 .cli-info{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px;font-size:12.5px}
 textarea.inp{resize:vertical;min-height:92px;line-height:1.4}
+.solta{position:relative;margin-top:12px;display:grid;justify-items:center;gap:4px;text-align:center;padding:26px 16px;border:2px dashed var(--line);border-radius:14px;background:var(--surface-2);cursor:pointer;transition:border-color .15s,background .15s}
+.solta svg{width:34px;height:34px;fill:none;stroke:var(--accent);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;margin-bottom:4px}
+.solta b{font-size:15px}.solta span{font-size:12.5px;color:var(--muted)}
+.solta:hover,.solta.em-cima{border-color:var(--accent);background:var(--accent-soft)}
+.solta-tela{position:fixed;inset:0;z-index:80;display:grid;place-items:center;background:rgba(13,13,36,.72);color:#fff;font-family:var(--f-display);font-size:22px;font-weight:700;text-align:center;padding:24px;pointer-events:none}
+.solta-tela div{border:3px dashed #8f92ff;border-radius:20px;padding:40px 32px;max-width:520px}
 .cnt-top{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .cnt-row.done td:first-child{box-shadow:inset 3px 0 0 var(--good)}
 .cnt-row.diff td:first-child{box-shadow:inset 3px 0 0 var(--bad)}
@@ -223,7 +230,11 @@ textarea.inp{resize:vertical;min-height:92px;line-height:1.4}
 .fotos-g{display:flex;gap:8px;flex-wrap:wrap}
 .fotos-g img{width:120px;height:120px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
 /* telas de entrada */
-.center{min-height:100vh;display:grid;place-items:center;padding-block:24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.fundo{position:fixed;inset:0;z-index:-1;background:linear-gradient(var(--veu),var(--veu)),url(fundo.jpg) center/cover no-repeat var(--marca-bg);pointer-events:none}
+.entrada{background:var(--marca-bg);color-scheme:dark}
+.entrada .banner{width:100%;max-width:min(640px,100%);aspect-ratio:16/9;object-fit:cover;border-radius:16px;display:block;box-shadow:0 18px 50px rgba(60,50,220,.35)}
+.entrada .steps{color:#c9cbe8}
+.center{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding-block:24px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .card-login{width:100%;max-width:380px;display:grid;gap:14px}
 .card-login .brand{margin-bottom:6px}
 /* barra de abas (celular) */
@@ -262,11 +273,13 @@ textarea.inp{resize:vertical;min-height:92px;line-height:1.4}
 </style>
 </head>
 <body>
+<div class="fundo" aria-hidden="true"></div>
 
-<div id="tela-boot" class="center"><div class="steps"><span class="dot"></span>Abrindo o Painel DKM…</div></div>
+<div id="tela-boot" class="center entrada"><img class="banner" src="fundo.jpg" alt="DKM · Tecnologia, inovação, sem limites"><div class="steps"><span class="dot"></span>Abrindo o Painel DKM…</div></div>
 
 <!-- Primeira vez: ligar ao Supabase -->
-<div id="tela-config" class="center" hidden>
+<div id="tela-config" class="center entrada" hidden>
+  <img class="banner" src="fundo.jpg" alt="DKM · Tecnologia, inovação, sem limites">
   <form class="panel card-login" id="fConfig">
     <div class="brand"><div class="mark">DKM</div><div><b>Ligar ao banco de dados</b><small>Só na primeira vez neste aparelho</small></div></div>
     <p class="note">No Supabase: <b>Project Settings → API</b> (ou <b>Data API</b> e <b>API Keys</b>). Copie a <b>Project URL</b> e a chave <b>anon / publishable</b>. Nunca use a chave <b>service_role / secret</b>.</p>
@@ -279,7 +292,8 @@ textarea.inp{resize:vertical;min-height:92px;line-height:1.4}
 </div>
 
 <!-- Login -->
-<div id="tela-login" class="center" hidden>
+<div id="tela-login" class="center entrada" hidden>
+  <img class="banner" src="fundo.jpg" alt="DKM · Tecnologia, inovação, sem limites">
   <form class="panel card-login" id="fLogin">
     <div class="brand"><div class="mark">DKM</div><div><b>Painel DKM</b><small>Acessórios · controle na mão</small></div></div>
     <div class="field"><label for="lEmail">Usuário</label><input id="lEmail" class="inp" type="text" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="ex.: Kennedy" required></div>
@@ -487,7 +501,11 @@ textarea.inp{resize:vertical;min-height:92px;line-height:1.4}
         <div class="panel">
           <h2>Importar planilha FINANCAS_DKM</h2>
           <p class="note">Lê as abas <b>Estoque</b> (produtos, quantidades, custo, venda e SUGESTÃO DE PEDIDO) e <b>Tabela de venda</b> (vendas, quem comprou, pago ou a receber).</p>
-          <div class="row-f" style="margin-top:12px"><label class="btn" for="fXlsx">Escolher planilha .xlsx<input id="fXlsx" type="file" accept=".xlsx,.xlsm,.xls" style="position:absolute;width:1px;height:1px;opacity:0"></label></div>
+          <label class="solta" id="soltaXlsx" for="fXlsx">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 18v-6M9 15l3-3 3 3"/></svg>
+            <b>Arraste a planilha aqui</b><span>ou toque para escolher o arquivo .xlsx</span>
+            <input id="fXlsx" type="file" accept=".xlsx,.xlsm,.xls" style="position:absolute;width:1px;height:1px;opacity:0">
+          </label>
           <div id="impRes" style="margin-top:12px"></div>
         </div>
         <div class="grid">
@@ -580,7 +598,7 @@ $('#fLogin').onsubmit=async e=>{e.preventDefault();$('#lMsg').textContent='';
 let modoDemo=false;
 $('#sair').onclick=async()=>{if(modoDemo){modoDemo=false;usuario=null;sb=null;$('#demoBar').hidden=true;cfg.url&&cfg.key?iniciar():tela('config');return}
   await sb.auth.signOut().catch(()=>{});usuario=null;tela('login')};
-if(!SUPABASE_URL)$('#lTroca').hidden=false;
+if(!SUPABASE_URL)$('#lTroca').hidden=false;else $('#gTroca').hidden=true;
 if(window.DKM_DEMO){const abreDemo=()=>{modoDemo=true;sb=window.DKM_DEMO.createClient();$('#demoBar').hidden=false;entrar({email:'demonstração'})};$('#cDemo').hidden=false;$('#cDemo').onclick=abreDemo;$('#lDemo').hidden=false;$('#lDemo').onclick=abreDemo}
 
 async function iniciar(){
@@ -1104,7 +1122,23 @@ function carregaXLSX(){return window.XLSX?Promise.resolve():new Promise((res,rej
 const limpa=v=>{const s=v==null?'':String(v).trim();return(s==='N\\A'||s==='N/A'||s==='-')?'':s.toUpperCase()};
 const numPl=v=>typeof v==='number'?r2(v):0;
 const serial=v=>{if(typeof v!=='number')return null;const d=new Date(Date.UTC(1899,11,30)+Math.round(v)*86400000);return d.toISOString().slice(0,10)};
-$('#fXlsx').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const box=$('#impRes');box.innerHTML='<div class="steps"><span class="dot"></span>Lendo a planilha…</div>';
+$('#fXlsx').onchange=e=>{const f=e.target.files[0];e.target.value='';if(f)lerPlanilhaArquivo(f)};
+/* arrastar a planilha: na área da Gestão ou em qualquer tela */
+const ehPlanilha=f=>f&&/\.(xlsx|xlsm|xls)$/i.test(f.name);
+let telaSolta=null,contaArrasto=0;
+const temArquivo=e=>[...(e.dataTransfer?.types||[])].includes('Files');
+window.addEventListener('dragenter',e=>{if(!usuario||!temArquivo(e))return;e.preventDefault();contaArrasto++;
+  if(!telaSolta){telaSolta=document.createElement('div');telaSolta.className='solta-tela';telaSolta.innerHTML='<div>Solte a planilha FINANCAS_DKM aqui<br><span style="font-size:14px;font-weight:500;opacity:.8">ela vai para Gestão → Importar</span></div>';document.body.appendChild(telaSolta)}});
+window.addEventListener('dragover',e=>{if(temArquivo(e))e.preventDefault()});
+const tiraSolta=()=>{contaArrasto=0;if(telaSolta){telaSolta.remove();telaSolta=null}$('#soltaXlsx').classList.remove('em-cima')};
+window.addEventListener('dragleave',e=>{if(!temArquivo(e))return;contaArrasto=Math.max(0,contaArrasto-1);if(!contaArrasto)tiraSolta()});
+window.addEventListener('drop',e=>{if(!temArquivo(e))return;e.preventDefault();tiraSolta();if(!usuario)return;
+  const f=[...e.dataTransfer.files].find(ehPlanilha);
+  if(!f){toast('Isso não é uma planilha do Excel (.xlsx).');return}
+  if(location.hash!=='#gestao')location.hash='#gestao';lerPlanilhaArquivo(f);setTimeout(()=>$('#impRes').scrollIntoView({behavior:'smooth',block:'center'}),150)});
+$('#soltaXlsx').addEventListener('dragenter',()=>$('#soltaXlsx').classList.add('em-cima'));
+$('#soltaXlsx').addEventListener('dragleave',()=>$('#soltaXlsx').classList.remove('em-cima'));
+async function lerPlanilhaArquivo(f){const box=$('#impRes');box.innerHTML='<div class="steps"><span class="dot"></span>Lendo a planilha…</div>';
   try{await carregaXLSX();const wb=XLSX.read(await f.arrayBuffer(),{type:'array'});
     const rows=n=>{const ws=wb.Sheets[n];if(!ws)throw new Error(`A planilha não tem a aba "${n}".`);
       if(ws['!ref']){const rg=XLSX.utils.decode_range(ws['!ref']);rg.s.c=0;rg.s.r=0;ws['!ref']=XLSX.utils.encode_range(rg)}

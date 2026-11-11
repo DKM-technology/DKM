@@ -1,7 +1,7 @@
 // Painel DKM - deixa o app instalável e abre mesmo com internet fraca.
 // Sempre tenta a versão mais nova primeiro (não precisa Ctrl+F5).
-const CACHE = 'dkm-v1';
-const BASE = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png'];
+const CACHE = 'dkm-v2';
+const BASE = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png', 'fundo.jpg'];
 self.addEventListener('install', e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE).then(c => c.addAll(BASE)).catch(() => {})); });
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
 self.addEventListener('fetch', e => {
