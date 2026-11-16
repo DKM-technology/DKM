@@ -193,6 +193,24 @@ textarea.inp{resize:vertical;min-height:92px;line-height:1.4}
 .solta:hover,.solta.em-cima{border-color:var(--accent);background:var(--accent-soft)}
 .solta-tela{position:fixed;inset:0;z-index:80;display:grid;place-items:center;background:rgba(13,13,36,.72);color:#fff;font-family:var(--f-display);font-size:22px;font-weight:700;text-align:center;padding:24px;pointer-events:none}
 .solta-tela div{border:3px dashed #8f92ff;border-radius:20px;padding:40px 32px;max-width:520px}
+.ci{display:grid;grid-template-columns:52px minmax(0,1fr) auto auto;gap:8px 12px;align-items:center;padding:9px 2px;border-bottom:1px solid var(--line)}
+.ci:last-child{border-bottom:0}
+.ci .th{width:52px;height:52px;border-radius:8px;background:#fff;object-fit:contain;border:1px solid var(--line);display:grid;place-items:center;font-size:11px;color:#999;cursor:pointer;overflow:hidden}
+.ci .th img{width:100%;height:100%;object-fit:contain}
+.ci .nm{min-width:0}.ci .nm b{display:block;font-size:13px;font-weight:600;line-height:1.3;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ci .nm span{font-size:12px;color:var(--muted)}
+.ci .pr{display:flex;align-items:center;gap:6px}.ci .pr .inp{width:92px;text-align:right;padding:6px 8px}
+.ci .ac{display:flex;gap:4px;align-items:center}
+.ci.oculto{opacity:.55}
+.tg{position:relative;width:40px;height:22px;border-radius:99px;background:var(--line);border:0;cursor:pointer;flex:none}
+.tg::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s}
+.tg[aria-pressed="true"]{background:var(--good)}.tg[aria-pressed="true"]::after{left:21px}
+.estrela{border:0;background:none;font-size:18px;cursor:pointer;opacity:.35;padding:2px}.estrela[aria-pressed="true"]{opacity:1}
+.regua td{padding:4px 6px}.regua .inp{width:80px;text-align:right;padding:6px 8px}
+.barra-prog{height:10px;border-radius:99px;background:var(--line);overflow:hidden}.barra-prog i{display:block;height:100%;background:var(--accent);transition:width .2s}
+.chk{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:12.5px;cursor:pointer;background:var(--surface)}
+.chk input{margin:0}
+@media (max-width:640px){.ci{grid-template-columns:52px minmax(0,1fr)}.ci .pr,.ci .ac{grid-column:2}}
 .cnt-top{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
 .cnt-row.done td:first-child{box-shadow:inset 3px 0 0 var(--good)}
 .cnt-row.diff td:first-child{box-shadow:inset 3px 0 0 var(--bad)}
@@ -524,6 +542,61 @@ textarea.inp{resize:vertical;min-height:92px;line-height:1.4}
       </div>
     </section>
 
+    <!-- CATÁLOGO -->
+    <section id="v-catalogo" class="view" hidden>
+      <div class="head"><div><h1>Catálogo da loja</h1><p>O que aparece na sua vitrine, com que preço e com que foto. Os pedidos chegam no seu WhatsApp.</p></div>
+        <div class="row-f"><a class="btn pri" id="catAbrir" href="https://dkm-technology.github.io/DKM/catalogo.html" target="_blank" rel="noopener">Abrir a vitrine</a><button class="btn" type="button" id="catCopia">Copiar link</button></div></div>
+      <div id="catErro" class="alert warn" hidden></div>
+      <div class="kpis" id="catKpi"></div>
+      <div class="grid g2" style="align-items:start">
+        <div class="panel"><h2>Importar de fornecedor <span class="sub">zip com a planilha .csv e as fotos</span></h2>
+          <div class="field" style="margin-bottom:10px"><label for="zForn">Fornecedor</label><input id="zForn" class="inp" list="zFornLista" placeholder="ex.: DELON" autocomplete="off" maxlength="40"><datalist id="zFornLista"></datalist></div>
+          <label class="solta" id="soltaZip" for="fZip">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 18v-6M9 15l3-3 3 3"/></svg>
+            <b>Arraste o zip do fornecedor aqui</b><span>ou toque para escolher o arquivo</span>
+            <input id="fZip" type="file" accept=".zip,application/zip" style="position:absolute;width:1px;height:1px;opacity:0">
+          </label>
+          <div id="zipRes" style="margin-top:12px"></div>
+        </div>
+        <div class="panel"><h2>Régua de preço <span class="sub">preço sugerido = custo × multiplicador</span></h2><div id="reguaBox"></div></div>
+      </div>
+      <div class="panel">
+        <h2>Produtos do catálogo <span class="sub" id="catSub"></span></h2>
+        <div class="row-f" style="margin-bottom:10px">
+          <div class="field" style="flex:1 1 220px"><label for="catQ">Buscar</label><input id="catQ" class="inp" placeholder="nome do produto" autocomplete="off"></div>
+          <div class="field" style="width:220px"><label for="catCat">Categoria</label><select id="catCat" class="inp"></select></div>
+          <div class="field" style="width:180px"><label for="catForn">De onde vem</label><select id="catForn" class="inp"></select></div>
+          <div class="seg" role="group" aria-label="Mostrar"><button type="button" data-cv="todos" aria-pressed="true">Todos</button><button type="button" data-cv="vis" aria-pressed="false">Na vitrine</button><button type="button" data-cv="oc" aria-pressed="false">Ocultos</button><button type="button" data-cv="man" aria-pressed="false">Preço manual</button></div>
+        </div>
+        <div class="row-f" id="catLote" style="margin-bottom:10px" hidden>
+          <span class="note" id="catLoteTxt"></span>
+          <button class="btn sm" type="button" data-lote="mostrar">Mostrar todos</button>
+          <button class="btn sm" type="button" data-lote="ocultar">Ocultar todos</button>
+          <span class="row-f" style="gap:6px"><input id="catPct" class="inp num" style="width:70px;padding:5px 8px" value="10" inputmode="decimal"><button class="btn sm" type="button" data-lote="subir">% a mais</button><button class="btn sm" type="button" data-lote="descer">% a menos</button></span>
+          <button class="btn sm" type="button" data-lote="sugerido">Voltar ao preço sugerido</button>
+        </div>
+        <div id="catConfirm" class="confirm" hidden style="margin-bottom:10px"></div>
+        <div id="catLista"></div>
+        <div class="row-f" style="margin-top:10px"><button class="btn" type="button" id="catMais" hidden>Ver mais</button></div>
+        <input id="fFotoItem" type="file" accept="image/*" style="position:absolute;width:1px;height:1px;opacity:0">
+      </div>
+      <div class="grid g2" style="align-items:start">
+        <div class="panel"><h2>Meu estoque na vitrine</h2>
+          <p class="note">Coloca no catálogo os produtos que você já tem, com o preço de venda do estoque. Eles aparecem como <b>Pronta entrega</b> enquanto tiverem quantidade.</p>
+          <div class="row-f" style="margin-top:10px"><button class="btn pri" type="button" id="catEstoque">Colocar meu estoque no catálogo</button></div>
+          <p class="note" id="catEstoqueMsg" style="margin-top:8px"></p>
+        </div>
+        <div class="panel"><h2>Configuração da vitrine</h2>
+          <div class="grid" style="gap:10px">
+            <div class="field"><label for="cfZap">WhatsApp que recebe os pedidos</label><input id="cfZap" class="inp" inputmode="tel"></div>
+            <div class="row-f"><div class="field" style="flex:1 1 140px"><label for="cfTit">Nome na vitrine</label><input id="cfTit" class="inp"></div><div class="field" style="flex:2 1 220px"><label for="cfSub">Frase</label><input id="cfSub" class="inp"></div></div>
+            <div class="field"><label for="cfAviso">Aviso de encomenda</label><input id="cfAviso" class="inp"></div>
+            <div class="row-f"><button class="btn pri" type="button" id="cfSalva">Salvar</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- GESTÃO -->
     <section id="v-gestao" class="view" hidden>
       <div class="head"><div><h1>Gestão</h1><p>Planilha, conta e instalação do app.</p></div></div>
@@ -546,6 +619,11 @@ textarea.inp{resize:vertical;min-height:92px;line-height:1.4}
               <div class="row-f" style="justify-content:space-between"><span>Banco de dados</span><span class="note" id="gUrl"></span></div>
               <div class="row-f"><button class="btn" id="sair" type="button">Sair</button><button class="btn sm" id="gTroca" type="button">Trocar banco de dados</button></div>
             </div>
+          </div>
+          <div class="panel">
+            <h2>Catálogo da loja</h2>
+            <p class="note">Vitrine com fotos para os clientes montarem o pedido e mandarem no seu WhatsApp.</p>
+            <div class="row-f" style="margin-top:10px"><a class="btn pri" href="#catalogo">Cuidar do catálogo</a><a class="btn" href="https://dkm-technology.github.io/DKM/catalogo.html" target="_blank" rel="noopener">Abrir a vitrine</a></div>
           </div>
           <div class="panel">
             <h2>Instalar no celular</h2>
@@ -668,7 +746,7 @@ async function carregar(){
     const cf=Object.fromEntries(g.data.map(x=>[x.chave,x.valor]));S.meta=+cf.meta_ano||100000;S.sug=Array.isArray(cf.sugestao)?cf.sugestao:[];
     S.compras=cp.data;S.carregadoEm=new Date();
     S.clientes=Object.fromEntries(cl.data.map(x=>[chave(x.nome),x]));S.cupons=cu.data;S.precos=mergePrecos(cf.precos);S.cli=calcClientes();
-    renderAll();
+    renderAll();carregarCatalogo();
   }catch(e){const el=$('#erroGeral');el.textContent=msgErro(e);el.hidden=false;console.error(e)}
   finally{b.classList.remove('spin')}
 }
@@ -682,8 +760,9 @@ const VIEWS=[
  {id:'clientes',nome:'Clientes',ic:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18.5 14.2A6.5 6.5 0 0 1 21.5 20"/>'},
  {id:'compras',nome:'Compras',ic:'<path d="M3 8a2 2 0 0 1 2-2h2l2-2h6l2 2h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.5"/>'},
  {id:'contagem',nome:'Contagem',ic:'<path d="M9 4h6v3H9zM6 5H5v16h14V5h-1M9 12l2 2 4-4M9 17h6"/>'},
+ {id:'catalogo',nome:'Catálogo',mob:false,ic:'<path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h14v-7"/><path d="M10 20v-4h4v4"/>'},
  {id:'gestao',nome:'Gestão',ic:'<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>'}];
-const navHTML=(cls)=>VIEWS.map(v=>`<a href="#${v.id}" data-v="${v.id}"${v.id==='compras'&&cls?' class="cam-tab"':''}><svg viewBox="0 0 24 24">${v.ic}</svg>${v.nome}<span class="k" data-k="${v.id}"></span></a>`).join('');
+const navHTML=(cls)=>VIEWS.filter(v=>!cls||v.mob!==false).map(v=>`<a href="#${v.id}" data-v="${v.id}"${v.id==='compras'&&cls?' class="cam-tab"':''}><svg viewBox="0 0 24 24">${v.ic}</svg>${v.nome}<span class="k" data-k="${v.id}"></span></a>`).join('');
 $('#nav').innerHTML=navHTML(false);$('#tabbar').innerHTML=navHTML(true);
 function route(){const v=(location.hash||'#controle').slice(1);const ok=VIEWS.some(x=>x.id===v)?v:'controle';
   $$('.view').forEach(s=>s.hidden=s.id!=='v-'+ok);
@@ -1164,8 +1243,10 @@ window.addEventListener('dragover',e=>{if(temArquivo(e))e.preventDefault()});
 const tiraSolta=()=>{contaArrasto=0;if(telaSolta){telaSolta.remove();telaSolta=null}$('#soltaXlsx').classList.remove('em-cima')};
 window.addEventListener('dragleave',e=>{if(!temArquivo(e))return;contaArrasto=Math.max(0,contaArrasto-1);if(!contaArrasto)tiraSolta()});
 window.addEventListener('drop',e=>{if(!temArquivo(e))return;e.preventDefault();tiraSolta();if(!usuario)return;
+  const z=[...e.dataTransfer.files].find(f=>/\.zip$/i.test(f.name));
+  if(z){if(location.hash!=='#catalogo')location.hash='#catalogo';abrirZip(z);return}
   const f=[...e.dataTransfer.files].find(ehPlanilha);
-  if(!f){toast('Isso não é uma planilha do Excel (.xlsx).');return}
+  if(!f){toast('Isso não é uma planilha do Excel (.xlsx) nem o zip do catálogo.');return}
   if(location.hash!=='#gestao')location.hash='#gestao';lerPlanilhaArquivo(f);setTimeout(()=>$('#impRes').scrollIntoView({behavior:'smooth',block:'center'}),150)});
 $('#soltaXlsx').addEventListener('dragenter',()=>$('#soltaXlsx').classList.add('em-cima'));
 $('#soltaXlsx').addEventListener('dragleave',()=>$('#soltaXlsx').classList.remove('em-cima'));
@@ -1204,6 +1285,138 @@ else if('serviceWorker' in navigator&&location.protocol==='https:')navigator.ser
 
 function renderSide(){$('#sbRec').textContent=brl(S.ven.filter(v=>v.st!=='PAGO').reduce((a,v)=>a+v.val,0));$('#sbEst').textContent=S.est.reduce((a,e)=>a+e.qt,0);$('#sbZero').textContent=S.est.filter(e=>e.qt===0).length;
   $('#sbHora').textContent=S.carregadoEm?S.carregadoEm.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):''}
+/* ===== CATÁLOGO DA LOJA ===== */
+const VITRINE_URL='https://dkm-technology.github.io/DKM/catalogo.html';
+const CAT_PADRAO={whatsapp:'5562991153874',titulo:'DKM',subtitulo:'Tecnologia, inovação, sem limites',aviso_encomenda:'Itens sob encomenda chegam em até 3 dias úteis.',minimo:9.9,final90:true,regua:[[5,3.5],[10,2.6],[20,2.2],[50,1.9],[100,1.7],[200,1.5],[null,1.35]]};
+let CAT={itens:[],cfg:{...CAT_PADRAO},ok:false},catVis='todos',catLim=60,zipDados=null,fotoAlvo=null;
+function precoSug(c,cfg=CAT.cfg){c=+c;if(!(c>0))return 0;const R=(cfg.regua&&cfg.regua.length)?cfg.regua:CAT_PADRAO.regua;const f=R.find(x=>x[0]==null||c<=+x[0])||R[R.length-1];let v=c*(+f[1]||1);const min=+cfg.minimo||0;if(v<min)v=min;
+  if(cfg.final90!==false)v=v<100?Math.ceil(v-0.9)+0.9:Math.ceil((v-9.9)/10)*10+9.9;else v=Math.ceil(v*2)/2;return r2(v)}
+const fotoCat=f=>!f?'':(window.DKM_FOTOS_DEMO&&window.DKM_FOTOS_DEMO[f])?window.DKM_FOTOS_DEMO[f]:/^https?:/.test(f)?f:`${cfg.url}/storage/v1/object/public/catalogo/${f.split('/').map(encodeURIComponent).join('/')}`;
+const hashNome=s=>{let h=5381;for(const ch of String(s))h=((h<<5)+h+ch.charCodeAt(0))>>>0;return h.toString(36)};
+const origemTxt=x=>x.origem==='ESTOQUE'?'Meu estoque':x.fornecedor?x.fornecedor:x.origem==='MANUAL'?'Cadastro manual':'Sem fornecedor';
+const fornecedores=()=>[...new Set(CAT.itens.map(x=>x.fornecedor).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR'));
+const fornNome=s=>String(s||'').trim().replace(/\s+/g,' ').toUpperCase().slice(0,40);
+async function carregarCatalogo(){
+  try{const [it,cf]=await Promise.all([todas(()=>sb.from('catalogo_itens').select('*').order('categoria').order('nome').order('id')),sb.from('config').select('*').eq('chave','catalogo')]);
+    if(it.error)throw it.error;CAT.itens=it.data.map(x=>({...x,custo:+x.custo,preco:+x.preco}));CAT.cfg={...CAT_PADRAO,...((cf.data&&cf.data[0]&&cf.data[0].valor)||{})};CAT.ok=true;$('#catErro').hidden=true}
+  catch(e){CAT.ok=false;const m=msgErro(e);$('#catErro').textContent=/não foi criado|does not exist|Could not find/i.test(m+String(e&&e.message))?'O catálogo ainda não foi criado no banco. Rode o arquivo 02_catalogo.sql no SQL Editor do Supabase e toque em atualizar (↻).':m;$('#catErro').hidden=false}
+  renderCatalogo()}
+function renderCatalogo(){
+  const L=CAT.itens,vis=L.filter(x=>x.ativo&&x.preco>0),comFoto=L.filter(x=>x.foto).length;
+  const cs=vis.reduce((a,x)=>a+x.custo,0),ps=vis.reduce((a,x)=>a+x.preco,0);
+  $('#catKpi').innerHTML=`<div class="kpi hl"><span class="lbl">Na vitrine</span><span class="val num">${vis.length}</span><span class="foot">de ${L.length} produtos no catálogo</span></div>
+   <div class="kpi"><span class="lbl">Com foto</span><span class="val num">${comFoto}</span><span class="foot">${L.length-comFoto} sem foto</span></div>
+   <div class="kpi"><span class="lbl">Categorias</span><span class="val num">${new Set(vis.map(x=>x.categoria)).size}</span><span class="foot">aparecendo na vitrine</span></div>
+   <div class="kpi"><span class="lbl">Margem média</span><span class="val num">${ps?Math.round((1-cs/ps)*100):0}%</span><span class="foot">sobre o preço de venda</span></div>`;
+  const cats=[...new Set(L.map(x=>x.categoria))].sort((a,b)=>a.localeCompare(b,'pt-BR'));const atual=$('#catCat').value;
+  $('#catCat').innerHTML='<option value="">Todas as categorias</option>'+cats.map(c=>`<option${c===atual?' selected':''}>${esc(c)}</option>`).join('');
+  const forns=[...new Set(L.map(origemTxt))].sort((a,b)=>a.localeCompare(b,'pt-BR'));const fa=$('#catForn').value;
+  $('#catForn').innerHTML='<option value="">Todos</option>'+forns.map(c=>`<option${c===fa?' selected':''}>${esc(c)}</option>`).join('');
+  $('#zFornLista').innerHTML=fornecedores().map(f=>`<option value="${esc(f)}">`).join('');
+  const q=chave($('#catQ').value),cc=$('#catCat').value,ff=$('#catForn').value;
+  const lst=L.filter(x=>(!cc||x.categoria===cc)&&(!ff||origemTxt(x)===ff)&&(!q||chave(x.nome).includes(q))&&(catVis==='todos'||(catVis==='vis'&&x.ativo)||(catVis==='oc'&&!x.ativo)||(catVis==='man'&&x.preco_manual)));
+  $('#catSub').textContent=L.length?`${lst.length} produto${lst.length===1?'':'s'}`:'';
+  $('#catLote').hidden=!(cc||ff);$('#catLoteTxt').textContent=[cc&&`categoria ${cc}`,ff&&ff].filter(Boolean).join(' · ').replace(/^./,m=>m.toUpperCase())+':';
+  $('#catLista').innerHTML=L.length?(lst.slice(0,catLim).map(x=>{const m=x.preco>0&&x.custo>0?Math.round((1-x.custo/x.preco)*100):null,sug=precoSug(x.custo);
+    return `<div class="ci${x.ativo?'':' oculto'}" data-id="${x.id}"><button class="th" type="button" data-foto="${x.id}" title="Trocar a foto">${x.foto?`<img src="${esc(fotoCat(x.foto))}" alt="" loading="lazy">`:'+ foto'}</button>
+      <div class="nm"><b title="${esc(x.nome)}">${esc(x.nome)}</b><span>${esc(x.categoria)} · custo ${brl(x.custo)}${x.origem==='ESTOQUE'?' · do meu estoque':x.fornecedor?' · '+esc(x.fornecedor):''}</span></div>
+      <div class="pr"><input class="inp num" data-preco="${x.id}" value="${x.preco.toFixed(2).replace('.',',')}" inputmode="decimal" aria-label="Preço de venda">${m!=null?`<span class="pill ${m>=40?'p-good':m>=20?'p-warn':'p-bad'}" title="margem">${m}%</span>`:''}${x.preco_manual&&sug?`<button class="btn sm" type="button" data-sug="${x.id}" title="Voltar ao sugerido: ${brl(sug)}">↺</button>`:''}</div>
+      <div class="ac"><button class="estrela" type="button" data-dest="${x.id}" aria-pressed="${!!x.destaque}" title="Destaque na vitrine">⭐</button><button class="tg" type="button" data-ativo="${x.id}" aria-pressed="${!!x.ativo}" title="Aparece na vitrine"></button></div></div>`}).join('')||'<div class="empty">Nenhum produto com esse filtro.</div>'):'<div class="empty">O catálogo está vazio. Escreva o fornecedor e arraste o zip dele ali em cima, ou coloque o seu estoque.</div>';
+  $('#catMais').hidden=lst.length<=catLim;$('#catMais').textContent=`Ver mais (${lst.length-catLim})`;
+  renderRegua();
+  const c=CAT.cfg;if(document.activeElement?.closest?.('#v-catalogo .field')==null){$('#cfZap').value=c.whatsapp||'';$('#cfTit').value=c.titulo||'';$('#cfSub').value=c.subtitulo||'';$('#cfAviso').value=c.aviso_encomenda||''}
+}
+const salvaItem=async(x,campos)=>{Object.assign(x,campos);must(await sb.from('catalogo_itens').update({...campos,atualizado_em:new Date().toISOString()}).eq('id',x.id))};
+const acha=id=>CAT.itens.find(x=>String(x.id)===String(id));
+$('#catLista').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ativo)busy(b,async()=>{const x=acha(b.dataset.ativo);await salvaItem(x,{ativo:!x.ativo});renderCatalogo()});
+  if(b.dataset.dest)busy(b,async()=>{const x=acha(b.dataset.dest);await salvaItem(x,{destaque:!x.destaque});renderCatalogo()});
+  if(b.dataset.sug)busy(b,async()=>{const x=acha(b.dataset.sug);await salvaItem(x,{preco:precoSug(x.custo),preco_manual:false});renderCatalogo();toast('Preço sugerido de volta')});
+  if(b.dataset.foto){fotoAlvo=acha(b.dataset.foto);$('#fFotoItem').click()}});
+$('#catLista').addEventListener('change',e=>{const i=e.target.closest('[data-preco]');if(!i)return;busy(null,async()=>{const x=acha(i.dataset.preco);const v=r2(dec(i.value));if(!(v>0)){toast('Preço inválido');renderCatalogo();return}await salvaItem(x,{preco:v,preco_manual:true});renderCatalogo();toast('Preço salvo')})});
+$('#fFotoItem').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f||!fotoAlvo)return;const x=fotoAlvo;busy(null,async()=>{const b=await reduzFoto(f);const path=`manual/${x.id}-${Date.now()}.jpg`;
+  const {error}=await sb.storage.from('catalogo').upload(path,b,{contentType:'image/jpeg',upsert:true,cacheControl:'31536000'});if(error)throw error;await salvaItem(x,{foto:path});renderCatalogo();toast('Foto trocada')})};
+$('#catQ').oninput=()=>{catLim=60;renderCatalogo()};$('#catCat').onchange=()=>{catLim=60;renderCatalogo()};$('#catForn').onchange=()=>{catLim=60;renderCatalogo()};
+$$('[data-cv]').forEach(b=>b.onclick=()=>{catVis=b.dataset.cv;catLim=60;$$('[data-cv]').forEach(x=>x.setAttribute('aria-pressed',x===b));renderCatalogo()});
+$('#catMais').onclick=()=>{catLim+=120;renderCatalogo()};
+$('#catCopia').onclick=()=>copy(VITRINE_URL);
+async function salvaLote(rows){for(let i=0;i<rows.length;i+=300)must(await sb.from('catalogo_itens').upsert(rows.slice(i,i+300).map(x=>({id:x.id,ref:x.ref,origem:x.origem,fornecedor:x.fornecedor||'',produto_id:x.produto_id??null,nome:x.nome,categoria:x.categoria,custo:x.custo,preco:x.preco,preco_manual:!!x.preco_manual,foto:x.foto||'',ativo:!!x.ativo,destaque:!!x.destaque,atualizado_em:new Date().toISOString()})),{onConflict:'id'}))}
+$$('[data-lote]').forEach(b=>b.onclick=()=>{const cc=$('#catCat').value,ff=$('#catForn').value;if(!cc&&!ff)return;const L=CAT.itens.filter(x=>(!cc||x.categoria===cc)&&(!ff||origemTxt(x)===ff));const a=b.dataset.lote;const pct=dec($('#catPct').value);
+  const de=[cc,ff].filter(Boolean).join(' / ');
+  const txt={mostrar:`Mostrar os ${L.length} produtos de ${de} na vitrine?`,ocultar:`Esconder os ${L.length} produtos de ${de} da vitrine?`,subir:`Aumentar ${pct}% o preço dos ${L.length} produtos de ${de}?`,descer:`Baixar ${pct}% o preço dos ${L.length} produtos de ${de}?`,sugerido:`Voltar os ${L.length} produtos de ${de} para o preço sugerido pela régua?`}[a];
+  if((a==='subir'||a==='descer')&&!(pct>0)){toast('Digite a porcentagem');return}
+  confirmBox($('#catConfirm'),esc(txt),'Confirmar',()=>busy(b,async()=>{
+    L.forEach(x=>{if(a==='mostrar')x.ativo=true;if(a==='ocultar')x.ativo=false;
+      if(a==='subir'||a==='descer'){let v=x.preco*(1+(a==='subir'?pct:-pct)/100);v=CAT.cfg.final90!==false?(v<100?Math.ceil(v-0.9)+0.9:Math.ceil((v-9.9)/10)*10+9.9):Math.ceil(v*2)/2;x.preco=r2(Math.max(v,0.9));x.preco_manual=true}
+      if(a==='sugerido'){x.preco=precoSug(x.custo);x.preco_manual=false}});
+    await salvaLote(L);renderCatalogo();toast('Pronto: '+L.length+' produtos atualizados')}))});
+/* régua */
+function renderRegua(){const c=CAT.cfg,R=(c.regua&&c.regua.length)?c.regua:CAT_PADRAO.regua,box=$('#reguaBox');if(box.contains(document.activeElement))return;
+  box.innerHTML=`<table class="regua"><tbody>${R.map((f,i)=>`<tr><td class="note">${i===R.length-1?'acima disso':'custo até R$'}</td><td>${i===R.length-1?'':`<input class="inp num" data-rf="${i}" value="${String(f[0]).replace('.',',')}" inputmode="decimal">`}</td><td class="note">× </td><td><input class="inp num" data-rm="${i}" value="${String(f[1]).replace('.',',')}" inputmode="decimal"></td><td class="note" data-rex="${i}"></td></tr>`).join('')}</tbody></table>
+   <div class="row-f" style="margin-top:10px"><div class="field" style="width:130px"><label for="rgMin">Preço mínimo R$</label><input id="rgMin" class="inp num" value="${String(c.minimo??9.9).replace('.',',')}" inputmode="decimal"></div>
+   <label class="chk" style="align-self:center"><input type="checkbox" id="rg90" ${c.final90!==false?'checked':''}> terminar em ,90</label></div>
+   <div class="row-f" style="margin-top:12px"><button class="btn" type="button" id="rgSalva">Salvar régua</button><button class="btn pri" type="button" id="rgAplica">Aplicar nos preços automáticos</button></div>
+   <p class="note" style="margin-top:8px">Produtos em que você mudou o preço na mão (preço manual) não são alterados.</p>`;
+  const ler=()=>{const n=R.map((f,i)=>[i===R.length-1?null:dec(box.querySelector(`[data-rf="${i}"]`).value),dec(box.querySelector(`[data-rm="${i}"]`).value)]);return{...CAT.cfg,regua:n,minimo:dec($('#rgMin').value),final90:$('#rg90').checked}};
+  const ex=()=>{const c2=ler();c2.regua.forEach((f,i)=>{const lim=f[0]??(c2.regua[i-1]?.[0]*2||300);const custo=i===0?Math.min(3,lim):(+c2.regua[i-1][0]+(i===c2.regua.length-1?lim/2:(f[0]-c2.regua[i-1][0])/2));const el=box.querySelector(`[data-rex="${i}"]`);if(el)el.textContent=`ex.: custo ${brl(custo)} → ${brl(precoSug(custo,c2))}`})};
+  ex();box.oninput=ex;box.onchange=ex;
+  $('#rgSalva').onclick=()=>busy($('#rgSalva'),async()=>{CAT.cfg=ler();must(await sb.from('config').upsert({chave:'catalogo',valor:CAT.cfg}));toast('Régua salva')});
+  $('#rgAplica').onclick=()=>{const L=CAT.itens.filter(x=>!x.preco_manual&&x.custo>0);confirmBox($('#catConfirm'),`Recalcular o preço de ${L.length} produtos pela régua?`,'Recalcular',()=>busy($('#rgAplica'),async()=>{CAT.cfg=ler();must(await sb.from('config').upsert({chave:'catalogo',valor:CAT.cfg}));L.forEach(x=>x.preco=precoSug(x.custo));await salvaLote(L);renderCatalogo();toast(L.length+' preços recalculados')}));$('#catConfirm').scrollIntoView({block:'center'})};
+}
+$('#cfSalva').onclick=()=>busy($('#cfSalva'),async()=>{const z=$('#cfZap').value.replace(/\D/g,'');if(z.length<10){toast('Confira o número do WhatsApp com DDD');return}
+  CAT.cfg={...CAT.cfg,whatsapp:z.length<=11?'55'+z:z,titulo:$('#cfTit').value.trim()||'DKM',subtitulo:$('#cfSub').value.trim(),aviso_encomenda:$('#cfAviso').value.trim()};
+  must(await sb.from('config').upsert({chave:'catalogo',valor:CAT.cfg}));toast('Vitrine salva');renderCatalogo()});
+/* estoque → catálogo */
+$('#catEstoque').onclick=()=>busy($('#catEstoque'),async()=>{if(!CAT.ok){toast('Rode antes o 02_catalogo.sql');return}
+  const rows=S.est.filter(e=>e.v>0).map(e=>{const ref='EST:'+e.id,ja=CAT.itens.find(x=>x.ref===ref);return{ref,origem:'ESTOQUE',fornecedor:'',produto_id:e.id,nome:[cap(e.p),nz(e.m),nz(e.t)?cap(e.t):''].filter(Boolean).join(' '),categoria:e.cat,custo:e.c,preco:ja?ja.preco:e.v,preco_manual:true,foto:ja?ja.foto:'',ativo:ja?ja.ativo:true,destaque:ja?ja.destaque:false,atualizado_em:new Date().toISOString()}});
+  for(let i=0;i<rows.length;i+=300)must(await sb.from('catalogo_itens').upsert(rows.slice(i,i+300),{onConflict:'ref'}));
+  $('#catEstoqueMsg').textContent=`${rows.length} produtos do estoque estão no catálogo. Toque no quadrinho "+ foto" de cada um para colocar a foto.`;await carregarCatalogo()});
+/* importar o zip de um fornecedor (planilha .csv + fotos) */
+function carregaZip(){return window.JSZip?Promise.resolve():new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';s.onload=res;s.onerror=()=>rej(new Error('Não carregou o leitor de zip. Confira a internet.'));document.head.appendChild(s)})}
+function lerCSV(t){const linhas=[];let campo='',lin=[],q=false;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c==='"'){if(t[i+1]==='"'){campo+='"';i++}else q=false}else campo+=c}else if(c==='"')q=true;else if(c===';'){lin.push(campo);campo=''}else if(c==='\n'){lin.push(campo.replace(/\r$/,''));linhas.push(lin);lin=[];campo=''}else campo+=c}if(campo||lin.length){lin.push(campo);linhas.push(lin)}return linhas}
+function reduzFoto(blob,max=640){return new Promise((res,rej)=>{const u=URL.createObjectURL(blob),img=new Image();img.onload=()=>{const k=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));const c=document.createElement('canvas');c.width=Math.round(img.naturalWidth*k);c.height=Math.round(img.naturalHeight*k);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);c.toBlob(b=>b?res(b):rej(new Error('foto')),'image/jpeg',.82)};img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('foto'))};img.src=u})}
+async function abrirZip(f){const box=$('#zipRes');if(!CAT.ok){box.innerHTML='<div class="alert warn">Rode antes o 02_catalogo.sql no Supabase.</div>';return}
+  if(!fornNome($('#zForn').value)){const m=/(?:fotos|produtos)[-_ ]+([a-z0-9][a-z0-9 _-]*)\.zip$/i.exec(f.name);if(m)$('#zForn').value=fornNome(m[1].replace(/[-_]+/g,' '))}
+  const forn=fornNome($('#zForn').value);
+  if(!forn){box.innerHTML='<div class="alert warn">Escreva primeiro o nome do fornecedor (ex.: DELON) e arraste o zip de novo.</div>';$('#zForn').focus();return}
+  box.innerHTML='<div class="steps"><span class="dot"></span>Abrindo o zip…</div>';
+  try{await carregaZip();const zip=await JSZip.loadAsync(f);const csvs=Object.values(zip.files).filter(z=>!z.dir&&/\.csv$/i.test(z.name)&&!/(^|\/)__MACOSX\//.test(z.name));const csvF=csvs.find(z=>/produtos/i.test(z.name))||csvs[0];
+    if(!csvF)throw new Error('Esse zip não tem a planilha .csv dos produtos (colunas: Produto; Preço; Categoria; Fotos).');
+    const L=lerCSV((await csvF.async('string')).replace(/^﻿/,''));const cab=L.shift().map(h=>h.trim().toLowerCase());
+    const iN=cab.findIndex(h=>h.startsWith('produto')),iP=cab.findIndex(h=>h.startsWith('pre')),iC=cab.findIndex(h=>h.startsWith('categ')),iF=cab.findIndex(h=>h.startsWith('fotos'));
+    const itens=L.filter(r=>r[iN]).map(r=>({nome:r[iN].trim(),custo:r2(dec(r[iP])),categoria:(r[iC]||'Outros').trim(),foto:(r[iF]||'').split(' | ')[0].trim()})).filter(x=>x.custo>0);
+    const cont={};itens.forEach(x=>cont[x.categoria]=(cont[x.categoria]||0)+1);const cats=Object.keys(cont).sort((a,b)=>a.localeCompare(b,'pt-BR'));
+    if(!itens.length)throw new Error('A planilha do zip não tem produtos com preço. Confira as colunas Produto e Preço.');
+    zipDados={zip,itens,forn};
+    box.innerHTML=`<div class="alert info">Fornecedor <b>${esc(forn)}</b>: <b>${itens.length} produtos</b> em ${cats.length} categorias. Escolha o que entra no catálogo:</div>
+      <div class="row-f" style="margin:10px 0"><button class="btn sm" type="button" id="zTodas">Marcar todas</button><button class="btn sm" type="button" id="zNenhuma">Desmarcar todas</button></div>
+      <div class="chips" id="zCats" style="max-height:220px;overflow:auto">${cats.map(c=>`<label class="chk"><input type="checkbox" value="${esc(c)}" checked> ${esc(c)} <span class="note">(${cont[c]})</span></label>`).join('')}</div>
+      <div class="row-f" style="margin-top:10px"><label class="chk"><input type="checkbox" id="zOculto"> entrar escondido (eu escolho depois o que mostrar)</label><label class="chk"><input type="checkbox" id="zPula" checked> não reenviar foto de quem já tem</label></div>
+      <p class="note" id="zConta" style="margin-top:8px"></p>
+      <div class="row-f" style="margin-top:8px"><button class="btn pri" type="button" id="zVai">Importar</button></div><div id="zProg" style="margin-top:12px"></div>`;
+    const conta=()=>{const sel=new Set([...box.querySelectorAll('#zCats input:checked')].map(i=>i.value));const n=itens.filter(x=>sel.has(x.categoria)).length;$('#zConta').textContent=`${n} produtos selecionados. Enviar as fotos leva uns ${Math.max(1,Math.round(n/150))} minuto${n>=225?'s':''}; deixe esta tela aberta.`;$('#zVai').textContent=`Importar ${n} produtos`;return sel};
+    conta();box.querySelector('#zCats').onchange=conta;$('#zTodas').onclick=()=>{box.querySelectorAll('#zCats input').forEach(i=>i.checked=true);conta()};$('#zNenhuma').onclick=()=>{box.querySelectorAll('#zCats input').forEach(i=>i.checked=false);conta()};
+    $('#zVai').onclick=()=>importarZip(conta(),$('#zOculto').checked,$('#zPula').checked);
+  }catch(e){box.innerHTML=`<div class="alert bad">${esc(msgErro(e))}</div>`}}
+let zipParar=false;
+async function importarZip(sel,oculto,pula){const {zip,itens,forn}=zipDados;const fk=chave(forn);const L=itens.filter(x=>sel.has(x.categoria));if(!L.length){toast('Marque pelo menos uma categoria');return}
+  const pg=$('#zProg');zipParar=false;$('#zVai').disabled=true;let feitos=0,erros=0,lote=[];
+  const mostra=()=>{pg.innerHTML=`<div class="barra-prog"><i style="width:${Math.round(feitos/L.length*100)}%"></i></div><div class="row-f" style="justify-content:space-between;margin-top:6px"><span class="note">${feitos} de ${L.length} produtos${erros?` · ${erros} foto${erros===1?'':'s'} com problema`:''}</span><button class="btn sm danger" type="button" id="zPara">Parar</button></div>`;$('#zPara').onclick=()=>{zipParar=true}};mostra();
+  const grava=async(forca)=>{if(lote.length>=100||(forca&&lote.length)){const b=lote;lote=[];must(await sb.from('catalogo_itens').upsert(b,{onConflict:'ref'}))}};
+  let i=0;const trab=async()=>{while(i<L.length&&!zipParar){const x=L[i++];let ref='FORN:'+fk+':'+x.nome,ja=CAT.itens.find(y=>y.ref===ref);if(!ja&&fk==='DELON'){ja=CAT.itens.find(y=>y.ref==='DELON:'+x.nome);if(ja)ref=ja.ref}let foto=ja?ja.foto:'';
+    if(x.foto&&!(pula&&foto)){try{const zf=zip.file(x.foto);if(zf){const b=await reduzFoto(await zf.async('blob'));const path=`forn/${hashNome(fk+'|'+x.nome)}.jpg`;const {error}=await sb.storage.from('catalogo').upload(path,b,{contentType:'image/jpeg',upsert:true,cacheControl:'31536000'});if(error)throw error;foto=path}}catch(e){erros++}}
+    lote.push({ref,origem:'FORNECEDOR',fornecedor:forn,nome:x.nome,categoria:x.categoria,custo:x.custo,preco:ja&&ja.preco_manual?ja.preco:precoSug(x.custo),preco_manual:ja?!!ja.preco_manual:false,foto,ativo:ja?ja.ativo:!oculto,destaque:ja?!!ja.destaque:false,atualizado_em:new Date().toISOString()});
+    feitos++;if(feitos%5===0)mostra();await grava(false)}};
+  try{await Promise.all([trab(),trab(),trab(),trab()]);await grava(true);mostra();
+    pg.innerHTML+=`<div class="alert info" style="margin-top:10px">${zipParar?'Parado':'Pronto'}: ${feitos} produtos no catálogo${erros?`, ${erros} sem foto`:''}. ${zipParar?'Pode importar de novo depois que ele continua de onde parou.':''}</div>`;
+    toast('Catálogo atualizado');await carregarCatalogo()}
+  catch(e){pg.innerHTML+=`<div class="alert bad" style="margin-top:10px">Parou: ${esc(msgErro(e))}. Importe de novo, que ele continua de onde parou.</div>`}
+  finally{$('#zVai').disabled=false;if($('#zPara'))$('#zPara').remove()}}
+$('#fZip').onchange=e=>{const f=e.target.files[0];e.target.value='';if(f)abrirZip(f)};
+$('#soltaZip').addEventListener('dragenter',()=>$('#soltaZip').classList.add('em-cima'));
+$('#soltaZip').addEventListener('dragleave',()=>$('#soltaZip').classList.remove('em-cima'));
+$('#soltaZip').addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();$('#soltaZip').classList.remove('em-cima');tiraSolta();const f=[...e.dataTransfer.files].find(f=>/\.zip$/i.test(f.name));if(f)abrirZip(f);else toast('Arraste o arquivo .zip')});
+
 function renderAll(){renderControle();renderPedidoStatic();renderBusca();repreco();renderCliInfo();renderCart();renderClientes();renderRepo();renderCompras();renderContagem();if(contaModo==='contar')renderConta();renderSide()}
 iniciar();
 </script>
