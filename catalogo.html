@@ -757,6 +757,15 @@ body.filtrando #secBolas{margin-top:16px}
 /* botão do caminhão: sem bolinha vazia */
 .carrinho.pedidos b.zero{display:none}
 .bola .ic-txt{display:inline-block;font-weight:400}
+
+/* preço × quantidade */
+.pq{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap}
+.p-xq{display:inline-flex;align-items:baseline;gap:6px;margin-bottom:6px;animation:aparece .3s}
+.p-preco .p-xq b{font-family:inherit;font-size:13px;line-height:1;color:#fff;background:var(--accent);border-radius:99px;padding:3px 8px;font-weight:800}
+.p-preco .p-xq small{font-size:12.5px;color:var(--muted)}
+.p-xq.pula b{animation:bateTot .4s cubic-bezier(.3,1.7,.5,1)}
+#pPreco.bate{animation:bateTot .45s cubic-bezier(.3,1.7,.5,1)}
+.pc .pq .pc-novo{margin:0}
 </style>
 </head>
 <body>
@@ -821,7 +830,6 @@ body.filtrando #secBolas{margin-top:16px}
       <div class="p-preco"><div id="pPrecoBox"><b class="num" id="pPreco"></b></div><span id="pPrazo"></span></div>
       <div class="p-cupom" id="pCupom"></div>
       <div class="p-qtd"><b>Quantidade</b><span class="qtd grande"><button type="button" id="pMenos" aria-label="Menos um">−</button><span class="num" id="pQ">1</span><button type="button" id="pMais" aria-label="Mais um">+</button></span></div>
-      <div class="p-totq" id="pTotQ" aria-live="polite"></div>
       <div class="p-bts"><button class="btn pri" type="button" id="pAdd">Adicionar à sacola</button><button class="btn" type="button" id="pJa">Comprar agora</button></div>
       <div class="p-mini"><a id="pZap" href="#" target="_blank" rel="noopener">💬 Perguntar no WhatsApp</a><button type="button" id="pShare">🔗 Compartilhar</button></div>
       <ul class="p-garantias"><li>💳 Todas as formas de pagamento: Pix, cartão e dinheiro</li><li>🚚 Entregamos em todo lugar</li><li>📲 Pedido pelo WhatsApp, sem cadastro</li></ul>
@@ -933,7 +941,7 @@ async function carregar(){
     $('#sub').textContent=CFG.subtitulo||'Catálogo';
     $('#aviso').textContent=CFG.aviso_encomenda||'';$('#sacolaAviso').textContent=CFG.aviso_encomenda||'';
     if(!ITENS.length){$('#estado').hidden=false;$('#estado').textContent='O catálogo está sendo preparado. Volte daqui a pouco.';return}
-    montaTudo();carregaMais();abreDoLink();abrePedidoDoLink();atualizaMeus();
+    montaTudo();carregaMais();abreDoLink();abrePedidoDoLink();atualizaMeus();checaPromo();
   }catch(e){$('#estado').classList.remove('grade');$('#estado').innerHTML='Não foi possível carregar o catálogo agora. Confira a internet e <button class="link" onclick="location.reload()">tente de novo</button>.'}
 }
 /* ===== Loja: horário, avisos e as categorias que mais vendem (da planilha de vendas da DKM) ===== */
@@ -1295,10 +1303,10 @@ function montaProd(){const x=PROD,u=imgDe(x),mais=MAIS[x.id]||0,ja=SAC[x.id]||0;
   $('#pFoto').innerHTML=u?`<img src="${esc(u)}" alt="${esc(x.nome)}"><span class="dica">${matchMedia('(hover:hover)').matches?'passe o mouse para ampliar':'toque para ampliar'}</span>`:'<span class="sem">DKM</span>';
   $('#pSelos').innerHTML=(x.pronta?'<span class="pr">⚡ Pronta entrega</span>':'<span>Sob encomenda</span>')+(x.destaque?'<span class="de">⭐ Destaque</span>':'')+(mais>=3?`<span class="de">🔥 ${mais} pedidos recentes</span>`:'');
   $('#pNome').textContent=x.nome;$('#pCat').textContent=x.categoria;
-  $('#pPrecoBox').innerHTML=`<b class="num" id="pPreco">${brl(x.preco)}</b>`;contaNum($('#pPreco'),x.preco,brl,600);PROD_D=0;TOTQ=null;precoComCupom(x,true);
+  PROD_D=0;PREV=null;precoBox('abre');precoComCupom(x,true);
   $('#pPrazo').innerHTML=x.pronta?'<span class="ok">Sai hoje. Entregamos onde você estiver.</span>':esc(CFG.aviso_encomenda||'Sob encomenda: combinamos o prazo pelo WhatsApp.');
   montaCupomProd();
-  $('#pQ').textContent=PQ;totalQ(false);$('#pAdd').innerHTML=ja?'Atualizar sacola':'Adicionar à sacola';$('#pAdd').classList.remove('feito');
+  $('#pQ').textContent=PQ;$('#pAdd').innerHTML=ja?'Atualizar sacola':'Adicionar à sacola';$('#pAdd').classList.remove('feito');
   const num=String(CFG.whatsapp||'5562991153874').replace(/\D/g,'');
   $('#pZap').href=`https://wa.me/${num}?text=${encodeURIComponent(`Olá! Tenho uma dúvida sobre este produto do catálogo DKM: ${x.nome} (${brl(x.preco)})`)}`;
   const g=grupoDe(x);const rel=ITENS.filter(y=>y.id!==x.id&&y.categoria===x.categoria);const rel2=g>=0?ITENS.filter(y=>y.id!==x.id&&y.categoria!==x.categoria&&grupoDe(y)===g):[];
@@ -1316,7 +1324,7 @@ function ligaProd(){
   tp.addEventListener('pointermove',e=>{if(y0==null)return;const dy=Math.max(0,e.clientY-y0);pr.style.transform=`translateY(${dy}px)`;pr.style.transition='none'});
   const solta=e=>{if(y0==null)return;const dy=e.clientY-y0;y0=null;pr.style.transition='transform .25s';if(dy>90){pr.style.transform='translateY(100%)';setTimeout(()=>{fechaProd();pr.style.transform='';pr.style.transition=''},230)}else{pr.style.transform='';setTimeout(()=>pr.style.transition='',260)}};
   tp.addEventListener('pointerup',solta);tp.addEventListener('pointercancel',solta);
-  const mudaQ=dq=>{const n=Math.min(99,Math.max(1,PQ+dq));if(n===PQ)return;PQ=n;const q=$('#pQ');q.textContent=PQ;q.classList.remove('pulaQ','desceQ');void q.offsetWidth;q.classList.add(dq>0?'pulaQ':'desceQ');totalQ(true)};
+  const mudaQ=dq=>{const n=Math.min(99,Math.max(1,PQ+dq));if(n===PQ)return;PQ=n;const q=$('#pQ');q.textContent=PQ;q.classList.remove('pulaQ','desceQ');void q.offsetWidth;q.classList.add(dq>0?'pulaQ':'desceQ');precoBox('qtd')};
   $('#pMenos').onclick=()=>mudaQ(-1);$('#pMais').onclick=()=>mudaQ(1);
   const poe=()=>{const x=PROD;const antes=SAC[x.id]||0;SAC[x.id]=PQ;salva();renderSacola();
     $$(`.card[data-id="${x.id}"]`).forEach(el=>{const t=document.createElement('div');t.innerHTML=cartao(x);el.replaceWith(t.firstElementChild)});
@@ -1349,21 +1357,28 @@ const CUPP={};
 async function descProd(x){const k=CUP.cod+'|'+x.id+'|'+$('#nome').value.trim().toUpperCase();if(CUPP[k]!=null)return CUPP[k];
   try{const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/cupom_vitrine`,{method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_codigo:CUP.cod,p_cliente:$('#nome').value.trim(),p_itens:[{id:x.id,q:1}]})});
     const j=r.ok?await r.json():null;return CUPP[k]=j&&j.ok?+j.desconto||0:0}catch(e){return 0}}
-async function precoComCupom(x,anima){const box=$('#pPrecoBox');if(!box||!CUP.cod||!CUP.r||!CUP.r.ok)return;const d=await descProd(x);if(PROD!==x||!d)return;
-  const novo=Math.max(0,x.preco-d),pct=Math.round(d/x.preco*100),mov=anima&&!reduz();PROD_D=d;TOTQ=null;totalQ(false);
-  box.innerHTML=`<div class="pc${mov?' anima':''}"><div class="pc-top"><s class="pc-velho num">${brl(x.preco)}</s><span class="pc-badge">−${pct}%</span><span class="pc-tag">🎟️ ${esc(CUP.r.codigo)}</span></div>
-    <b class="num pc-novo" id="pPreco">${brl(mov?x.preco:novo)}</b><span class="pc-eco">🎉 Você economiza <b>${brl(d)}</b> em cada um</span>${mov?'<span class="pc-chuva" aria-hidden="true"><i>💸</i><i>⬇️</i><i>💰</i><i>⬇️</i><i>💸</i></span>':''}</div>`;
-  if(mov)setTimeout(()=>{const el=$('#pPreco');if(el&&PROD===x)contaNum2(el,x.preco,novo,900)},650)}
-let PROD_D=0,TOTQ=null;
-function totalQ(anima){const x=PROD;if(!x)return;const box=$('#pTotQ');const r=CUP.r&&CUP.r.ok?CUP.r:null;
-  let d=0;if(r&&PROD_D){d=r.tipo==='REAIS'?Math.min(PROD_D,x.preco*PQ):PROD_D*PQ}const cheio=x.preco*PQ,fim=Math.max(0,cheio-d);
-  if(PQ<2&&!d){box.innerHTML='';TOTQ=null;return}
-  const ja=box.querySelector('#pTotV');const de=TOTQ!=null?TOTQ:fim;
-  if(!ja||!anima){box.innerHTML=`<span>Total de <b class="num" id="pTotN">${PQ}</b> ${PQ===1?'unidade':'unidades'}</span><span class="p-tot-v">${d?`<s class="num" id="pTotS">${brl(cheio)}</s>`:''}<b class="num" id="pTotV">${brl(fim)}</b></span>${d?`<small id="pTotE">🎉 economia de <b class="num">${brl(d)}</b></small>`:''}`}
-  else{$('#pTotN').textContent=PQ;box.querySelector('span').lastChild.textContent=' '+(PQ===1?'unidade':'unidades');const s=$('#pTotS');if(s)s.textContent=brl(cheio);const e=$('#pTotE');if(e)e.innerHTML=`🎉 economia de <b class="num">${brl(d)}</b>`;
-    const v=$('#pTotV');contaNum2(v,de,fim,450);v.classList.remove('bate');void v.offsetWidth;v.classList.add('bate')}
-  box.classList.toggle('com-cup',!!d);TOTQ=fim}
+async function precoComCupom(x,anima){if(!$('#pPrecoBox')||!CUP.cod||!CUP.r||!CUP.r.ok)return;const d=await descProd(x);if(PROD!==x)return;PROD_D=d;if(d)precoBox(anima?'cupom':'troca')}
+/* preço do produto aberto: multiplica pela quantidade (×3) e mostra o desconto do cupom */
+let PROD_D=0,PREV=null;
+function precoBox(modo){const x=PROD;if(!x)return;const box=$('#pPrecoBox');const r=CUP.r&&CUP.r.ok?CUP.r:null,q=PQ,cheio=x.preco*q;
+  let d=0;if(r&&PROD_D){const cheio1=Math.round(x.preco*r.valor)/100;d=r.tipo==='REAIS'?Math.min(PROD_D,cheio):(Math.abs(PROD_D-cheio1)<.011?Math.round(cheio*r.valor)/100:PROD_D*q)}const fim=Math.max(0,cheio-d),mov=!reduz();
+  const xq=q>1?`<span class="p-xq"><b>×${q}</b><small>${brl(x.preco)} cada</small></span>`:'';
+  const anima=modo==='cupom'&&mov&&d,ini=anima?cheio:(modo==='qtd'&&PREV!=null&&mov?PREV:fim);
+  if(!d)box.innerHTML=`<div class="pq"><b class="num" id="pPreco">${brl(ini)}</b>${xq}</div>`;
+  else box.innerHTML=`<div class="pc${anima?' anima':''}"><div class="pc-top"><s class="pc-velho num">${brl(cheio)}</s><span class="pc-badge">−${Math.round(d/cheio*100)}%</span><span class="pc-tag">🎟️ ${esc(r.codigo)}</span></div>
+    <div class="pq"><b class="num pc-novo" id="pPreco">${brl(ini)}</b>${xq}</div><span class="pc-eco">🎉 Você economiza <b>${brl(d)}</b>${q>1?' no total':''}</span>${anima?'<span class="pc-chuva" aria-hidden="true"><i>💸</i><i>⬇️</i><i>💰</i><i>⬇️</i><i>💸</i></span>':''}</div>`;
+  const el=$('#pPreco');
+  if(anima)setTimeout(()=>{if(PROD===x&&$('#pPreco')===el)contaNum2(el,cheio,fim,900)},650);
+  else if(modo==='abre'&&mov)contaNum(el,fim,brl,600);
+  else if(modo==='qtd'&&PREV!=null&&PREV!==fim&&mov){contaNum2(el,PREV,fim,420);el.classList.add('bate');const p=box.querySelector('.p-xq');if(p)p.classList.add('pula')}
+  PREV=fim}
 function contaNum2(el,de,para,dur){const t0=performance.now();const f=t=>{const p=Math.min(1,(t-t0)/dur);el.textContent=brl(de+(para-de)*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f);else el.classList.add('chegou')};requestAnimationFrame(f)}
+/* promoção relâmpago: cupom que você põe "na vitrine" no painel aparece sozinho para todo mundo */
+async function checaPromo(){let r;try{const x=await fetch(`${SUPABASE_URL}/rest/v1/rpc/promo_vitrine`,{method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:'{}'});if(!x.ok)return;r=await x.json()}catch(e){return}
+  let tirada='';try{tirada=sessionStorage.getItem('dkm-promo-tirada')||''}catch(e){}
+  if(r&&r.ok&&r.codigo&&r.codigo!==tirada){if(!CUP.cod||(CUP.promo&&CUP.cod!==r.codigo)){CUP={cod:r.codigo,r:null,chave:null,pend:null,promo:true};validaCupom()}}
+  else if(CUP.promo&&CUP.cod){const cod=CUP.cod,tinha=CUP.r&&CUP.r.ok;CUP={cod:'',r:null,chave:null,pend:null};for(const k in CUPP)delete CUPP[k];renderSacola();renderCupom();faixa();if(PROD&&!$('#prod').hidden){montaCupomProd();PROD_D=0;precoBox('troca')}if(tinha)avisoAcabou(cod)}}
+setInterval(()=>{if(document.visibilityState==='visible')checaPromo()},60000);
 function avisoAcabou(cod){const t=document.createElement('div');t.className='acabou';t.innerHTML=`⚡ A promoção <b>${esc(cod)}</b> acabou`;document.body.appendChild(t);setTimeout(()=>t.classList.add('vai'),2600);setTimeout(()=>t.remove(),3200)}
 /* confere de tempos em tempos se o cupom ativo ainda vale (se você desativar no painel, some da vitrine) */
 setInterval(()=>{if(document.visibilityState==='visible'&&CUP.cod&&CUP.r&&CUP.r.ok&&CUP.pend==null)validaCupom()},45000);
@@ -1383,7 +1398,7 @@ function validaCupom(agora){clearTimeout(tCup);if(!CUP.cod){CUP.r=null;CUP.chave
     const naTela=!$('#sacola').hidden||(PROD&&!$('#prod').hidden);const digitado=CUP.digitado;CUP.digitado=false;
     /* cupom guardado (link ou visita anterior) que deixou de valer: some sozinho, como promoção relâmpago que acabou */
     if(!r.ok&&!digitado&&!r.pessoal&&!/internet|conferir o cupom agora|Muitas tentativas/i.test(r.msg||'')){const cod=CUP.cod;CUP={cod:'',r:null,chave:null,pend:null};try{localStorage.removeItem('dkm-cupom')}catch(e){}
-      for(const k in CUPP)delete CUPP[k];renderSacola();renderCupom();faixa();if(PROD&&!$('#prod').hidden){montaCupomProd();$('#pPrecoBox').innerHTML=`<b class="num" id="pPreco">${brl(PROD.preco)}</b>`;PROD_D=0;TOTQ=null;totalQ(false)}
+      for(const k in CUPP)delete CUPP[k];renderSacola();renderCupom();faixa();if(PROD&&!$('#prod').hidden){montaCupomProd();PROD_D=0;precoBox('troca')}
       if(antes)avisoAcabou(cod);return}
     if(r.ok&&!antes){CUP.anim=true;if(naTela){festa();carimbo(true,'Cupom aplicado!',`${rotulo(r).replace('−','')} de desconto · ${r.codigo}`)}}
     if(!r.ok){CUP.erroAnim=true;if(agora&&naTela){carimbo(false,'Cupom não aplicado',r.msg||'');const pb=$('#pPrecoBox');if(pb&&!$('#prod').hidden){pb.classList.remove('nega');void pb.offsetWidth;pb.classList.add('nega')}}}
@@ -1394,7 +1409,7 @@ function renderCupom(){
   if(r&&!r.ok&&!esperando){a.innerHTML=`<div class="cupom-form cup-novo${CUP.erroAnim?' treme':''}"><span class="cup-ic" aria-hidden="true">🎟️</span><input id="cupomCod" value="${esc(CUP.cod)}" autocomplete="off" aria-label="Código do cupom" maxlength="30"><button type="button" id="cupomOk">Aplicar</button></div><p class="cupom-msg">${esc(r.msg)}${r.pessoal?' <button class="link" type="button" id="irNome">Escrever meu nome</button>':''}</p>`;CUP.erroAnim=false;liga();faixa();return}
   const ok=r&&r.ok&&!esperando;
   a.innerHTML=`<div class="ticket${ok?'':' espera'}${CUP.anim?' entra':''}"><span class="pct">${ok?rotulo(r):'…'}</span><div><span class="cod">${esc(CUP.cod)}</span><small>${ok?(temItens?`Desconto de ${brl(descAtual())} neste pedido${r.limitado?' (alguns itens já estão no preço mínimo)':''}`:'Escolha os produtos e o desconto entra sozinho'):'Conferindo o cupom…'}</small>${ok&&r.expira_em?`<small class="relogio">⏳ ${faltaV(r.expira_em)}</small>`:''}</div><button class="x" type="button" id="cupomTira" aria-label="Tirar o cupom">×</button>${ok?`<span class="carimbo${CUP.anim?' bate':''}">APLICADO</span>`:''}</div>`;
-  CUP.anim=false;$('#cupomTira').onclick=()=>{CUP={cod:'',r:null,chave:null,pend:null};try{localStorage.removeItem('dkm-cupom')}catch(e){}renderSacola();renderCupom()};faixa()}
+  CUP.anim=false;$('#cupomTira').onclick=()=>{if(CUP.promo)try{sessionStorage.setItem('dkm-promo-tirada',CUP.cod)}catch(e){}CUP={cod:'',r:null,chave:null,pend:null};try{localStorage.removeItem('dkm-cupom')}catch(e){}renderSacola();renderCupom()};faixa()}
 function ligaChama(box){const c=box.querySelector('[data-chama]');if(!c)return;c.onclick=()=>{const f=c.nextElementSibling;c.hidden=true;f.hidden=false;f.classList.add('abre');setTimeout(()=>{const i=f.querySelector('input');i&&i.focus()},30)}}
 function faltaV(iso){const ms=new Date(iso)-Date.now();if(ms<=0)return'acabou';const m=Math.ceil(ms/6e4);if(m<60)return`acaba em ${m} min`;const h=Math.floor(m/60);if(h<48)return`acaba em ${h}h${m%60?String(m%60).padStart(2,'0'):''}`;return'até '+new Date(iso).toLocaleDateString('pt-BR')}
 setInterval(()=>{const r=CUP.r;if(!r||!r.ok||!r.expira_em)return;if(new Date(r.expira_em)<=Date.now()){validaCupom(true);return}renderCupom()},30000);

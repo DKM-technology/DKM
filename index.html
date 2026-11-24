@@ -574,6 +574,11 @@ body.mc-aberto{overflow:hidden}
 details.tab-nivel{margin-top:16px}details.tab-nivel summary{cursor:pointer;list-style:none;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
 details.tab-nivel summary::-webkit-details-marker{display:none}details.tab-nivel summary::after{content:"▾";margin-left:auto;color:var(--muted);transition:transform .2s}details.tab-nivel[open] summary::after{transform:rotate(180deg)}
 @media (prefers-reduced-motion:reduce){.cc2,.ideia2,.rec i,.cc2-mais{animation:none}}
+
+.vit-chk{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1.5px dashed color-mix(in srgb,var(--accent) 55%,var(--line));border-radius:12px;cursor:pointer}
+.vit-chk input{width:18px;height:18px;margin-top:2px;accent-color:var(--accent)}.vit-chk small{display:block;color:var(--muted);font-size:12px;font-weight:400}
+.vit-pill{background:color-mix(in srgb,var(--accent) 20%,transparent);color:var(--accent);animation:pulsaR 2.2s infinite}
+.btn.vit-on{border-color:var(--accent);color:var(--accent)}
 </style>
 </head>
 <body>
@@ -1287,8 +1292,11 @@ function renderClientes(){
   // cupons
   const hj=hoje(),agora=Date.now();const st=c=>!c.ativo?['desativado','p-mute']:((c.validade&&c.validade<hj)||(c.expira_em&&new Date(c.expira_em)<agora))?['vencido','p-mute']:(c.usos_max!=null&&c.usos>=c.usos_max)?['usado','p-mute']:['ativo','p-good'];
   $('#cupSub').textContent=S.cupons.length?S.cupons.filter(c=>st(c)[0]==='ativo').length+' ativos':'';badge('cupons',S.cupons.filter(c=>st(c)[0]==='ativo').length||'');
-  $('#cupLista').innerHTML=S.cupons.length?S.cupons.map(c=>{const [t,cl]=st(c);return `<div class="cup"><div><code>${esc(c.codigo)}</code> <span class="pill ${cl}">${t}</span><div class="note">${descCupom(c)} de desconto${c.cliente?' · só '+esc(cap(c.cliente)):' · qualquer cliente'}${c.expira_em?(st(c)[0]==='ativo'?` · <b class="pz-falta">⏳ ${faltaCup(c.expira_em)}</b>`:' · até '+quandoTxt(new Date(c.expira_em))):c.validade?' · até '+dataBR(c.validade):''} · usado ${c.usos}${c.usos_max!=null?'/'+c.usos_max:''}×</div></div>${t==='ativo'?`<div class="row-f" style="gap:6px"><button class="btn sm" type="button" data-cuplink="${esc(c.codigo)}">Copiar link</button><button class="btn sm danger" type="button" data-desat="${esc(c.codigo)}">Desativar</button></div>`:`<div class="row-f" style="gap:6px"><button class="btn sm pri" type="button" data-reat="${esc(c.codigo)}">${t==='vencido'?(c.expira_em?'Reativar por mais '+pzNome(Math.round(Math.max(36e5,new Date(c.expira_em)-new Date(c.criado_em||agora-72e5))/6e4)):'Reativar por +30 dias'):t==='usado'?'Liberar mais 1 uso':'Reativar'}</button><button class="btn sm danger" type="button" data-apaga="${esc(c.codigo)}">Apagar de vez</button></div>`}</div>`}).join(''):'<div class="empty">Nenhum cupom ainda.</div>';
+  $('#cupLista').innerHTML=S.cupons.length?S.cupons.map(c=>{const [t,cl]=st(c);return `<div class="cup"><div><code>${esc(c.codigo)}</code> <span class="pill ${cl}">${t}</span>${c.vitrine&&t==='ativo'?' <span class="pill vit-pill">📢 na vitrine agora</span>':''}<div class="note">${descCupom(c)} de desconto${c.cliente?' · só '+esc(cap(c.cliente)):' · qualquer cliente'}${c.expira_em?(st(c)[0]==='ativo'?` · <b class="pz-falta">⏳ ${faltaCup(c.expira_em)}</b>`:' · até '+quandoTxt(new Date(c.expira_em))):c.validade?' · até '+dataBR(c.validade):''} · usado ${c.usos}${c.usos_max!=null?'/'+c.usos_max:''}×</div></div>${t==='ativo'?`<div class="row-f" style="gap:6px">${c.cliente?'':`<button class="btn sm${c.vitrine?' vit-on':''}" type="button" data-vit="${esc(c.codigo)}" title="Mostrar para todos na vitrine">${c.vitrine?'📢 Na vitrine · desligar':'📢 Pôr na vitrine'}</button>`}<button class="btn sm" type="button" data-cuplink="${esc(c.codigo)}">Copiar link</button><button class="btn sm danger" type="button" data-desat="${esc(c.codigo)}">Desativar</button></div>`:`<div class="row-f" style="gap:6px"><button class="btn sm pri" type="button" data-reat="${esc(c.codigo)}">${t==='vencido'?(c.expira_em?'Reativar por mais '+pzNome(Math.round(Math.max(36e5,new Date(c.expira_em)-new Date(c.criado_em||agora-72e5))/6e4)):'Reativar por +30 dias'):t==='usado'?'Liberar mais 1 uso':'Reativar'}</button><button class="btn sm danger" type="button" data-apaga="${esc(c.codigo)}">Apagar de vez</button></div>`}</div>`}).join(''):'<div class="empty">Nenhum cupom ainda.</div>';
   $$('[data-cuplink]').forEach(b=>b.onclick=()=>copy(linkCupom(b.dataset.cuplink)));
+  $$('[data-vit]').forEach(b=>b.onclick=()=>busy(b,async()=>{const c=S.cupons.find(x=>x.codigo===b.dataset.vit);if(!c)return;const liga=!c.vitrine;const up=liga?{vitrine:true,usos_max:null}:{vitrine:false};
+    const r=await sb.from('cupons').update(up).eq('codigo',c.codigo);if(r.error&&/vitrine/i.test(r.error.message||'')){toast('Rode o 11-promo-vitrine.sql no Supabase primeiro.');return}must(r);Object.assign(c,up);renderClientes();
+    toast(liga?'📢 '+c.codigo+' está na vitrine para todo mundo (em até 1 minuto)':c.codigo+' saiu da vitrine')}));
   $$('[data-reat]').forEach(b=>b.onclick=()=>busy(b,async()=>{const c=S.cupons.find(x=>x.codigo===b.dataset.reat);if(!c)return;const [t]=st(c);const up={ativo:true};
     if(c.expira_em&&new Date(c.expira_em)<agora){const dur=Math.max(36e5,new Date(c.expira_em)-new Date(c.criado_em||agora-72e5));const f=new Date(agora+dur);up.expira_em=f.toISOString();up.validade=isoD(f)}
     else if(c.validade&&c.validade<hj){const d=new Date();d.setDate(d.getDate()+30);up.validade=isoD(d)}
@@ -1322,6 +1330,7 @@ function abrirCupom(cli,mod){const m=MODELOS[mod]||MODELOS.volta,box=$('#cupomBo
     <div class="field" style="width:130px"><label for="kUsos">Pode usar</label><select id="kUsos" class="inp"><option value="1"${m.usos===1?' selected':''}>1 vez</option><option value="">quantas vezes quiser</option></select></div>
     <div class="field" style="width:160px"><label for="kCod">Código</label><input id="kCod" class="inp" style="text-transform:uppercase" autocomplete="off"></div>
    </div>
+   <label class="chk vit-chk" style="margin-top:12px"><input type="checkbox" id="kVit"> <span><b>📢 Promoção relâmpago na vitrine</b><small>aparece sozinho para todo mundo que abrir o catálogo, sem precisar de link. Desligou, some.</small></span></label>
    <div class="field" style="margin-top:10px"><label>Prazo: depois disso o cupom para sozinho</label><div class="chips prazo" id="kPrazo" role="group" aria-label="Prazo do cupom">${PRAZOS.map(([mn,t])=>`<button type="button" data-pz="${mn}" aria-pressed="${mn===(m.dias*1440)}">${t}</button>`).join('')}</div><p class="note" id="kPzTxt" style="margin-top:6px"></p></div>
    <div class="row-f" style="margin-top:10px"><div class="field" style="flex:1 1 300px"><label for="kMsg">Mensagem para o WhatsApp</label><textarea id="kMsg" class="inp"></textarea></div>
     <div class="field" style="width:190px"><label for="kFone">WhatsApp do cliente (opcional)</label><input id="kFone" class="inp" inputmode="tel" placeholder="(62) 9 9999-9999" value="${esc(S.clientes[chave(cli)]?.telefone||'')}"></div></div>
@@ -1336,13 +1345,16 @@ function abrirCupom(cli,mod){const m=MODELOS[mod]||MODELOS.volta,box=$('#cupomBo
   $$('[data-mod]').forEach(b=>b.onclick=()=>abrirCupom($('#kCli').value,b.dataset.mod));
   $$('[data-kt]').forEach(b=>b.onclick=()=>{tipo=b.dataset.kt;$$('[data-kt]').forEach(x=>x.setAttribute('aria-pressed',x===b));montaMsg()});
   ['#kCli','#kVal'].forEach(id=>$(id).oninput=montaMsg);
+  $('#kVit').onchange=()=>{if($('#kVit').checked){$('#kCli').value='';$('#kUsos').value='';montaMsg();toast('Promoção para todos: sem nome e sem limite de usos')}};
   $('#kPrazo').onclick=e=>{const b=e.target.closest('[data-pz]');if(!b)return;pz=+b.dataset.pz;$$('#kPrazo [data-pz]').forEach(x=>x.setAttribute('aria-pressed',x===b));montaMsg()};$('#kCod').oninput=()=>{codEditado=true;montaMsg()};
   $('#kCancela').onclick=()=>{box.hidden=true};
   $('#kCria').onclick=()=>busy($('#kCria'),async()=>{const cod=$('#kCod').value.trim().toUpperCase().replace(/\s+/g,''),v=dec($('#kVal').value),fim=pz?new Date(Date.now()+pz*60000):null,cl=chave($('#kCli').value);
     if(!cod||v<=0){toast('Preencha o código e o desconto');return}if(S.cupons.some(x=>x.codigo===cod)){toast('Já existe um cupom com esse código');return}
     if(tipo==='PCT'&&v>50){toast('Desconto acima de 50%? Confira o valor');return}
-    const row={codigo:cod,tipo,valor:v,cliente:cl||null,validade:fim?isoD(fim):null,expira_em:fim?fim.toISOString():null,usos_max:$('#kUsos').value?1:null,usos:0,ativo:true,descricao:modelo.nome};
+    const vit=$('#kVit').checked;
+    const row={codigo:cod,tipo,valor:v,cliente:vit?null:(cl||null),validade:fim?isoD(fim):null,expira_em:fim?fim.toISOString():null,usos_max:vit?null:($('#kUsos').value?1:null),usos:0,ativo:true,descricao:modelo.nome,...(vit?{vitrine:true}:{})};
     let ins=await sb.from('cupons').insert(row);
+    if(ins.error&&/vitrine/i.test(ins.error.message||'')){delete row.vitrine;ins=await sb.from('cupons').insert(row);if(!ins.error)toast('Rode o 11-promo-vitrine.sql no Supabase para a promoção aparecer sozinha na vitrine.')}
     if(ins.error&&/expira_em/i.test(ins.error.message||'')){delete row.expira_em;ins=await sb.from('cupons').insert(row);if(!ins.error&&pz&&pz<1440)toast('Rode o 9-cupom-prazo.sql no Supabase para o prazo em horas valer. Por enquanto ele vale até o fim do dia.')}
     must(ins);S.cupons.unshift({...row,criado_em:new Date().toISOString()});
     const fone=$('#kFone').value.replace(/\D/g,'');if(cl&&fone){must(await sb.from('clientes').upsert({nome:cl,telefone:fone,nivel:S.clientes[cl]?.nivel??null}));S.clientes[cl]={...(S.clientes[cl]||{nome:cl,obs:''}),telefone:fone,nivel:S.clientes[cl]?.nivel??null}}
