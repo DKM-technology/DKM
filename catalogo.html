@@ -207,13 +207,13 @@ select.ordem{border:1px solid var(--line);background:var(--surface);color:var(--
 .voa{position:fixed;z-index:95;border-radius:12px;pointer-events:none;object-fit:contain;background:#fff;box-shadow:0 10px 26px rgba(0,0,0,.5)}
 .barra button.pula{animation:pula .5s cubic-bezier(.3,1.6,.5,1)}
 @keyframes pula{30%{transform:scale(1.06)}60%{transform:scale(.97)}}
-.esq-card{border-radius:14px;background:linear-gradient(100deg,var(--surface) 30%,var(--surface-2) 50%,var(--surface) 70%);background-size:300% 100%;animation:brilho 1.3s linear infinite;aspect-ratio:3/4}
-@keyframes brilho{to{background-position:-150% 0}}
+.esq-card{border-radius:14px;background:linear-gradient(100deg,var(--surface) 30%,var(--surface-2) 50%,var(--surface) 70%);background-size:300% 100%;animation:brilhoSk 1.3s linear infinite;aspect-ratio:3/4}
+@keyframes brilhoSk{to{background-position:-150% 0}}
 
 .zap-flutua{position:fixed;left:max(14px,env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:45;display:flex;align-items:center;gap:8px;background:#25d366;color:#05230f;font-weight:700;text-decoration:none;border-radius:999px;padding:11px 16px 11px 12px;box-shadow:0 10px 26px rgba(0,0,0,.45);font-size:14px;transition:bottom .3s}
 .zap-flutua svg{width:22px;height:22px}
-.zap-flutua::before{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid #25d366;animation:onda 2.4s infinite}
-@keyframes onda{from{opacity:.8;transform:scale(1)}to{opacity:0;transform:scale(1.35)}}
+.zap-flutua::before{content:"";position:absolute;inset:-2px;border-radius:inherit;border:2px solid #25d366;animation:ondaZap 2.6s ease-out infinite;pointer-events:none}
+@keyframes ondaZap{from{opacity:.7;transform:scale(1)}to{opacity:0;transform:scale(1.12,1.25)}}
 body.com-barra .zap-flutua{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 @media (max-width:520px){.zap-flutua span{display:none}.zap-flutua{padding:12px}}
 .topo-bt{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:45;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-size:18px;box-shadow:0 8px 20px rgba(0,0,0,.4);transition:bottom .3s}
@@ -317,8 +317,8 @@ body.filtrando #secBolas{margin-top:16px}
 .status.on .st-ic{background:var(--good);box-shadow:0 0 0 0 rgba(62,207,142,.7);animation:pisca 1.8s infinite}
 .status.off{border-color:#3a3260;background:linear-gradient(90deg,rgba(109,94,252,.18),rgba(109,94,252,.05))}
 .status.off .st-ic{width:16px;height:16px;background:none}
-.status.off .st-ic b{display:block;font-size:13px;line-height:1;transform-origin:50% 0;animation:balanca 2.6s ease-in-out infinite}
-@keyframes balanca{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(14deg)}}
+.status.off .st-ic b{display:block;font-size:13px;line-height:1;transform-origin:50% 0;animation:balancaLua 2.6s ease-in-out infinite}
+@keyframes balancaLua{0%,100%{transform:rotate(-14deg)}50%{transform:rotate(14deg)}}
 .status.off .st-ic em{display:block;position:absolute;left:10px;top:-2px;font-style:normal;font-weight:800;font-size:9px;color:var(--accent-2);opacity:0;animation:zz 2.8s ease-out infinite}
 .status.off .st-ic .z2{animation-delay:1.4s;font-size:7px}
 @keyframes zz{0%{opacity:0;transform:translate(0,4px) scale(.6)}30%{opacity:1}100%{opacity:0;transform:translate(9px,-12px) scale(1.1)}}
@@ -409,8 +409,8 @@ body.filtrando #secBolas{margin-top:16px}
 @keyframes ticket{from{transform:scale(.7) rotate(-4deg);opacity:0}to{transform:none;opacity:1}}
 .ticket.espera{background:var(--surface-2);color:var(--muted)}.ticket.espera .x{background:var(--line);color:var(--ink)}.ticket.espera .pct{border-color:var(--line)}
 .carimbo{position:absolute;right:52px;top:6px;border:2px solid #06261a;color:#06261a;border-radius:6px;padding:1px 6px;font-family:var(--f-display);font-weight:800;font-size:11px;letter-spacing:.12em;transform:rotate(-8deg);opacity:.75}
-.carimbo.bate{animation:carimbo .5s cubic-bezier(.3,1.6,.5,1) .25s both}
-@keyframes carimbo{from{transform:scale(2.4) rotate(-20deg);opacity:0}to{transform:rotate(-8deg);opacity:.75}}
+.carimbo.bate{animation:carimboV .5s cubic-bezier(.3,1.6,.5,1) .25s both}
+@keyframes carimboV{from{transform:scale(2.4) rotate(-20deg);opacity:0}to{transform:rotate(-8deg);opacity:.75}}
 .tot-linhas{display:grid;gap:4px;margin:14px 0 0;font-size:14px}
 .tot-linhas div{display:flex;justify-content:space-between}
 .tot-linhas .riscado{color:var(--muted)}.tot-linhas .riscado s{text-decoration-thickness:2px}
@@ -723,12 +723,12 @@ body.filtrando #secBolas{margin-top:16px}
 .andador svg{width:100%;height:100%;overflow:visible}
 .pessoa{animation:balancaP .5s ease-in-out infinite}
 .perna1,.perna2{transform-origin:14px 23px}
-.perna1{animation:passo .5s ease-in-out infinite alternate}.perna2{animation:passo .5s ease-in-out infinite alternate-reverse}
+.perna1{animation:passoPerna .5s ease-in-out infinite alternate}.perna2{animation:passoPerna .5s ease-in-out infinite alternate-reverse}
 .roda{transform-box:fill-box;transform-origin:center}
 .cart{animation:sacode .25s ease-in-out infinite alternate}
 .cx1,.cx2{animation:pulaCx .5s ease-in-out infinite alternate}.cx2{animation-delay:.25s}
 @keyframes caminha{from{transform:translateX(-70px)}to{transform:translateX(calc(var(--w,320px) + 10px))}}
-@keyframes passo{from{transform:rotate(-24deg)}to{transform:rotate(24deg)}}
+@keyframes passoPerna{from{transform:rotate(-24deg)}to{transform:rotate(24deg)}}
 @keyframes balancaP{50%{transform:translateY(-1px)}}
 @keyframes sacode{to{transform:translateY(-.6px)}}
 @keyframes pulaCx{to{transform:translateY(-1.5px)}}
@@ -806,9 +806,9 @@ body.filtrando #secBolas{margin-top:16px}
 /* ===== fim de cinema da promoção ===== */
 .faixa-cupom.cine>.cn-acabou{position:absolute;inset:0;z-index:6;display:grid;place-items:center;pointer-events:none}
 .cn-acabou b{font-family:var(--f-display);font-weight:900;font-size:clamp(22px,4vw,40px);letter-spacing:.12em;color:#ff3d6e;border:4px solid #ff3d6e;border-radius:12px;padding:6px 18px;background:rgba(10,4,14,.72);text-shadow:0 0 18px rgba(255,61,110,.8);transform:rotate(-6deg);animation:carimboFim .55s cubic-bezier(.3,1.7,.5,1) .25s both}
-.cn-acabou i{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px;border-radius:50%;border:3px solid rgba(255,61,110,.9);opacity:0;animation:onda .8s ease-out .5s both}
+.cn-acabou i{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px;border-radius:50%;border:3px solid rgba(255,61,110,.9);opacity:0;animation:ondaFim .8s ease-out .5s both}
 @keyframes carimboFim{from{opacity:0;transform:scale(3.2) rotate(-14deg);filter:blur(6px)}}
-@keyframes onda{0%{opacity:.9;transform:scale(.5)}100%{opacity:0;transform:scale(14)}}
+@keyframes ondaFim{0%{opacity:.9;transform:scale(.5)}100%{opacity:0;transform:scale(14)}}
 .faixa-cupom.cine.fim1{animation:tremeFim .5s steps(6) .5s,glitch .9s steps(9) both!important}
 .faixa-cupom.cine.fim1 .cn-num,.faixa-cupom.cine.fim1 .cn-cod{animation:rgbSplit .25s steps(2) 4!important}
 .faixa-cupom.cine.fim1 .cd i{background:rgba(255,61,110,.45);border-color:#ff3d6e}
@@ -826,6 +826,28 @@ body.filtrando #secBolas{margin-top:16px}
 @keyframes fogoAnda{to{left:100%}}
 .brasa{position:absolute;width:var(--s);height:var(--s);border-radius:50%;background:radial-gradient(circle,#fff3b0,#ffb703 45%,#fb5607 70%,transparent 72%);box-shadow:0 0 8px 2px rgba(255,140,0,.8);animation:brasa 1s ease-out forwards}
 @keyframes brasa{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2)}}
+
+/* ===== entrada de cinema do cupom ===== */
+.faixa-cupom.cine.espera{opacity:0}
+.faixa-cupom.cine.entra{animation:revelaCine 1s cubic-bezier(.6,0,.25,1) both!important}
+@keyframes revelaCine{0%{opacity:1;clip-path:inset(0 100% 0 0 round 20px);filter:brightness(2.4) saturate(1.5)}65%{filter:brightness(1.5) saturate(1.2)}100%{opacity:1;clip-path:inset(0 0 0 0 round 20px);filter:none}}
+.faixa-cupom.cine.entra.pronta{animation:none!important;clip-path:none}
+.cn-flash{position:absolute;inset:0;z-index:5;border-radius:inherit;background:radial-gradient(120% 160% at 18% 50%,#fff 0%,rgba(217,210,255,.85) 30%,rgba(143,125,255,0) 70%);opacity:0;pointer-events:none;mix-blend-mode:screen}
+.faixa-cupom.cine.entra .cn-flash{animation:clarao .9s ease-out .95s both}
+@keyframes clarao{0%{opacity:0}12%{opacity:.95}100%{opacity:0}}
+.cn-anel{position:absolute;z-index:4;left:90px;top:50%;width:60px;height:60px;margin:-30px;border-radius:50%;border:3px solid #ffd166;box-shadow:0 0 22px rgba(255,209,102,.9);opacity:0;pointer-events:none}
+.faixa-cupom.cine.entra .cn-anel{animation:anelCine 1s cubic-bezier(.2,.8,.3,1) 1.05s both}
+@keyframes anelCine{0%{opacity:1;transform:scale(.3)}100%{opacity:0;transform:scale(7)}}
+.faixa-cupom.cine.entra .cn-num{animation:bateNum 1s cubic-bezier(.3,1.6,.5,1) .95s both,ouro 4s linear 2s infinite!important}
+@keyframes bateNum{0%{opacity:0;transform:scale(3.2);filter:blur(10px) brightness(3)}45%{opacity:1;transform:scale(.92);filter:blur(0) brightness(1.8)}70%{transform:scale(1.06)}100%{transform:none;filter:none}}
+.feixe-box{position:absolute;z-index:60;pointer-events:none;transition:opacity .8s}
+.feixe-box.vai{opacity:0}
+.linha-luz{position:absolute;top:-10px;bottom:-10px;left:0;width:6px;margin-left:-3px;border-radius:6px;background:linear-gradient(180deg,rgba(255,255,255,0),#fff 20%,#d9d2ff 50%,#fff 80%,rgba(255,255,255,0));box-shadow:0 0 16px 5px rgba(217,210,255,.95),0 0 60px 22px rgba(143,125,255,.55),0 0 120px 40px rgba(79,179,255,.25);animation:luzAnda .95s cubic-bezier(.6,0,.25,1) forwards}
+@keyframes luzAnda{0%{left:0;opacity:0}8%{opacity:1}92%{opacity:1}100%{left:100%;opacity:0}}
+.faisca-luz{position:absolute;width:var(--s);height:var(--s);border-radius:50%;box-shadow:0 0 8px 2px currentColor;color:#d9d2ff;animation:faiscaLuz .8s ease-out forwards}
+@keyframes faiscaLuz{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2)}}
+@media (max-width:640px){.cn-anel{left:60px}}
+@media (prefers-reduced-motion:reduce){.faixa-cupom.cine.espera{opacity:1}.cn-flash,.cn-anel{display:none}}
 </style>
 </head>
 <body>
@@ -1517,13 +1539,13 @@ function faixa(){const f=$('#faixaCupom'),r=CUP.r;if(!CUP.cod||!r){if(!f.hidden&
   CD_ALVO=r.expira_em?new Date(r.expira_em):r.validade?new Date(r.validade+'T23:59:59'):null;
   const prazo=CD_ALVO?`<span class="cd-txt">⏳ termina em</span><span class="cd" id="cnCd"></span>`:'por tempo limitado';
   const fx=Array.from({length:14},(_,i)=>`<i style="left:${(i*37+11)%100}%;top:${(i*53+7)%100}%;--d:${(i*0.37)%3}s;--t:${2+(i%4)*.6}s"></i>`).join('');
-  if(novo||!f.querySelector('.cn-pct')){f.innerHTML=`<span class="cn-luz" aria-hidden="true"></span><span class="cn-faiscas" aria-hidden="true">${fx}</span><span class="cn-barra cima" aria-hidden="true"></span><span class="cn-barra baixo" aria-hidden="true"></span>
+  if(novo||!f.querySelector('.cn-pct')){f.innerHTML=`<span class="cn-luz" aria-hidden="true"></span><span class="cn-flash" aria-hidden="true"></span><span class="cn-anel" aria-hidden="true"></span><span class="cn-faiscas" aria-hidden="true">${fx}</span><span class="cn-barra cima" aria-hidden="true"></span><span class="cn-barra baixo" aria-hidden="true"></span>
     <div class="cn-esq"><small class="cn-sobre">PROMOÇÃO ATIVA</small><div class="cn-pct"><span class="cn-num">${esc(v)}</span>${pct?'<span class="cn-por">%</span>':''}<em>OFF</em></div></div>
     <div class="cn-meio" id="faixaTxt"><span class="cn-l1">com o cupom</span><span class="cn-cod">🎟️ ${esc(r.codigo)}</span><span class="cn-l2" id="cnPrazo">${prazo}</span></div>
     <button type="button" class="cn-cta" id="cnCta">Aproveitar <span>›</span></button>${!CUP.promo?`<div class="cn-dono" id="cnDono" hidden>👁️ Só neste aparelho (veio pelo link ou foi digitado). Para aparecer para todos: <b>📢 Pôr na vitrine</b> no painel. <button type="button" id="cnTira">tirar daqui</button></div>`:''}`;
     {const dn=$('#cnDono');if(dn){dn.hidden=!DONO;$('#cnTira').onclick=()=>{CUP={cod:'',r:null,chave:null,pend:null};try{localStorage.removeItem('dkm-cupom')}catch(e){}renderSacola();renderCupom();faixa();if(PROD&&!$('#prod').hidden){montaCupomProd();PROD_D=0;precoBox('troca')}}}}
     $('#cnCta').onclick=()=>{if(itensSacola().length)abreSacola();else{const t=$('#secBolas')||$('#todos');t.scrollIntoView({behavior:reduz()?'auto':'smooth',block:'start'})}};
-    if(novo&&!reduz()){f.classList.remove('entra');void f.offsetWidth;f.classList.add('entra')}}
+    if(novo&&!reduz())entradaFaixa(f)}
   tickCd(true)}
 /* contagem regressiva do cupom (segundo a segundo) */
 let CD_ALVO=null;
@@ -1535,8 +1557,24 @@ function tickCd(novo){const el=$('#cnCd');if(!el||!CD_ALVO)return;let ms=CD_ALVO
   U.forEach(([k,v])=>{const b=el.querySelector(`[data-u="${k}"] b`);if(b&&b.textContent!==v){b.textContent=v;const i=b.parentElement;i.classList.remove('vira');void i.offsetWidth;i.classList.add('vira')}});
   el.classList.toggle('urgente',CD_ALVO-Date.now()<36e5)}
 setInterval(()=>{if(!$('#faixaCupom').hidden)tickCd(false)},1000);
+/* entrada de cinema: espera o banner aparecer na tela, um feixe de luz varre e revela, clarão e o número bate */
+let obsFaixa=null;
+function entradaFaixa(f){f.classList.remove('entra','pronta');f.classList.add('espera');
+  const vai=()=>{if(!f.isConnected||f.hidden)return;f.classList.remove('espera');void f.offsetWidth;f.classList.add('entra');feixe(f);setTimeout(()=>{if(f.classList.contains('entra'))f.classList.add('pronta')},2600)};
+  if(obsFaixa)obsFaixa.disconnect();
+  if(!window.IntersectionObserver)return vai();
+  obsFaixa=new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting&&e.intersectionRatio>=.35)){obsFaixa.disconnect();obsFaixa=null;vai()}},{threshold:[0,.35,.6]});obsFaixa.observe(f)}
+function feixe(f){const r=f.getBoundingClientRect(),box=document.createElement('div');box.className='feixe-box';
+  box.style.cssText=`left:${r.left+scrollX}px;top:${r.top+scrollY}px;width:${r.width}px;height:${r.height}px`;
+  box.innerHTML='<span class="linha-luz"></span>';document.body.appendChild(box);
+  const cores=['#ffffff','#d9d2ff','#8f7dff','#ffd166','#4fb3ff'],t0=performance.now(),dur=950;
+  const tk=setInterval(()=>{const p=Math.min(1,(performance.now()-t0)/dur);const ease=1-Math.pow(1-p,2.2);
+    for(let i=0;i<3;i++){const e=document.createElement('i');e.className='faisca-luz';
+      e.style.cssText=`left:${ease*100}%;top:${Math.random()*100}%;--dx:${(Math.random()*70-50)|0}px;--dy:${(Math.random()*90-45)|0}px;--s:${2+Math.random()*3.5}px;background:${cores[(Math.random()*cores.length)|0]};animation-duration:${.5+Math.random()*.6}s`;box.appendChild(e)}
+    if(p>=1)clearInterval(tk)},40);
+  setTimeout(()=>box.classList.add('vai'),dur+150);setTimeout(()=>box.remove(),dur+1300)}
 /* faixa explodindo quando o cupom acaba ou é desligado */
-function explodeFaixa(f){if(f.classList.contains('fim1'))return;const sai=()=>{f.querySelectorAll('.cn-acabou').forEach(x=>x.remove());f.hidden=true;f.classList.remove('fim1','fim2');f.style.clipPath=''};
+function explodeFaixa(f){if(f.classList.contains('fim1'))return;if(obsFaixa){obsFaixa.disconnect();obsFaixa=null}f.classList.remove('espera','entra','pronta');const sai=()=>{f.querySelectorAll('.cn-acabou').forEach(x=>x.remove());f.hidden=true;f.classList.remove('fim1','fim2');f.style.clipPath=''};
   /* 1) congela: falha de imagem (glitch) e o carimbo PROMOÇÃO ENCERRADA bate */
   const st=document.createElement('div');st.className='cn-acabou';st.innerHTML='<b>PROMOÇÃO ENCERRADA</b><i></i>';f.appendChild(st);
   f.classList.remove('entra');f.classList.add('fim1');
