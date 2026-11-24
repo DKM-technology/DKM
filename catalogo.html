@@ -793,6 +793,12 @@ body.filtrando #secBolas{margin-top:16px}
 @keyframes bum{40%{transform:translate(-50%,-50%) scale(1.4);opacity:1}100%{transform:translate(-50%,-50%) scale(2);opacity:0}}
 @media (prefers-reduced-motion:reduce){.cd i.vira b,.cd-dp{animation:none}}
 @media (max-width:640px){.cd i{min-width:32px}.cd i b{font-size:15px}}
+
+.card.vivo{animation:vivoCard 1.6s ease-out}
+@keyframes vivoCard{0%{box-shadow:0 0 0 0 rgba(62,207,142,.0)}15%{box-shadow:0 0 0 4px rgba(62,207,142,.7)}100%{box-shadow:0 0 0 0 rgba(62,207,142,0)}}
+.vivo-aviso{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);z-index:320;background:#0f2a20;border:1.5px solid var(--good);color:#c9f7e2;border-radius:99px;padding:9px 16px;font-size:13px;box-shadow:0 14px 40px rgba(0,0,0,.5);animation:sobeVivo .45s cubic-bezier(.3,1.6,.5,1);transition:opacity .5s,transform .5s;max-width:92vw;text-align:center}
+.vivo-aviso.vai{opacity:0;transform:translate(-50%,16px)}
+@keyframes sobeVivo{from{opacity:0;transform:translate(-50%,20px)}}
 </style>
 </head>
 <body>
@@ -968,9 +974,29 @@ async function carregar(){
     $('#sub').textContent=CFG.subtitulo||'Catálogo';
     $('#aviso').textContent=CFG.aviso_encomenda||'';$('#sacolaAviso').textContent=CFG.aviso_encomenda||'';
     if(!ITENS.length){$('#estado').hidden=false;$('#estado').textContent='O catálogo está sendo preparado. Volte daqui a pouco.';return}
-    montaTudo();carregaMais();abreDoLink();abrePedidoDoLink();atualizaMeus();checaPromo();
+    ASSIN=assina(ITENS,CFG);montaTudo();carregaMais();abreDoLink();abrePedidoDoLink();atualizaMeus();checaPromo();
   }catch(e){$('#estado').classList.remove('grade');$('#estado').innerHTML='Não foi possível carregar o catálogo agora. Confira a internet e <button class="link" onclick="location.reload()">tente de novo</button>.'}
 }
+/* ===== ao vivo: confere o catálogo a cada 20 s e atualiza sem recarregar a página ===== */
+let ASSIN='',tVivo=null;
+const assina=(it,c)=>JSON.stringify([c,it.map(x=>[x.id,x.nome,x.preco,x.foto,x.pronta,x.destaque,x.categoria])]);
+async function aoVivo(){if(document.visibilityState!=='visible')return;
+  try{const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/catalogo_publico`,{method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:'{}'});if(!r.ok)return;
+    const j=await r.json();const novos=(j.itens||[]).map(x=>({...x,preco:+x.preco,_b:sem(x.nome+' '+x.categoria)}));const sig=assina(novos,j.config||{});
+    if(!ASSIN){ASSIN=sig;return}if(sig===ASSIN)return;ASSIN=sig;
+    const antes=new Map(ITENS.map(x=>[x.id,x]));const mudou=new Set(novos.filter(x=>{const a=antes.get(x.id);return !a||a.preco!==x.preco||a.pronta!==x.pronta||a.foto!==x.foto}).map(x=>x.id));
+    const sumiu=ITENS.filter(x=>!novos.some(y=>y.id===x.id)).length,entrou=novos.filter(x=>!antes.has(x.id)).length;
+    CFG=j.config||CFG;ITENS=novos;for(const k in ARTE)delete ARTE[k];for(const k in CUPP)delete CUPP[k];
+    Object.keys(SAC).forEach(id=>{if(!ITENS.some(x=>String(x.id)===id)){delete SAC[id];delete SACM[id]}});salva();salvaM();
+    const y=scrollY;montaCats();renderPrateleiras();filtra(false);renderSacola();scrollTo({top:y,behavior:'auto'});
+    $$('.card').forEach(c=>{if(mudou.has(+c.dataset.id)){c.classList.remove('vivo');void c.offsetWidth;c.classList.add('vivo')}});
+    if(PROD&&!$('#prod').hidden){const x=ITENS.find(i=>i.id===PROD.id);if(x){PROD=x;montaProd()}else fechaProd()}
+    if(CUP.cod&&CUP.r&&CUP.r.ok)validaCupom();
+    const partes=[entrou?`${entrou} novo${entrou===1?'':'s'}`:'',mudou.size-entrou>0?`${mudou.size-entrou} com preço ou estoque novo`:'',sumiu?`${sumiu} saiu${sumiu===1?'':'ram'}`:''].filter(Boolean);
+    if(partes.length)avisoVivo('🔄 Catálogo atualizado: '+partes.join(' · '))}catch(e){}}
+function avisoVivo(t){const a=document.createElement('div');a.className='vivo-aviso';a.textContent=t;document.body.appendChild(a);setTimeout(()=>a.classList.add('vai'),3200);setTimeout(()=>a.remove(),3800)}
+setInterval(aoVivo,20000);setInterval(()=>{if(document.visibilityState==='visible')checaPromo()},20000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){aoVivo();checaPromo()}});
 /* ===== Loja: horário, avisos e as categorias que mais vendem (da planilha de vendas da DKM) ===== */
 const HORARIO={semana:[8,17],fimdesemana:[9,13]}; /* seg a sex 8h–17h · sáb, dom e feriados 9h–13h */
 const AVISOS=['🚚 Entregamos para todo lugar','💳 Aceitamos todas as formas de pagamento','🕗 Seg a sex 8h–17h · sáb, dom e feriados 9h–13h','📲 Pedido direto no WhatsApp, sem cadastro','⚡ Pronta entrega sai no mesmo dia','🛍️ Loja 100% online'];
@@ -1419,7 +1445,7 @@ async function checaPromo(){let r;try{const x=await fetch(`${SUPABASE_URL}/rest/
   let tirada='';try{tirada=sessionStorage.getItem('dkm-promo-tirada')||''}catch(e){}
   if(r&&r.ok&&r.codigo&&r.codigo!==tirada){if(!CUP.cod||(CUP.promo&&CUP.cod!==r.codigo)){CUP={cod:r.codigo,r:null,chave:null,pend:null,promo:true};validaCupom()}}
   else if(CUP.promo&&CUP.cod){const cod=CUP.cod,tinha=CUP.r&&CUP.r.ok;CUP={cod:'',r:null,chave:null,pend:null};for(const k in CUPP)delete CUPP[k];renderSacola();renderCupom();faixa();if(PROD&&!$('#prod').hidden){montaCupomProd();PROD_D=0;precoBox('troca')}if(tinha)avisoAcabou(cod)}}
-setInterval(()=>{if(document.visibilityState==='visible')checaPromo()},60000);
+
 function avisoAcabou(cod){const t=document.createElement('div');t.className='acabou';t.innerHTML=`⚡ A promoção <b>${esc(cod)}</b> acabou`;document.body.appendChild(t);setTimeout(()=>t.classList.add('vai'),2600);setTimeout(()=>t.remove(),3200)}
 /* confere de tempos em tempos se o cupom ativo ainda vale (se você desativar no painel, some da vitrine) */
 setInterval(()=>{if(document.visibilityState==='visible'&&CUP.cod&&CUP.r&&CUP.r.ok&&CUP.pend==null)validaCupom()},45000);
