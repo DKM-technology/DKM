@@ -724,6 +724,27 @@ details.compra[open]{background:var(--surface-2)}
 
 .ren{margin-top:10px;padding:10px;border-radius:12px;border:1.5px dashed var(--accent);background:color-mix(in srgb,var(--accent) 8%,var(--surface));animation:abreCli .25s ease-out}
 .ren-l{display:block;font-size:12.5px;margin-bottom:6px;color:var(--muted)}
+
+/* celular: aba "Mais" */
+.mais-sheet{display:none}
+@media (max-width:860px){
+  .mais-sheet{display:block;position:fixed;inset:0;z-index:39}
+  .mais-sheet[hidden]{display:none}
+  .ms-fundo{position:absolute;inset:0;background:rgba(0,0,0,.45);opacity:0;transition:opacity .22s}
+  .ms-caixa{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:22px 22px 0 0;padding:10px 16px calc(84px + env(safe-area-inset-bottom,0px));transform:translateY(100%);transition:transform .25s cubic-bezier(.2,.9,.3,1);box-shadow:0 -18px 40px rgba(0,0,0,.25)}
+  .mais-sheet.aberto .ms-fundo{opacity:1}.mais-sheet.aberto .ms-caixa{transform:none}
+  .ms-alca{display:block;width:44px;height:5px;border-radius:9px;background:var(--line);margin:0 auto 10px}
+  .ms-tit{display:block;font-size:13px;color:var(--muted);margin:0 2px 10px;font-weight:600}
+  .ms-grade{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .ms-grade a{position:relative;display:flex;align-items:center;gap:10px;padding:16px 14px;border-radius:16px;border:1.5px solid var(--line);background:var(--surface-2);color:var(--ink);text-decoration:none;font-weight:700;font-size:15px}
+  .mais-sheet.aberto .ms-grade a{animation:entraEnc .3s cubic-bezier(.2,.9,.3,1) both;animation-delay:calc(var(--i) * 40ms)}
+  .ms-grade a svg{width:24px;height:24px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .ms-grade a[aria-current="page"]{border-color:var(--accent);color:var(--accent)}
+  .ms-grade a .k{margin-left:auto;background:var(--accent);color:var(--accent-ink);border-radius:99px;font-size:11px;padding:0 7px;line-height:18px}.ms-grade a .k:empty{display:none}
+  .tabbar a.mais-tab svg{fill:currentColor;stroke:none}
+  .tabbar a.mais-tab[aria-current]{color:var(--accent)}
+}
+@media (prefers-reduced-motion:reduce){.ms-caixa,.ms-fundo{transition:none}.mais-sheet.aberto .ms-grade a{animation:none}}
 </style>
 </head>
 <body>
@@ -1231,9 +1252,18 @@ const VIEWS=[
  {id:'compras',nome:'Compras',ic:'<path d="M3 8a2 2 0 0 1 2-2h2l2-2h6l2 2h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.5"/>'},
  {id:'contagem',nome:'Contagem',ic:'<path d="M9 4h6v3H9zM6 5H5v16h14V5h-1M9 12l2 2 4-4M9 17h6"/>'},
  {id:'catalogo',nome:'Catálogo',mob:false,ic:'<path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h14v-7"/><path d="M10 20v-4h4v4"/>'},
- {id:'gestao',nome:'Gestão',ic:'<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>'}];
+ {id:'gestao',nome:'Gestão',mob:false,ic:'<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>'}];
 const navHTML=(cls)=>VIEWS.filter(v=>!cls||v.mob!==false).map(v=>`<a href="#${v.id}" data-v="${v.id}"${v.id==='compras'&&cls?' class="cam-tab"':''}><svg viewBox="0 0 24 24">${v.ic}</svg>${v.nome}<span class="k" data-k="${v.id}"></span></a>`).join('');
-$('#nav').innerHTML=navHTML(false);$('#tabbar').innerHTML=navHTML(true);
+$('#nav').innerHTML=navHTML(false);$('#tabbar').innerHTML=navHTML(true)+`<a href="#" class="mais-tab" id="maisTab" role="button" aria-haspopup="dialog"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>Mais<span class="k" id="kMais"></span></a>`;
+/* celular: as abas que não cabem na barra ficam no "Mais" */
+{const MAIS=VIEWS.filter(v=>v.mob===false),sh=document.createElement('div');sh.id='maisSheet';sh.className='mais-sheet';sh.hidden=true;
+  sh.innerHTML=`<div class="ms-fundo" data-msx></div><div class="ms-caixa" role="dialog" aria-label="Mais telas"><span class="ms-alca"></span><b class="ms-tit">Mais telas</b><div class="ms-grade">${MAIS.map((v,i)=>`<a href="#${v.id}" data-v="${v.id}" style="--i:${i}"><svg viewBox="0 0 24 24">${v.ic}</svg><span>${v.nome}</span><span class="k" data-k="${v.id}"></span></a>`).join('')}</div></div>`;
+  document.body.appendChild(sh);
+  const fecha=()=>{sh.classList.remove('aberto');setTimeout(()=>{sh.hidden=true},220)};
+  $('#maisTab').onclick=e=>{e.preventDefault();if(!sh.hidden&&sh.classList.contains('aberto'))return fecha();sh.hidden=false;requestAnimationFrame(()=>sh.classList.add('aberto'))};
+  sh.addEventListener('click',e=>{if(e.target.closest('[data-msx],a[data-v]'))fecha()});
+  window.addEventListener('hashchange',()=>{const v=(location.hash||'').slice(1);$('#maisTab').toggleAttribute('aria-current',MAIS.some(x=>x.id===v));if(!sh.hidden)fecha()});
+  const v0=(location.hash||'').slice(1);if(MAIS.some(x=>x.id===v0))$('#maisTab').setAttribute('aria-current','page')}
 function route(){const v=(location.hash||'#controle').slice(1);const ok=VIEWS.some(x=>x.id===v)?v:'controle';
   $$('.view').forEach(s=>s.hidden=s.id!=='v-'+ok);
   $$('[data-v]').forEach(a=>{if(a.dataset.v===ok)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});window.scrollTo(0,0)}
@@ -1247,7 +1277,7 @@ window.dkmTemaSistema=()=>setTheme(lsGet('-tema')||'system');
 function setOlho(v){OCULTA=v;lsSet('-oculta',v?'1':null);const b=$('#btnOlho');b.setAttribute('aria-pressed',v);b.title=b.ariaLabel=v?'Mostrar valores':'Esconder valores';document.body.classList.toggle('valores-ocultos',v)}
 setOlho(OCULTA);
 $('#btnOlho').onclick=()=>{setOlho(!OCULTA);try{renderAll();if(CAT.ok)renderCatalogo()}catch(e){}toast(OCULTA?'Valores escondidos':'Valores à mostra')};
-function badge(id,t){$$(`[data-k="${id}"]`).forEach(el=>el.textContent=t||'')}
+function badge(id,t){$$(`[data-k="${id}"]`).forEach(el=>el.textContent=t||'');const km=$('#kMais');if(km){const n=VIEWS.filter(v=>v.mob===false).reduce((a,v)=>{const el=$(`.ms-grade [data-k="${v.id}"]`);const x=parseInt(el&&el.textContent)||0;return a+x},0);km.textContent=n||''}}
 
 /* ===== CONTROLE ===== */
 const vDate=v=>v.d?new Date(v.d+'T12:00'):null;
