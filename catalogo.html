@@ -799,6 +799,33 @@ body.filtrando #secBolas{margin-top:16px}
 .vivo-aviso{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);z-index:320;background:#0f2a20;border:1.5px solid var(--good);color:#c9f7e2;border-radius:99px;padding:9px 16px;font-size:13px;box-shadow:0 14px 40px rgba(0,0,0,.5);animation:sobeVivo .45s cubic-bezier(.3,1.6,.5,1);transition:opacity .5s,transform .5s;max-width:92vw;text-align:center}
 .vivo-aviso.vai{opacity:0;transform:translate(-50%,16px)}
 @keyframes sobeVivo{from{opacity:0;transform:translate(-50%,20px)}}
+
+.cn-dono{grid-column:1/-1;position:relative;z-index:2;font-size:12px;color:#e6e1ff;background:rgba(0,0,0,.35);border:1px dashed rgba(255,255,255,.25);border-radius:10px;padding:7px 10px}
+.cn-dono button{margin-left:6px;border:0;background:#fff;color:#14092e;border-radius:99px;padding:2px 10px;font-weight:700;font-size:11.5px;cursor:pointer}
+
+/* ===== fim de cinema da promoção ===== */
+.faixa-cupom.cine>.cn-acabou{position:absolute;inset:0;z-index:6;display:grid;place-items:center;pointer-events:none}
+.cn-acabou b{font-family:var(--f-display);font-weight:900;font-size:clamp(22px,4vw,40px);letter-spacing:.12em;color:#ff3d6e;border:4px solid #ff3d6e;border-radius:12px;padding:6px 18px;background:rgba(10,4,14,.72);text-shadow:0 0 18px rgba(255,61,110,.8);transform:rotate(-6deg);animation:carimboFim .55s cubic-bezier(.3,1.7,.5,1) .25s both}
+.cn-acabou i{position:absolute;left:50%;top:50%;width:40px;height:40px;margin:-20px;border-radius:50%;border:3px solid rgba(255,61,110,.9);opacity:0;animation:onda .8s ease-out .5s both}
+@keyframes carimboFim{from{opacity:0;transform:scale(3.2) rotate(-14deg);filter:blur(6px)}}
+@keyframes onda{0%{opacity:.9;transform:scale(.5)}100%{opacity:0;transform:scale(14)}}
+.faixa-cupom.cine.fim1{animation:tremeFim .5s steps(6) .5s,glitch .9s steps(9) both!important}
+.faixa-cupom.cine.fim1 .cn-num,.faixa-cupom.cine.fim1 .cn-cod{animation:rgbSplit .25s steps(2) 4!important}
+.faixa-cupom.cine.fim1 .cd i{background:rgba(255,61,110,.45);border-color:#ff3d6e}
+@keyframes tremeFim{0%,100%{transform:none}20%{transform:translate(-6px,2px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-4px,1px)}80%{transform:translate(3px,2px)}}
+@keyframes glitch{0%,100%{filter:none}15%{filter:hue-rotate(80deg) saturate(2)}30%{filter:none}45%{filter:contrast(1.8) brightness(1.3)}60%{filter:grayscale(.6)}75%{filter:hue-rotate(-60deg)}90%{filter:grayscale(.9) brightness(.8)}}
+@keyframes rgbSplit{0%{text-shadow:-4px 0 #ff2e63,4px 0 #08d9d6}100%{text-shadow:4px 0 #ff2e63,-4px 0 #08d9d6}}
+.faixa-cupom.cine.fim2{animation:queima 1.3s linear forwards!important;background:radial-gradient(120% 140% at 0% 0%,#2a2a33 0%,#141418 45%,#07060a 100%)}
+.faixa-cupom.cine.fim2>*:not(.cn-acabou):not(.cn-barra){filter:grayscale(1) brightness(.7);transition:filter .3s}
+.faixa-cupom.cine.fim2 .cn-barra{animation:fechaBarra .9s cubic-bezier(.7,0,.3,1) forwards}
+@keyframes queima{from{clip-path:inset(0 0 0 0 round 20px)}to{clip-path:inset(0 0 0 100% round 20px)}}
+@keyframes fechaBarra{from{transform:scaleY(0)}to{transform:scaleY(.42)}}
+.queima-box{position:fixed;z-index:400;pointer-events:none;transition:opacity .9s}
+.queima-box.vai{opacity:0}
+.linha-fogo{position:absolute;top:-6px;bottom:-6px;left:0;width:10px;margin-left:-5px;border-radius:8px;background:linear-gradient(180deg,#fff3b0,#ffb703 30%,#fb5607 70%,#ff006e);box-shadow:0 0 18px 6px rgba(255,140,0,.8),0 0 50px 16px rgba(255,60,0,.45);animation:fogoAnda 1.3s linear forwards}
+@keyframes fogoAnda{to{left:100%}}
+.brasa{position:absolute;width:var(--s);height:var(--s);border-radius:50%;background:radial-gradient(circle,#fff3b0,#ffb703 45%,#fb5607 70%,transparent 72%);box-shadow:0 0 8px 2px rgba(255,140,0,.8);animation:brasa 1s ease-out forwards}
+@keyframes brasa{0%{opacity:1;transform:translate(0,0) scale(1)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2)}}
 </style>
 </head>
 <body>
@@ -1493,7 +1520,8 @@ function faixa(){const f=$('#faixaCupom'),r=CUP.r;if(!CUP.cod||!r){if(!f.hidden&
   if(novo||!f.querySelector('.cn-pct')){f.innerHTML=`<span class="cn-luz" aria-hidden="true"></span><span class="cn-faiscas" aria-hidden="true">${fx}</span><span class="cn-barra cima" aria-hidden="true"></span><span class="cn-barra baixo" aria-hidden="true"></span>
     <div class="cn-esq"><small class="cn-sobre">PROMOÇÃO ATIVA</small><div class="cn-pct"><span class="cn-num">${esc(v)}</span>${pct?'<span class="cn-por">%</span>':''}<em>OFF</em></div></div>
     <div class="cn-meio" id="faixaTxt"><span class="cn-l1">com o cupom</span><span class="cn-cod">🎟️ ${esc(r.codigo)}</span><span class="cn-l2" id="cnPrazo">${prazo}</span></div>
-    <button type="button" class="cn-cta" id="cnCta">Aproveitar <span>›</span></button>`;
+    <button type="button" class="cn-cta" id="cnCta">Aproveitar <span>›</span></button>${!CUP.promo?`<div class="cn-dono" id="cnDono" hidden>👁️ Só neste aparelho (veio pelo link ou foi digitado). Para aparecer para todos: <b>📢 Pôr na vitrine</b> no painel. <button type="button" id="cnTira">tirar daqui</button></div>`:''}`;
+    {const dn=$('#cnDono');if(dn){dn.hidden=!DONO;$('#cnTira').onclick=()=>{CUP={cod:'',r:null,chave:null,pend:null};try{localStorage.removeItem('dkm-cupom')}catch(e){}renderSacola();renderCupom();faixa();if(PROD&&!$('#prod').hidden){montaCupomProd();PROD_D=0;precoBox('troca')}}}}
     $('#cnCta').onclick=()=>{if(itensSacola().length)abreSacola();else{const t=$('#secBolas')||$('#todos');t.scrollIntoView({behavior:reduz()?'auto':'smooth',block:'start'})}};
     if(novo&&!reduz()){f.classList.remove('entra');void f.offsetWidth;f.classList.add('entra')}}
   tickCd(true)}
@@ -1508,13 +1536,16 @@ function tickCd(novo){const el=$('#cnCd');if(!el||!CD_ALVO)return;let ms=CD_ALVO
   el.classList.toggle('urgente',CD_ALVO-Date.now()<36e5)}
 setInterval(()=>{if(!$('#faixaCupom').hidden)tickCd(false)},1000);
 /* faixa explodindo quando o cupom acaba ou é desligado */
-function explodeFaixa(f){const r=f.getBoundingClientRect();const box=document.createElement('div');box.className='estilhacos';box.style.cssText=`left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px`;
-  const cores=['#ffd166','#ff3d6e','#8f7dff','#3ecf8e','#fff','#4fb3ff'];
-  for(let i=0;i<46;i++){const p=document.createElement('i');const x=Math.random()*100,y=Math.random()*100,a=Math.atan2(y-50,x-50),dist=120+Math.random()*260;
-    p.style.cssText=`left:${x}%;top:${y}%;--dx:${Math.cos(a)*dist}px;--dy:${Math.sin(a)*dist+80}px;--r:${(Math.random()*720-360)|0}deg;background:${cores[i%cores.length]};width:${4+Math.random()*10}px;height:${4+Math.random()*10}px;animation-delay:${Math.random()*.12}s`;box.appendChild(p)}
-  const bum=document.createElement('b');bum.className='bum';bum.textContent='💥';box.appendChild(bum);
-  document.body.appendChild(box);f.classList.remove('entra');f.classList.add('explode');
-  setTimeout(()=>{f.hidden=true;f.classList.remove('explode')},650);setTimeout(()=>box.remove(),1500)}
+function explodeFaixa(f){if(f.classList.contains('fim1'))return;const sai=()=>{f.querySelectorAll('.cn-acabou').forEach(x=>x.remove());f.hidden=true;f.classList.remove('fim1','fim2');f.style.clipPath=''};
+  /* 1) congela: falha de imagem (glitch) e o carimbo PROMOÇÃO ENCERRADA bate */
+  const st=document.createElement('div');st.className='cn-acabou';st.innerHTML='<b>PROMOÇÃO ENCERRADA</b><i></i>';f.appendChild(st);
+  f.classList.remove('entra');f.classList.add('fim1');
+  /* 2) a faixa queima da esquerda para a direita, soltando brasas, e as barras de cinema fecham */
+  setTimeout(()=>{const r=f.getBoundingClientRect();const box=document.createElement('div');box.className='queima-box';box.style.cssText=`left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px`;
+    const fogo=document.createElement('span');fogo.className='linha-fogo';box.appendChild(fogo);document.body.appendChild(box);f.classList.add('fim2');
+    const t0=performance.now(),dur=1300;const tk=setInterval(()=>{const p=Math.min(1,(performance.now()-t0)/dur);for(let i=0;i<3;i++){const e=document.createElement('i');e.className='brasa';
+        e.style.cssText=`left:${p*100}%;top:${Math.random()*100}%;--dx:${(Math.random()*60-10)|0}px;--dy:${-(40+Math.random()*120)|0}px;--s:${2+Math.random()*4}px;animation-duration:${.7+Math.random()*.8}s`;box.appendChild(e)}if(p>=1)clearInterval(tk)},45);
+    setTimeout(()=>{sai();box.classList.add('vai')},dur+60);setTimeout(()=>box.remove(),dur+1600)},950)}
 /* total contando até o valor novo */
 let totMostrado=null;
 function contaTotal(v){const el=$('#sacolaTot');if(totMostrado==null||matchMedia('(prefers-reduced-motion: reduce)').matches||Math.abs(v-totMostrado)<.005){el.textContent=brl(v);totMostrado=v;return}
@@ -1541,7 +1572,7 @@ async function modoDono(){
     const {data:{session}}=await sb.auth.getSession();if(!session)return;
     for(let de=0;;de+=1000){const {data,error}=await sb.from('catalogo_itens').select('id,custo,fornecedor,origem').range(de,de+999);if(error)return;
       data.forEach(x=>CUSTO[x.id]={custo:+x.custo,forn:x.origem==='ESTOQUE'?'Meu estoque':x.fornecedor||''});if(data.length<1000)break}
-    DONO=true;mostraDono();if(ITENS.length){render();renderPrateleiras()}
+    DONO=true;mostraDono();{const dn=$('#cnDono');if(dn)dn.hidden=false}if(ITENS.length){render();renderPrateleiras()}
   }catch(e){}
 }
 botaoPedidos();vaiPasso(1);PASSO_MAX=1;
