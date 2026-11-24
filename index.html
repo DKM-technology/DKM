@@ -521,6 +521,59 @@ body.mc-aberto{overflow:hidden}
 .mc-conf-box h3{margin:0 0 8px;font-size:18px}.mc-aviso{color:var(--warn);font-size:13px}
 @media (max-width:520px){.mc-it{grid-template-columns:auto auto minmax(0,1fr) auto;gap:10px;padding:11px}.mc-it img,.mc-sem{display:none}.mc-q{font-size:22px;min-width:40px}.mc-v{font-size:13px}.mc-pagar b{font-size:22px}}
 @media (prefers-reduced-motion:reduce){.mc,.mc-lista.entra .mc-it,.mc-it.ok .mc-ck{animation:none}}
+
+.ic-bt.lixo:hover{border-color:#e5484d;background:color-mix(in srgb,#e5484d 15%,var(--surface-2))}
+.ic-bt.lixo:hover{animation:lixoBalanca .5s}
+@keyframes lixoBalanca{25%{transform:rotate(-12deg)}75%{transform:rotate(12deg)}}
+.enc.apaga{animation:apagaEnc .5s cubic-bezier(.6,0,.8,.4) forwards}
+@keyframes apagaEnc{30%{transform:scale(1.02) rotate(-1deg)}100%{opacity:0;transform:scale(.6) translateY(30px) rotate(4deg);filter:blur(2px)}}
+
+/* ===== clientes dinâmico ===== */
+.segs{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;margin-bottom:14px}
+.seg-c{display:grid;justify-items:center;gap:2px;padding:12px 6px 10px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:transform .15s,border-color .2s,box-shadow .2s,background .2s}
+.seg-c:hover{transform:translateY(-2px);border-color:var(--accent)}
+.seg-c i{font-style:normal;font-size:22px;line-height:1}.seg-c b{font-size:24px;line-height:1.15}.seg-c span{font-size:11px;color:var(--muted);text-align:center;line-height:1.2}
+.seg-c.on{border-color:var(--accent);background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 22%,var(--surface)),var(--surface));box-shadow:0 10px 24px color-mix(in srgb,var(--accent) 22%,transparent)}
+.seg-c.on span{color:var(--ink);font-weight:600}
+.sg-sumidos b{color:var(--warn)}.sg-devendo b{color:#e5484d}.sg-ativos b{color:var(--good)}
+@media (max-width:1100px){.segs{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:620px){.segs{display:flex;overflow-x:auto;scrollbar-width:none;margin:0 -2px 12px;padding:2px}.segs::-webkit-scrollbar{display:none}.seg-c{flex:none;min-width:96px}}
+.ideias-row{display:flex;gap:10px;overflow-x:auto;scrollbar-width:thin;padding:2px 2px 10px;margin-bottom:6px;align-items:stretch}
+.ideias-tit{flex:none;align-self:center;font-weight:700;font-size:13px;color:var(--muted);writing-mode:horizontal-tb}
+.ideia2{flex:none;width:260px;display:flex;gap:10px;padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--surface);animation:entraEnc .4s cubic-bezier(.2,.9,.3,1) both;animation-delay:calc(var(--i) * 70ms)}
+.ideia2 i{font-style:normal;font-size:24px;line-height:1}.ideia2 b{font-size:13.5px;display:block}.ideia2 p{margin:3px 0 0;font-size:12px;color:var(--muted);line-height:1.35}
+.ideia2 .link-bt{color:var(--accent);font-weight:600;padding:4px 0 0;text-decoration:none}
+.cli-barra{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:6px 0 12px}
+.cli-busca{flex:1 1 280px;display:flex;align-items:center;gap:10px;border:1.5px solid var(--line);background:var(--surface);border-radius:14px;padding:0 14px;transition:border-color .2s,box-shadow .2s}
+.cli-busca:focus-within{border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 18%,transparent)}
+.cli-busca svg{width:18px;height:18px;fill:none;stroke:var(--muted);stroke-width:2}
+.cli-busca input{flex:1;border:0;background:none;color:var(--ink);padding:12px 0;font:inherit;outline:none}
+.cli-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,290px),1fr));gap:10px;align-items:start}
+.cli-grid.troca .cc2{animation-name:entraEnc}
+.cc2{border:1.5px solid var(--line);border-radius:16px;background:var(--surface);overflow:hidden;animation:entraEnc .35s cubic-bezier(.2,.9,.3,1) both;animation-delay:calc(min(var(--i),16) * 25ms);transition:border-color .2s,box-shadow .2s,transform .15s}
+.cc2:hover{border-color:color-mix(in srgb,var(--accent) 60%,var(--line));transform:translateY(-2px)}
+.cc2.aberto{grid-column:span 2;border-color:var(--accent);box-shadow:0 12px 30px color-mix(in srgb,var(--accent) 18%,transparent)}
+@media (max-width:700px){.cc2.aberto{grid-column:auto}}
+.cc2-top{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;padding:12px 14px 10px;border:0;background:none;color:var(--ink);text-align:left;cursor:pointer;font:inherit}
+.av{position:relative;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:15px;color:#fff;background:linear-gradient(135deg,#5a4cf0,#8f7dff)}
+.av em{position:absolute;right:-4px;bottom:-4px;font-style:normal;font-size:15px}
+.nv-ouro .av{background:linear-gradient(135deg,#b7791f,#f6c453);box-shadow:0 0 0 3px color-mix(in srgb,#f6c453 35%,transparent)}
+.nv-prata .av{background:linear-gradient(135deg,#6b7280,#cbd5e1)}.nv-atacado .av{background:linear-gradient(135deg,#0f766e,#2dd4bf)}
+.cc2-n b{display:block;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cc2-n small{font-size:12px;font-weight:600}
+.cc2-v{text-align:right}.cc2-v b{display:block;font-size:17px}.cc2-v small{font-size:11px;color:var(--muted)}
+.rec{display:block;height:4px;margin:0 14px 10px;border-radius:4px;background:var(--surface-2);overflow:hidden}.rec i{display:block;height:100%;border-radius:4px;animation:encheR .8s cubic-bezier(.3,1,.4,1)}
+@keyframes encheR{from{width:0}}
+.cc2-tags{display:flex;gap:6px;flex-wrap:wrap;padding:0 14px 10px;margin-top:-4px}
+.cc2-tags span{font-size:11.5px;font-weight:600;border-radius:99px;padding:2px 9px}
+.t-deve{background:color-mix(in srgb,#e5484d 16%,transparent);color:#e5484d}.t-sum{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.cc2-mais{border-top:1px dashed var(--line);padding:12px 14px 14px;display:grid;gap:10px;animation:abreCli .3s ease-out}
+@keyframes abreCli{from{opacity:0;transform:translateY(-6px)}}
+.cc2-info{display:flex;flex-wrap:wrap;gap:6px}.cc2-info span{font-size:12px;border:1px solid var(--line);border-radius:8px;padding:4px 9px;background:var(--surface-2)}
+.cc2-niv{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}.cc2-niv select{max-width:240px}
+.cli-mais{grid-column:1/-1;display:flex;justify-content:center;margin-top:6px}
+details.tab-nivel{margin-top:16px}details.tab-nivel summary{cursor:pointer;list-style:none;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+details.tab-nivel summary::-webkit-details-marker{display:none}details.tab-nivel summary::after{content:"▾";margin-left:auto;color:var(--muted);transition:transform .2s}details.tab-nivel[open] summary::after{transform:rotate(180deg)}
+@media (prefers-reduced-motion:reduce){.cc2,.ideia2,.rec i,.cc2-mais{animation:none}}
 </style>
 </head>
 <body>
@@ -662,19 +715,12 @@ body.mc-aberto{overflow:hidden}
     <!-- CLIENTES -->
     <section id="v-clientes" class="view" hidden>
       <div class="head"><div><h1>Clientes</h1><p>Quem mais compra, quem sumiu e níveis de preço.</p></div><a class="btn pri" href="#cupons">🎟️ Cupons</a></div>
-      <div class="kpis" id="cliKpi"></div>
-      <div class="grid g-main" style="align-items:start">
-        <div class="panel">
-          <h2>Clientes <span class="sub" id="cliSub2"></span></h2>
-          <div class="field" style="margin-bottom:10px"><label for="cliQ">Buscar cliente</label><input id="cliQ" class="inp" placeholder="nome" autocomplete="off"></div>
-          <div class="chips" id="cliFiltros" style="margin-bottom:6px"></div>
-          <div id="cliLista"></div>
-        </div>
-        <div class="grid">
-          <div class="panel"><h2>Ideias de promoção <span class="sub">pelos seus números</span></h2><div id="ideias" class="grid" style="gap:10px"></div></div>
-        </div>
-      </div>
-      <div class="panel"><h2>Tabela de preço por nível <span class="sub">o seu método de tabela: desconto sobre o preço cheio, nunca abaixo da margem mínima sobre o custo</span></h2><div id="tabPreco"></div></div>
+      <div class="segs" id="cliKpi" role="tablist" aria-label="Grupos de clientes"></div>
+      <div class="ideias-row" id="ideias"></div>
+      <div class="cli-barra"><div class="cli-busca"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="cliQ" placeholder="Buscar cliente pelo nome" autocomplete="off" aria-label="Buscar cliente"></div><span class="note" id="cliSub2"></span></div>
+      <div class="chips" id="cliFiltros" hidden></div>
+      <div id="cliLista" class="cli-grid"></div>
+      <details class="panel tab-nivel"><summary><b>⚙️ Tabela de preço por nível</b> <span class="sub">desconto de Prata, Ouro e Atacado (nunca abaixo da margem mínima)</span></summary><div id="tabPreco" style="margin-top:12px"></div></details>
     </section>
 
     <!-- CUPONS -->
@@ -1186,43 +1232,58 @@ function calcClientes(){const m={},lim=new Date();lim.setFullYear(lim.getFullYea
 function nivelAuto(c,pr=P()){const r=pr.regras;if(!c)return'VAREJO';if(c.tot12>=r.ouro)return'OURO';if(c.tot12>=r.prata||c.compras12>=r.prata_compras)return'PRATA';return'VAREJO'}
 function nivelDe(k){const man=S.clientes[k]?.nivel;return man||nivelAuto(S.cli[k])}
 const sumido=c=>c.tot>=80&&c.semComprar!=null&&c.semComprar>120;
-let cliFiltro='Todos',cliTodos=false;
+let cliFiltro='Todos',cliTodos=false,cliAberto=null;
+function contaN(el,para){if(matchMedia('(prefers-reduced-motion: reduce)').matches||!para){el.textContent=para;return}const t0=performance.now();const f=t=>{const p=Math.min(1,(t-t0)/700);el.textContent=Math.round(para*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
 function renderClientes(){
   const L=Object.values(S.cli),tot=L.reduce((a,c)=>a+c.tot,0)||1,top10=L.slice().sort((a,b)=>b.tot-a.tot).slice(0,10).reduce((a,c)=>a+c.tot,0);
   const ativos=L.filter(c=>c.semComprar!=null&&c.semComprar<=90).length,sum=L.filter(sumido),uma=L.filter(c=>c.compras===1).length,dev=L.filter(c=>c.deve>0);
-  $('#cliKpi').innerHTML=`
-   <div class="kpi hl"><span class="lbl">Clientes</span><span class="val num">${L.length}</span><span class="foot">${uma} compraram uma vez só</span></div>
-   <div class="kpi"><span class="lbl">Compraram em 90 dias</span><span class="val num">${ativos}</span><span class="foot">clientes ativos agora</span></div>
-   <div class="kpi"><span class="lbl">Sumidos</span><span class="val num" style="color:${sum.length?'var(--warn)':'inherit'}">${sum.length}</span><span class="foot">bons clientes há mais de 4 meses sem comprar</span></div>
-   <div class="kpi"><span class="lbl">Top 10 clientes</span><span class="val num">${Math.round(top10/tot*100)}%</span><span class="foot">das suas vendas</span></div>`;
-  const F={'Todos':()=>true,'🥇 Ouro':c=>nivelDe(c.nome)==='OURO','🥈 Prata':c=>nivelDe(c.nome)==='PRATA','📦 Atacado':c=>nivelDe(c.nome)==='ATACADO','Sumidos':sumido,'Devendo':c=>c.deve>0,'1 compra só':c=>c.compras===1};
-  $('#cliFiltros').innerHTML=Object.keys(F).map(f=>`<button type="button" data-cf2="${esc(f)}" aria-pressed="${f===cliFiltro}">${esc(f)}${f!=='Todos'?' ('+L.filter(F[f]).length+')':''}</button>`).join('');
-  $$('[data-cf2]').forEach(b=>b.onclick=()=>{cliFiltro=b.dataset.cf2;cliTodos=false;renderClientes()});
+  const F={'Todos':()=>true,'Ativos':c=>c.semComprar!=null&&c.semComprar<=90,'Sumidos':sumido,'Devendo':c=>c.deve>0,'🥇 Ouro':c=>nivelDe(c.nome)==='OURO','🥈 Prata':c=>nivelDe(c.nome)==='PRATA','📦 Atacado':c=>nivelDe(c.nome)==='ATACADO','1 compra só':c=>c.compras===1};
+  const SEG=[['Todos','👥','clientes'],['Ativos','🔥','compraram em 90 dias'],['Sumidos','😴','bons clientes sumidos'],['Devendo','💸',`devem ${brl0(dev.reduce((a,c)=>a+c.deve,0))}`],['🥇 Ouro','🥇','clientes Ouro'],['🥈 Prata','🥈','clientes Prata'],['1 compra só','🌱','voltar a comprar']];
+  if(!F[cliFiltro])cliFiltro='Todos';
+  const antes=$('#cliKpi').dataset.ok;
+  $('#cliKpi').innerHTML=SEG.map(([k,ic,t])=>{const n=L.filter(F[k]).length;return `<button type="button" class="seg-c${k===cliFiltro?' on':''} sg-${chave(k).replace(/[^a-z0-9]/gi,'')}" data-cf2="${esc(k)}" role="tab" aria-selected="${k===cliFiltro}"><i>${ic}</i><b class="num" data-conta="${n}">${antes?n:0}</b><span>${esc(t)}</span></button>`}).join('');
+  if(!antes){$('#cliKpi').dataset.ok=1;$$('#cliKpi [data-conta]').forEach(el=>contaN(el,+el.dataset.conta))}
+  $$('[data-cf2]').forEach(b=>b.onclick=()=>{cliFiltro=b.dataset.cf2;cliTodos=false;cliAberto=null;renderClientes();const g=$('#cliLista');g.classList.remove('troca');void g.offsetWidth;g.classList.add('troca')});
   const q=chave($('#cliQ').value);const vis=L.filter(c=>F[cliFiltro](c)&&(!q||c.nome.includes(q))).sort((a,b)=>b.tot12-a.tot12||b.tot-a.tot);
-  $('#cliSub2').textContent=`${vis.length} · ordenado por quanto comprou em 12 meses`;
-  const mostra=cliTodos||q?vis:vis.slice(0,12);
-  $('#cliLista').innerHTML=(vis.length?mostra.map(c=>{const n=nivelDe(c.nome),man=S.clientes[c.nome]?.nivel;
-    return `<div class="cli"><div class="cli-n"><b>${esc(cap(c.nome))}</b>${n!=='VAREJO'?`<span class="pill p-acc">${ICONE[n]} ${NOME_NIVEL[n]}</span>`:''}${c.deve>0?`<span class="pill p-bad">deve ${brl(c.deve)}</span>`:''}${sumido(c)?'<span class="pill p-warn">sumido</span>':''}</div>
-      <div class="cli-v num"><b>${brl0(c.tot12)}</b><span>12 meses · ${c.compras12} compra${c.compras12===1?'':'s'}</span></div>
-      <div class="cli-u" style="grid-column:1/-1">${c.ult?`última compra ${dataBR(c.ult)} · há ${c.semComprar} dias`:'sem compra com data'} · total ${brl0(c.tot)} em ${c.compras} compra${c.compras===1?'':'s'}</div>
-      <div class="cli-a"><select class="inp" data-niv="${esc(c.nome)}" aria-label="Nível de ${esc(cap(c.nome))}"><option value="">Automático (${NOME_NIVEL[nivelAuto(c)]})</option>${NIVEIS.map(x=>`<option value="${x}"${man===x?' selected':''}>${ICONE[x]} ${NOME_NIVEL[x]}</option>`).join('')}</select>
-      <button class="btn sm" type="button" data-cup="${esc(c.nome)}">Mandar cupom</button></div></div>`}).join(''):'<div class="empty">Nenhum cliente nesse filtro.</div>')+(mostra.length<vis.length?`<div class="row-f" style="margin-top:10px"><button class="btn" type="button" id="cliMais">Ver todos os ${vis.length}</button></div>`:'');
+  $('#cliSub2').textContent=`${vis.length} cliente${vis.length===1?'':'s'}${cliFiltro!=='Todos'?' · '+cliFiltro:''} · do que mais comprou para o que menos comprou`;
+  const mostra=cliTodos||q?vis:vis.slice(0,24);
+  const cor=d=>d==null?'var(--muted)':d<=30?'var(--good)':d<=90?'#4fb3ff':d<=120?'var(--warn)':'#e5484d';
+  const quando=d=>d==null?'sem data':d===0?'comprou hoje':d===1?'comprou ontem':d<=60?`há ${d} dias`:`há ${Math.round(d/30)} meses`;
+  const ini=n=>cap(n).split(' ').filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();
+  $('#cliLista').innerHTML=(vis.length?mostra.map((c,i)=>{const n=nivelDe(c.nome),man=S.clientes[c.nome]?.nivel,fone=String(S.clientes[c.nome]?.telefone||'').replace(/\D/g,''),ab=cliAberto===c.nome;
+    const rec=c.semComprar==null?0:Math.max(6,100-Math.min(100,c.semComprar/180*100));
+    return `<article class="cc2 nv-${n.toLowerCase()}${ab?' aberto':''}" style="--i:${i}" data-cli="${esc(c.nome)}">
+      <button type="button" class="cc2-top" data-abre="${esc(c.nome)}" aria-expanded="${ab}">
+        <span class="av">${esc(ini(c.nome))}${n!=='VAREJO'?`<em>${ICONE[n]}</em>`:''}</span>
+        <span class="cc2-n"><b>${esc(cap(c.nome))}</b><small style="color:${cor(c.semComprar)}">● ${quando(c.semComprar)}</small></span>
+        <span class="cc2-v"><b class="num">${brl0(c.tot12)}</b><small>${c.compras12} compra${c.compras12===1?'':'s'} no ano</small></span>
+      </button>
+      <span class="rec" title="quão recente foi a última compra"><i style="width:${rec}%;background:${cor(c.semComprar)}"></i></span>
+      ${c.deve>0||sumido(c)?`<div class="cc2-tags">${c.deve>0?`<span class="t-deve">💸 deve ${brl(c.deve)}</span>`:''}${sumido(c)?'<span class="t-sum">😴 sumido</span>':''}</div>`:''}
+      ${ab?`<div class="cc2-mais">
+        <div class="cc2-info"><span>🧾 <b>${c.compras}</b> compra${c.compras===1?'':'s'} no total</span><span>💰 <b>${brl0(c.tot)}</b> no total</span><span>📅 última: <b>${c.ult?dataBR(c.ult):'—'}</b></span>${fone?`<span>📱 <b>${esc(fone)}</b></span>`:''}</div>
+        <label class="cc2-niv">Nível<select class="inp" data-niv="${esc(c.nome)}" aria-label="Nível de ${esc(cap(c.nome))}"><option value="">Automático (${NOME_NIVEL[nivelAuto(c)]})</option>${NIVEIS.map(x=>`<option value="${x}"${man===x?' selected':''}>${ICONE[x]} ${NOME_NIVEL[x]}</option>`).join('')}</select></label>
+        <div class="row-f" style="gap:6px"><button class="btn sm pri" type="button" data-cup="${esc(c.nome)}">🎟️ Mandar cupom</button>${fone.length>=10?`<a class="btn sm" href="https://wa.me/${fone.length<=11?'55'+fone:fone}" target="_blank" rel="noopener">💬 WhatsApp</a>`:''}<button class="btn sm" type="button" data-novoped="${esc(c.nome)}">🛒 Novo pedido</button></div></div>`:''}
+    </article>`}).join(''):'<div class="panel"><div class="empty">Nenhum cliente nesse grupo.</div></div>')+(mostra.length<vis.length?`<div class="cli-mais"><button class="btn" type="button" id="cliMais">Ver todos os ${vis.length}</button></div>`:'');
   if($('#cliMais'))$('#cliMais').onclick=()=>{cliTodos=true;renderClientes()};
+  $$('[data-abre]').forEach(b=>b.onclick=()=>{cliAberto=cliAberto===b.dataset.abre?null:b.dataset.abre;renderClientes()});
+  $$('[data-novoped]').forEach(b=>b.onclick=()=>{$('#cli').value=cap(b.dataset.novoped);location.hash='#pedido';try{renderCliInfo();repreco();renderCart()}catch(x){}toast('Pedido para '+cap(b.dataset.novoped))});
   $$('[data-niv]').forEach(sel=>sel.onchange=()=>busy(sel,async()=>{const k=sel.dataset.niv,nv=sel.value||null;
     must(await sb.from('clientes').upsert({nome:k,nivel:nv,atualizado_em:new Date().toISOString()}));S.clientes[k]={...(S.clientes[k]||{nome:k,telefone:'',obs:''}),nivel:nv};
     toast(cap(k)+': '+(nv?NOME_NIVEL[nv]:'nível automático'));renderClientes();repreco();renderCliInfo();renderCart()}));
   $$('[data-cup]').forEach(b=>b.onclick=()=>{const c=S.cli[b.dataset.cup];abrirCupom(c.nome,sumido(c)?'volta':(nivelDe(c.nome)==='OURO'?'vip':'volta'))});
-  // ideias
+  // ideias: cartões curtos com um botão
   const dia={};S.ven.forEach(v=>{if(!v.d)return;const k=chave(v.who)+'|'+v.d;(dia[k]=dia[k]||new Set()).add(v.cat.startsWith('Película')?'P':v.cat==='Capas'?'C':'O')});
   const comp=Object.values(dia),combo=comp.filter(s=>s.has('P')&&s.has('C')).length;
   const fieis=L.filter(c=>c.compras>=5).sort((a,b)=>b.compras-a.compras);
-  const ideias=[];
-  if(sum.length)ideias.push(`<div class="ideia"><b>Trazer de volta ${sum.length} bons clientes</b><p>${esc(sum.slice().sort((a,b)=>b.tot-a.tot).slice(0,6).map(c=>cap(c.nome)).join(', '))}${sum.length>6?'…':''} não compram há mais de 4 meses. Mande um cupom de volta de 15%, com validade de 30 dias.</p><div><button class="btn sm" type="button" id="verSumidos">Ver sumidos</button></div></div>`);
-  if(comp.length)ideias.push(`<div class="ideia"><b>Combo película + capa</b><p>Só ${combo} de ${comp.length} compras (${Math.round(combo/comp.length*100)}%) levaram os dois juntos. Ofereça o combo por R$ 25 em vez de R$ 30: o custo é perto de R$ 8, então ainda sobra bem.</p></div>`);
-  if(fieis.length)ideias.push(`<div class="ideia"><b>Cartão fidelidade</b><p>${esc(fieis.slice(0,5).map(c=>cap(c.nome)+' ('+c.compras+')').join(', '))} já têm 5 compras ou mais. A cada 5 compras, uma película grátis custa só uns R$ 3 para você e segura o cliente.</p></div>`);
-  if(dev.length)ideias.push(`<div class="ideia"><b>Cobrar antes de dar desconto</b><p>${esc(dev.map(c=>cap(c.nome)+' '+brl(c.deve)).join(', '))}. O pedido avisa quando você vende para quem está devendo.</p></div>`);
-  ideias.push(`<div class="ideia"><b>Fone e carregador: desconto em R$</b><p>A margem desses é menor. Prefira um cupom de R$ 10 do que porcentagem. O app nunca deixa passar da margem mínima da tabela.</p></div>`);
-  $('#ideias').innerHTML=ideias.join('');if($('#verSumidos'))$('#verSumidos').onclick=()=>{cliFiltro='Sumidos';renderClientes();$('#cliLista').scrollIntoView({block:'start'})};
+  const I=[];
+  if(sum.length)I.push(['😴',`${sum.length} bons clientes sumidos`,'Mande um cupom de volta de 15% por 30 dias.','Ver sumidos','Sumidos']);
+  if(dev.length)I.push(['💸',`${dev.length} devendo ${brl0(dev.reduce((a,c)=>a+c.deve,0))}`,'Cobre antes de dar desconto.','Ver quem deve','Devendo']);
+  if(fieis.length)I.push(['⭐',`${fieis.length} clientes fiéis`,`${esc(fieis.slice(0,3).map(c=>cap(c.nome).split(' ')[0]).join(', '))}… 5+ compras: a 6ª película grátis custa uns R$ 3.`,'',null]);
+  if(comp.length)I.push(['🧩','Combo película + capa',`Só ${Math.round(combo/comp.length*100)}% levam os dois. Ofereça por R$ 25.`,'',null]);
+  I.push(['🔌','Fone e carregador','Margem menor: prefira cupom de R$ 10 a porcentagem.','',null]);
+  $('#ideias').innerHTML=`<span class="ideias-tit">💡 Ideias</span>`+I.map(([ic,t,p,bt,f],k)=>`<div class="ideia2" style="--i:${k}"><i>${ic}</i><div><b>${t}</b><p>${p}</p>${bt?`<button class="link-bt" type="button" data-ideia="${esc(f)}">${bt} ›</button>`:''}</div></div>`).join('');
+  $$('[data-ideia]').forEach(b=>b.onclick=()=>{cliFiltro=b.dataset.ideia;cliAberto=null;renderClientes();$('#cliLista').scrollIntoView({block:'start',behavior:'smooth'})});
   // cupons
   const hj=hoje(),agora=Date.now();const st=c=>!c.ativo?['desativado','p-mute']:((c.validade&&c.validade<hj)||(c.expira_em&&new Date(c.expira_em)<agora))?['vencido','p-mute']:(c.usos_max!=null&&c.usos>=c.usos_max)?['usado','p-mute']:['ativo','p-good'];
   $('#cupSub').textContent=S.cupons.length?S.cupons.filter(c=>st(c)[0]==='ativo').length+' ativos':'';badge('cupons',S.cupons.filter(c=>st(c)[0]==='ativo').length||'');
@@ -1860,9 +1921,11 @@ function encHTML(e){const its=itensDe(e),st=estagio(e),pend=pendentes(e).reduce(
   if(st==='separar')pri=tem?(et==='SEPARANDO'?`<button class="btn pri grande" type="button" data-eetapa="SAIU" data-eid="${e.id}">🚚 Saiu para entrega</button>`:`<button class="btn pri grande" type="button" data-eetapa="SEPARANDO" data-eid="${e.id}">📦 Começar a separar</button><button class="btn" type="button" data-eetapa="SAIU" data-eid="${e.id}">🚚 Já saiu</button>`):`<button class="btn pri grande" type="button" data-eentregue="${e.id}">✅ Entregue</button>`;
   if(st==='rota')pri=`<button class="btn pri grande ok" type="button" data-eentregue="${e.id}">✅ Foi entregue</button><button class="btn" type="button" data-eetapa="SAIU" data-eid="${e.id}">💬 Avisar de novo</button>`;
   if(st==='CANCELADA')pri=`<button class="btn" type="button" data-ereabre="${e.id}">↩️ Reabrir</button>`;
+  const lixo=`<button class="ic-bt lixo" type="button" data-eapaga="${e.id}" title="Excluir de vez">🗑️</button>`;
   if(st!=='CANCELADA'){sec+=fone.length>=10?`<a class="ic-bt" href="https://wa.me/${fone.length<=11?'55'+fone:fone}" target="_blank" rel="noopener" title="Conversar no WhatsApp">💬</a>`:'';
     if(st!=='comprar')sec+=`<button class="ic-bt" type="button" data-epedido="${e.id}" title="Lançar no Pedido (baixa o estoque e registra a venda)">🧾</button>`;
     if(st!=='ENTREGUE')sec+=`<button class="ic-bt perigo" type="button" data-ecan="${e.id}" title="Cancelar">✕</button>`}
+  sec+=lixo;
   const quando=new Date(e.criado_em).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
   return `<article class="enc est-${st.toLowerCase()}"><div class="enc-top"><div><b class="enc-nome">${esc(cap(e.cliente))}</b><span class="note">nº ${esc(e.codigo)} · ${quando} · ${e.origem==='VITRINE'?'🛍️ vitrine':'✍️ lançada aqui'}</span></div><b class="num enc-tot">${brl(totEnc(e))}</b></div>
     ${st==='CANCELADA'?`<div class="enc-can"><i>✕</i>${/cancelado pelo cliente/i.test(e.obs||'')||e.cancelado_por==='CLIENTE'?'Cancelado pelo cliente':'Pedido cancelado'}</div>`:''}${st!=='CANCELADA'?`<ol class="trilha" style="--k:${k};--n:${P.length}">${P.map(([c,ic,n],j)=>`<li class="${j<k||st==='ENTREGUE'?'ok':j===k?'agora':''}"><i>${ic}</i><span>${n}</span></li>`).join('')}<span class="tr-linha"><em></em></span>${st==='rota'?'<span class="tr-caminhao" aria-hidden="true">🚚</span>':''}</ol>`:''}
@@ -1883,7 +1946,7 @@ function renderEncomendas(){
   $('#encLotes').innerHTML=L.map(loteHTML).join('');$('#encLotes').hidden=!L.length;$('#encCorpo').classList.toggle('lado',L.length>0&&!L.some(l=>ENC.abre[l.f]));
   const lst=ENC.lista.filter(e=>estagio(e)===ENC.filtro);
   const vazio={comprar:'Nada para buscar no fornecedor agora. 🎉',separar:'Nenhum pedido para separar agora.',rota:'Nenhum pedido em entrega agora.',ENTREGUE:'Nenhum pedido entregue ainda.',CANCELADA:'Nenhum pedido cancelado.'}[ENC.filtro];
-  $('#encLista').innerHTML=lst.length?(ENC.filtro==='comprar'?'<h3 class="enc-h3">Pedidos esperando o fornecedor</h3>':'')+lst.map(encHTML).join(''):`<div class="panel"><div class="empty">${vazio}</div></div>`;
+  $('#encLista').innerHTML=lst.length?(ENC.filtro==='comprar'?'<h3 class="enc-h3">Pedidos esperando o fornecedor</h3>':ENC.filtro==='CANCELADA'&&lst.length>1?`<div class="enc-h3" style="display:flex;justify-content:flex-end"><button class="btn sm danger" type="button" data-apagatodas="1">🗑️ Excluir todas as canceladas (${lst.length})</button></div>`:'')+lst.map(encHTML).join(''):`<div class="panel"><div class="empty">${vazio}</div></div>`;
 }
 
 /* ações nos lotes */
@@ -1946,6 +2009,12 @@ $('#mcFim').onclick=()=>{const l=lotes().find(x=>x.f===MC.f);if(!l)return;const 
 const achaEnc=id=>ENC.lista.find(x=>String(x.id)===String(id));
 const mudaEnc=async(e,campos)=>{must(await sb.from('encomendas').update(campos).eq('id',e.id));Object.assign(e,campos);renderEncomendas()};
 $('#encLista').addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;
+  if(b.dataset.eapaga){const e=achaEnc(b.dataset.eapaga);if(!e)return;const ativo=['comprar','separar','rota'].includes(estagio(e));
+    confirmBox($('#encConfirm'),`🗑️ Excluir de vez o pedido de <b>${esc(cap(e.cliente))}</b> (nº ${esc(e.codigo)})? Ele some do painel e o link de acompanhar para de funcionar. <b>Não dá para desfazer.</b>${ativo?' <b class="neg">Atenção: este pedido ainda está em andamento.</b>':''}`,'Excluir de vez',()=>busy(b,async()=>{
+      const card=b.closest('.enc');if(card&&!matchMedia('(prefers-reduced-motion: reduce)').matches){card.classList.add('apaga');await new Promise(r=>setTimeout(r,500))}
+      must(await sb.from('encomendas').delete().eq('id',e.id));ENC.lista=ENC.lista.filter(x=>x.id!==e.id);renderEncomendas();toast('🗑️ Pedido excluído')}));$('#encConfirm').scrollIntoView({block:'center',behavior:'smooth'});return}
+  if(b.dataset.apagatodas){const L=ENC.lista.filter(x=>x.status==='CANCELADA');if(!L.length)return;
+    confirmBox($('#encConfirm'),`🗑️ Excluir de vez as <b>${L.length}</b> canceladas? Não dá para desfazer.`,'Excluir todas',()=>busy(b,async()=>{must(await sb.from('encomendas').delete().in('id',L.map(x=>x.id)));ENC.lista=ENC.lista.filter(x=>x.status!=='CANCELADA');renderEncomendas();toast(`🗑️ ${L.length} pedidos excluídos`)}));$('#encConfirm').scrollIntoView({block:'center',behavior:'smooth'});return}
   if(b.dataset.ecomprei){const e=achaEnc(b.dataset.ecomprei);busy(b,async()=>{const ids=pendentes(e).map(i=>i.id);if(ids.length)must(await sb.from('encomenda_itens').update({comprado:true}).in('id',ids));itensDe(e).forEach(i=>{if(ids.includes(i.id))i.comprado=true});
     await mudaEnc(e,{status:'COMPRADA',comprada_em:new Date().toISOString()});toast('📦 Foi para Separar')})}
   if(b.dataset.ecan){const e=achaEnc(b.dataset.ecan);confirmBox($('#encConfirm'),`Cancelar a encomenda de <b>${esc(cap(e.cliente))}</b> (nº ${esc(e.codigo)})?${itensDe(e).some(i=>i.comprado)?' <b class="neg">Você já comprou os itens dela no fornecedor.</b>':''}`,'Cancelar encomenda',()=>busy(b,()=>mudaEnc(e,{status:'CANCELADA'})));$('#encConfirm').scrollIntoView({block:'center'})}
