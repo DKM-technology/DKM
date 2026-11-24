@@ -55,7 +55,7 @@ main.wrap{padding-block:18px 120px}
 .selo{position:absolute;left:8px;top:8px;font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:999px;letter-spacing:.02em}
 .selo.pronta{background:rgba(62,207,142,.95);color:#06261a}
 .selo.encomenda{background:rgba(20,20,40,.82);color:#e4e4f5}
-.selo.dest{left:auto;right:8px;background:var(--warn);color:#2a1a00}
+.selo.dest{top:34px;background:var(--warn);color:#2a1a00}
 .card .corpo{padding:10px 12px 12px;display:flex;flex-direction:column;gap:8px;flex:1}
 .card .nome{font-size:13.5px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.6em}
 .card .pe{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto}
@@ -95,6 +95,142 @@ main.wrap{padding-block:18px 120px}
 @media (max-width:520px){.linha1{flex-wrap:wrap;gap:8px}.busca{flex:1 1 100%;order:2}.marca{font-size:17px}.grade{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card .corpo{padding:9px 10px 10px}.preco{font-size:16px}.marca{font-size:18px}}
 @media (prefers-reduced-motion:reduce){.dot{animation:none}}
 .ped-num{font-size:12.5px;color:var(--muted);margin:-4px 0 0}.ped-num.ok{color:var(--good,#3ecf8e);font-weight:600}
+/* ===== vitrine nova: letreiro, banner, bolinhas, prateleiras, filtro, confiança ===== */
+.letreiro{background:linear-gradient(90deg,#3b2fd0,#6d5efc 50%,#3b2fd0);color:#fff;font-size:12.5px;font-weight:500;overflow:hidden;white-space:nowrap;padding:7px 0;position:relative;z-index:21}
+.letreiro .trilha{display:inline-flex;gap:42px;padding-left:42px;animation:corre 38s linear infinite}
+.letreiro:hover .trilha{animation-play-state:paused}
+@keyframes corre{to{transform:translateX(-50%)}}
+.status{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);white-space:nowrap}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.status.on i{background:var(--good);box-shadow:0 0 0 0 rgba(62,207,142,.7);animation:pisca 1.8s infinite}
+@keyframes pisca{70%{box-shadow:0 0 0 8px rgba(62,207,142,0)}100%{box-shadow:0 0 0 0 rgba(62,207,142,0)}}
+
+.banner{position:relative;overflow:hidden;background:#07071a;touch-action:pan-y}
+.slides{display:flex;transition:transform .7s cubic-bezier(.7,0,.2,1)}
+.slide{flex:0 0 100%;min-height:clamp(200px,34vw,360px);position:relative;display:grid;align-items:center;overflow:hidden}
+.slide .arte{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 45%}
+.slide .txt{position:relative;z-index:2;padding:24px max(20px,6vw);max-width:620px;display:grid;gap:10px}
+.slide h2{font-family:var(--f-display);font-weight:800;font-size:clamp(24px,4.4vw,46px);line-height:1.02;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.slide p{margin:0;font-size:clamp(13px,1.6vw,16px);color:#d8d8f0;max-width:44ch}
+.slide .cta{justify-self:start;border:0;border-radius:12px;padding:11px 18px;background:#fff;color:#1b1450;font-weight:700;cursor:pointer;font-size:14px}
+.slide.s-marca .txt{align-self:end;padding-bottom:38px}
+@media (max-width:520px){.slide.s-marca .txt{padding-bottom:30px}.slide .cta{padding:8px 13px;font-size:13px}}
+.slide.s-pronta{background:radial-gradient(120% 120% at 100% 0,#1f6f53 0,#0b0b1c 60%)}
+.slide.s-paga{background:radial-gradient(120% 140% at 0 100%,#4a2fd8 0,#0b0b1c 62%)}
+.slide.s-dest{background:radial-gradient(120% 140% at 100% 100%,#7a4b0c 0,#0b0b1c 60%)}
+.colagem{position:absolute;right:max(16px,5vw);top:50%;transform:translateY(-50%);display:grid;grid-template-columns:repeat(2,clamp(70px,12vw,140px));gap:10px;z-index:1}
+.colagem img{width:100%;aspect-ratio:1;object-fit:contain;background:#fff;border-radius:14px;box-shadow:0 14px 30px rgba(0,0,0,.45)}
+.colagem img:nth-child(1){transform:rotate(-4deg)}.colagem img:nth-child(2){transform:translateY(18px) rotate(3deg)}.colagem img:nth-child(3){transform:rotate(2deg)}.colagem img:nth-child(4){transform:translateY(18px) rotate(-3deg)}
+.slide.ativo .colagem img{animation:flutua 4s ease-in-out infinite}
+.slide.ativo .colagem img:nth-child(2n){animation-delay:-2s}
+@keyframes flutua{50%{translate:0 -8px}}
+.slide.ativo .txt>*{animation:sobeTxt .6s cubic-bezier(.2,.9,.3,1) both}
+.slide.ativo .txt>*:nth-child(2){animation-delay:.08s}.slide.ativo .txt>*:nth-child(3){animation-delay:.16s}.slide.ativo .txt>*:nth-child(4){animation-delay:.24s}
+@keyframes sobeTxt{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.icones{display:flex;gap:8px;flex-wrap:wrap}.icones span{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:5px 11px;font-size:12.5px}
+.pontos{position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;gap:7px;z-index:3}
+.pontos button{width:8px;height:8px;border-radius:99px;border:0;background:rgba(255,255,255,.4);cursor:pointer;padding:0;transition:width .3s,background .3s}
+.pontos button[aria-current="true"]{width:26px;background:#fff}
+.seta-b{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:40px;height:40px;border-radius:50%;border:0;background:rgba(0,0,0,.45);color:#fff;font-size:20px;cursor:pointer;display:grid;place-items:center}
+.seta-b.esq{left:12px}.seta-b.dir{right:12px}
+@media (max-width:520px){.topo .wrap{gap:8px;padding-block:8px}.linha1 .marca small{display:none}.linha1 .status{order:1;margin-left:auto;font-size:11px;padding:3px 8px}.linha1 .busca{order:2}.busca input{padding-block:8px}.cats button{padding:5px 11px}.secao{margin-top:20px}}
+@media (max-width:640px){.seta-b{display:none}.colagem{opacity:.35;right:-10px}.slide .txt{padding-right:24px}}
+
+.secao{margin:26px 0 0}
+.secao-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:12px}
+.secao-top h2{font-family:var(--f-display);font-size:clamp(18px,2.4vw,22px);margin:0;display:flex;align-items:center;gap:8px}
+.secao-top h2::after{content:"";display:block;width:34px;height:3px;border-radius:99px;background:var(--accent);margin-left:4px}
+.ver{border:0;background:none;color:var(--accent-2);font-weight:600;cursor:pointer;font-size:13.5px;white-space:nowrap}
+.bolinhas{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 8px;scrollbar-width:none}
+.bolinhas::-webkit-scrollbar{display:none}
+.bola{flex:none;scroll-snap-align:start;display:grid;justify-items:center;gap:7px;width:84px;border:0;background:none;cursor:pointer;color:var(--ink);font-size:12.5px;font-weight:600;text-align:center}
+.bola .anel{width:76px;height:76px;border-radius:50%;padding:3px;background:conic-gradient(from var(--g,0deg),#6d5efc,#3ecf8e,#f2b45a,#6d5efc);animation:gira 6s linear infinite;transition:transform .2s}
+.bola:hover .anel{transform:scale(1.06)}
+.bola .anel span{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:var(--foto);border:3px solid var(--bg);overflow:hidden;font-size:26px}
+.bola img{width:100%;height:100%;object-fit:contain}
+.bola.on .anel{box-shadow:0 0 0 3px var(--accent-2)}
+.bola.todas .anel{background:var(--surface-2)}.bola.todas .anel span{background:var(--surface);color:var(--ink);font-size:22px}
+@property --g{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes gira{to{--g:360deg}}
+
+.prat{position:relative}
+.trilho{display:grid;grid-auto-flow:column;grid-auto-columns:clamp(150px,17vw,196px);gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:2px 2px 10px;scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+.trilho .card{scroll-snap-align:start}
+.prat .seta-p{position:absolute;top:42%;z-index:4;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-size:18px;box-shadow:0 6px 18px rgba(0,0,0,.4)}
+.prat .seta-p.esq{left:-10px}.prat .seta-p.dir{right:-10px}
+@media (max-width:760px){.prat .seta-p{display:none}}
+.secao.s-pronta .secao-top h2::after{background:var(--good)}.secao.s-mais .secao-top h2::after{background:#ff7a59}.secao.s-barato .secao-top h2::after{background:var(--warn)}
+
+.barra-grade{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.barra-grade .dir{display:flex;gap:8px;align-items:center}
+.bt-filtro{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 14px;cursor:pointer;font-weight:600}
+.bt-filtro svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.bt-filtro b{background:var(--accent);color:#fff;border-radius:99px;font-size:11px;padding:1px 7px}
+select.ordem{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;padding:9px 10px;font:inherit}
+.ativos{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.ativos button{border:1px solid var(--accent);background:rgba(109,94,252,.15);color:var(--ink);border-radius:999px;padding:5px 11px;font-size:12.5px;cursor:pointer}
+.ativos .limpa{border-color:var(--line);background:none;color:var(--muted)}
+
+.fundo-filtro{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.55)}
+.filtro{position:fixed;z-index:80;top:0;right:0;bottom:0;width:min(400px,100%);background:var(--surface);border-left:1px solid var(--line);display:flex;flex-direction:column;animation:entraLado .3s cubic-bezier(.2,.9,.3,1)}
+@keyframes entraLado{from{transform:translateX(100%)}to{transform:none}}
+.filtro .f-top{display:flex;justify-content:space-between;align-items:center;padding:calc(16px + env(safe-area-inset-top,0px)) 18px 10px;border-bottom:1px solid var(--line)}
+.filtro h2{font-family:var(--f-display);margin:0;font-size:20px}
+.filtro .x{border:0;background:var(--surface-2);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:18px}
+.filtro .f-corpo{flex:1;overflow:auto;padding:6px 18px 18px}
+.f-sec{padding:14px 0;border-bottom:1px solid var(--line)}
+.f-sec h3{font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 10px}
+.f-chips{display:flex;flex-wrap:wrap;gap:7px}
+.f-chips button{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;padding:7px 12px;cursor:pointer;font-size:13px}
+.f-chips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.f-preco{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;margin-top:10px}
+.f-preco input{border:1px solid var(--line);background:var(--surface-2);border-radius:10px;padding:9px 10px;width:100%;min-width:0}
+.f-sw{display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;font-weight:600}
+.f-sw input{appearance:none;width:46px;height:26px;border-radius:99px;background:var(--line);position:relative;cursor:pointer;transition:background .2s;flex:none}
+.f-sw input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .2s}
+.f-sw input:checked{background:var(--good)}.f-sw input:checked::after{transform:translateX(20px)}
+.f-cats{display:grid;gap:2px;max-height:none}
+.f-cats label{display:flex;align-items:center;gap:10px;padding:7px 2px;cursor:pointer;font-size:14px}
+.f-cats label small{margin-left:auto;color:var(--muted)}
+.f-cats input{accent-color:var(--accent);width:17px;height:17px}
+.f-cats .sep{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:10px 0 2px}
+.f-pe{display:grid;grid-template-columns:1fr 2fr;gap:10px;padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+
+.card{transition:transform .2s,box-shadow .2s,border-color .2s}
+.card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(0,0,0,.45);border-color:#3a3a64}
+.card .foto img{transition:transform .35s}
+.card:hover .foto img{transform:scale(1.06)}
+.card.entra{animation:cardEntra .45s cubic-bezier(.2,.9,.3,1) both}
+@keyframes cardEntra{from{opacity:.25;transform:translateY(14px)}to{opacity:1;transform:none}}
+.voa{position:fixed;z-index:95;border-radius:12px;pointer-events:none;object-fit:contain;background:#fff;box-shadow:0 10px 26px rgba(0,0,0,.5)}
+.barra button.pula{animation:pula .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pula{30%{transform:scale(1.06)}60%{transform:scale(.97)}}
+.esq-card{border-radius:14px;background:linear-gradient(100deg,var(--surface) 30%,var(--surface-2) 50%,var(--surface) 70%);background-size:300% 100%;animation:brilho 1.3s linear infinite;aspect-ratio:3/4}
+@keyframes brilho{to{background-position:-150% 0}}
+
+.zap-flutua{position:fixed;left:max(14px,env(safe-area-inset-left,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:45;display:flex;align-items:center;gap:8px;background:#25d366;color:#05230f;font-weight:700;text-decoration:none;border-radius:999px;padding:11px 16px 11px 12px;box-shadow:0 10px 26px rgba(0,0,0,.45);font-size:14px;transition:bottom .3s}
+.zap-flutua svg{width:22px;height:22px}
+.zap-flutua::before{content:"";position:absolute;inset:0;border-radius:inherit;border:2px solid #25d366;animation:onda 2.4s infinite}
+@keyframes onda{from{opacity:.8;transform:scale(1)}to{opacity:0;transform:scale(1.35)}}
+body.com-barra .zap-flutua{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+@media (max-width:520px){.zap-flutua span{display:none}.zap-flutua{padding:12px}}
+.topo-bt{position:fixed;right:max(14px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:45;width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;font-size:18px;box-shadow:0 8px 20px rgba(0,0,0,.4);transition:bottom .3s}
+body.com-barra .topo-bt{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+
+.confia{margin-top:40px;border-top:1px solid var(--line);padding-top:28px;display:grid;gap:22px}
+.confia h2{font-family:var(--f-display);margin:0;font-size:clamp(20px,2.6vw,26px)}
+.como{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;list-style:none;padding:0;margin:0;counter-reset:p}
+.como li{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;counter-increment:p;display:grid;gap:4px}
+.como li::before{content:counter(p);width:30px;height:30px;border-radius:50%;background:var(--accent);color:#fff;display:grid;place-items:center;font-weight:800;font-family:var(--f-display);margin-bottom:6px}
+.como b{font-family:var(--f-display);font-size:16px}.como span{color:var(--muted);font-size:13.5px}
+.selos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.selos div{display:grid;gap:4px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px}
+.selos .i{font-size:24px}.selos b{font-size:14px}.selos span{color:var(--muted);font-size:12.5px}
+.rodape{color:var(--muted);font-size:12.5px;text-align:center;padding:26px 0 10px}
+@media (max-width:760px){.como{grid-template-columns:1fr}.selos{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (prefers-reduced-motion:reduce){.letreiro .trilha,.bola .anel,.slide.ativo .colagem img,.slide.ativo .txt>*,.card.entra,.zap-flutua::before,.status.on i,.esq-card{animation:none}.slides{transition:none}}
+
 /* cupom: faixa no topo, bilhete na sacola, confete */
 .faixa-cupom{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:10px 14px;border-radius:12px;border:1.5px dashed var(--good);background:rgba(62,207,142,.08);animation:desce .5s cubic-bezier(.2,1.3,.4,1)}
 .faixa-cupom.ruim{border-color:var(--warn);background:rgba(242,180,90,.08)}
@@ -142,12 +278,15 @@ main.wrap{padding-block:18px 120px}
 </style>
 </head>
 <body>
-<header class="hero"><img src="fundo.jpg" alt="DKM · Tecnologia, inovação, sem limites"></header>
+<div class="letreiro" aria-label="Avisos da loja"><div class="trilha" id="letreiro"></div></div>
+<section class="banner" id="banner" aria-roledescription="carrossel" aria-label="Novidades da DKM"><div class="slides" id="slides"><div class="slide s-marca ativo"><img class="arte" src="fundo.jpg" alt="DKM · Tecnologia, inovação, sem limites"></div></div>
+  <button class="seta-b esq" type="button" id="bEsq" aria-label="Banner anterior">‹</button><button class="seta-b dir" type="button" id="bDir" aria-label="Próximo banner">›</button><div class="pontos" id="pontos"></div></section>
 <div class="topo">
   <div class="wrap">
     <div class="linha1">
       <div class="marca" id="marca">DKM<small id="sub">Catálogo</small></div>
-      <div class="busca"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="q" type="search" placeholder="Buscar: fone, cabo, carregador…" aria-label="Buscar produto" autocomplete="off"></div>
+      <div class="busca"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="q" type="search" placeholder="Busque o produto ou o modelo do celular (ex.: A15)" aria-label="Buscar produto" autocomplete="off"></div>
+      <span class="status" id="status"><i></i><span>Atendimento</span></span>
     </div>
     <div class="cats" id="cats" role="group" aria-label="Categorias"></div>
   </div>
@@ -155,12 +294,38 @@ main.wrap{padding-block:18px 120px}
 <main class="wrap">
   <div class="dono" id="dono"><span id="donoTxt">Só você vê o custo do fornecedor. O cliente não vê.</span><button type="button" id="donoBtn" aria-pressed="false"><svg class="o-aberto" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="o-fechado" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A10.6 10.6 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-3.2 4.1M6.6 6.6A17.4 17.4 0 0 0 2 12s3.6 7 10 7a10 10 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button></div>
   <div class="faixa-cupom" id="faixaCupom" hidden><span class="ic" aria-hidden="true">🎟️</span><p id="faixaTxt"></p></div>
-  <div class="info"><span id="contagem"></span><span id="aviso"></span></div>
+  <section class="secao" id="secBolas" aria-label="Categorias"><div class="secao-top"><h2>Categorias</h2></div><div class="bolinhas" id="bolinhas"></div></section>
+  <div id="prateleiras"></div>
+  <section class="secao" id="todos">
+    <div class="secao-top"><h2 id="tTodos">Todos os produtos</h2></div>
+    <div class="barra-grade"><span class="nota" id="contagem" style="margin:0"></span><div class="dir"><select class="ordem" id="ordem" aria-label="Ordenar produtos"></select><button class="bt-filtro" id="btFiltro" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg>Filtrar <b id="nFiltros" hidden></b></button></div></div>
+    <div class="ativos" id="ativos"></div>
+    <p class="nota" id="aviso" style="margin:0 0 12px"></p>
   <div id="grade" class="grade"></div>
   <div class="mais" id="mais" hidden><button class="btn" type="button" id="maisBtn">Ver mais produtos</button></div>
-  <div id="estado" class="carregando"><span class="dot"></span>Carregando o catálogo…</div>
+  <div id="estado" class="grade" aria-label="Carregando o catálogo"><div class="esq-card"></div><div class="esq-card"></div><div class="esq-card"></div><div class="esq-card"></div><div class="esq-card"></div><div class="esq-card"></div></div>
+  </section>
+  <section class="confia" id="confia">
+    <h2>Comprar na DKM é simples</h2>
+    <ol class="como"><li><b>Escolha</b><span>Toque no + dos produtos que você quer. Use a busca com o modelo do seu celular.</span></li><li><b>Envie pelo WhatsApp</b><span>O pedido já vai pronto, com número, itens e total. Sem cadastro.</span></li><li><b>Combine e receba</b><span>Você escolhe como pagar e a gente entrega onde você estiver.</span></li></ol>
+    <div class="selos"><div><span class="i">💳</span><b>Todas as formas de pagamento</b><span>Pix, cartão de crédito, débito e dinheiro</span></div><div><span class="i">🚚</span><b>Entregamos em todo lugar</b><span>Combine a entrega pelo WhatsApp</span></div><div><span class="i">🕗</span><b>Horário de atendimento</b><span>Seg a sex 8h às 17h · sáb, dom e feriados 9h às 13h</span></div><div><span class="i">⚡</span><b>Pronta entrega</b><span>Os produtos marcados saem no mesmo dia</span></div></div>
+    <p class="rodape">DKM · Tecnologia, inovação, sem limites · Loja 100% online</p>
+  </section>
 </main>
 <div class="barra" id="barra" hidden><button type="button" id="abreSacola"><span id="barraQtd"></span><span class="num" id="barraTot"></span></button></div>
+<a class="zap-flutua" id="zapFlutua" href="#" target="_blank" rel="noopener" aria-label="Falar com a DKM no WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .2-1.2c-.1-.1-.2-.2-.5-.3z"/></svg><span>Atendimento</span></a>
+<button class="topo-bt" id="topoBt" type="button" aria-label="Voltar ao topo" hidden>↑</button>
+<div class="fundo-filtro" id="fundoFiltro" hidden></div>
+<aside class="filtro" id="filtro" hidden aria-label="Filtrar produtos">
+  <div class="f-top"><h2>Filtrar</h2><button class="x" type="button" id="fFecha" aria-label="Fechar o filtro">×</button></div>
+  <div class="f-corpo">
+    <div class="f-sec"><h3>Ordenar por</h3><div class="f-chips" id="fOrdem"></div></div>
+    <div class="f-sec"><h3>Preço</h3><div class="f-chips" id="fFaixas"></div><div class="f-preco"><input id="fMin" inputmode="decimal" placeholder="Mínimo R$" aria-label="Preço mínimo"><span class="nota" style="margin:0">até</span><input id="fMax" inputmode="decimal" placeholder="Máximo R$" aria-label="Preço máximo"></div></div>
+    <div class="f-sec"><label class="f-sw">⚡ Só pronta entrega (sai hoje)<input type="checkbox" id="fPronta"></label></div>
+    <div class="f-sec" id="fCatsSec"><h3>Categorias</h3><div class="f-cats" id="fCats"></div></div>
+  </div>
+  <div class="f-pe"><button class="btn" type="button" id="fLimpa">Limpar</button><button class="btn pri" type="button" id="fVer">Ver produtos</button></div>
+</aside>
 <div class="fundo-sacola" id="fundoSacola" hidden></div>
 <section class="sacola" id="sacola" hidden aria-label="Seu pedido">
   <h2>Seu pedido</h2>
@@ -182,7 +347,7 @@ main.wrap{padding-block:18px 120px}
 /* Mesmo banco do Painel DKM: só lê o que está visível no catálogo */
 const SUPABASE_URL='https://slfukomaoygdtmlwylua.supabase.co';
 const SUPABASE_KEY='sb_publishable_Hlg2yivd6O1XtxzBRR-1Iw_Jc-td4f7';
-const $=s=>document.querySelector(s);
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const brl=v=>(+v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const sem=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
@@ -202,50 +367,189 @@ async function carregar(){
     if(!r.ok)throw new Error('HTTP '+r.status);
     const j=await r.json();CFG=j.config||{};ITENS=(j.itens||[]).map(x=>({...x,preco:+x.preco,_b:sem(x.nome+' '+x.categoria)}));
     Object.keys(SAC).forEach(id=>{if(!ITENS.some(x=>String(x.id)===id))delete SAC[id]});salva();
-    $('#estado').hidden=true;
+    $('#estado').hidden=true;$('#estado').classList.remove('grade');
     if(CFG.titulo)$('#marca').firstChild.textContent=CFG.titulo;
     $('#sub').textContent=CFG.subtitulo||'Catálogo';
     $('#aviso').textContent=CFG.aviso_encomenda||'';$('#sacolaAviso').textContent=CFG.aviso_encomenda||'';
     if(!ITENS.length){$('#estado').hidden=false;$('#estado').textContent='O catálogo está sendo preparado. Volte daqui a pouco.';return}
-    montaCats();filtra();renderSacola();
-  }catch(e){$('#estado').innerHTML='Não foi possível carregar o catálogo agora. Confira a internet e <button class="link" onclick="location.reload()">tente de novo</button>.'}
+    montaTudo();carregaMais();
+  }catch(e){$('#estado').classList.remove('grade');$('#estado').innerHTML='Não foi possível carregar o catálogo agora. Confira a internet e <button class="link" onclick="location.reload()">tente de novo</button>.'}
 }
+/* ===== Loja: horário, avisos e as categorias que mais vendem (da planilha de vendas da DKM) ===== */
+const HORARIO={semana:[8,17],fimdesemana:[9,13]}; /* seg a sex 8h–17h · sáb, dom e feriados 9h–13h */
+const AVISOS=['🚚 Entregamos para todo lugar','💳 Aceitamos todas as formas de pagamento','🕗 Seg a sex 8h–17h · sáb, dom e feriados 9h–13h','📲 Pedido direto no WhatsApp, sem cadastro','⚡ Pronta entrega sai no mesmo dia','🛍️ Loja 100% online'];
+const GRUPOS=[
+  {n:'Películas',ic:'📱',re:/pel[ií]cula|protetor de c[aâ]mera/i},
+  {n:'Capas',ic:'🧩',re:/\bcapa|capinha|\bcase\b/i},
+  {n:'Carregadores',ic:'🔌',re:/carregador/i},
+  {n:'Fones',ic:'🎧',re:/fone/i},
+  {n:'Cabos',ic:'🔗',re:/\bcabo/i},
+  {n:'Caixas de som',ic:'🔊',re:/caixa de som/i},
+  {n:'Relógios',ic:'⌚',re:/rel[oó]gio|pulseira|smartwatch/i},
+  {n:'Suportes',ic:'🚗',re:/suporte|veicular|automotivo/i}];
+const grupoDe=x=>{if(x._g===undefined)x._g=GRUPOS.findIndex(g=>g.re.test(x.categoria));return x._g};
+let MAIS={};               /* id -> quantas peças saíram nos últimos 90 dias (pedidos de verdade) */
+const F={ordem:'destaque',min:null,max:null,pronta:false,cats:new Set()};
+const ORDENS=[['destaque','Destaques primeiro'],['mais','Mais pedidos'],['menor','Menor preço'],['maior','Maior preço'],['novos','Novidades'],['az','Nome (A–Z)'],['za','Nome (Z–A)']];
+const reduz=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* letreiro e "aberto agora" */
+function montaLetreiro(){const t=AVISOS.map(a=>`<span>${esc(a)}</span>`).join('');$('#letreiro').innerHTML=t+t}
+function statusLoja(){
+  const agora=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Sao_Paulo'}));const d=agora.getDay(),h=agora.getHours()+agora.getMinutes()/60;
+  const faixa=dd=>dd===0||dd===6?HORARIO.fimdesemana:HORARIO.semana;const [a,f]=faixa(d);const aberto=h>=a&&h<f;
+  let txt;if(aberto)txt=`Atendendo agora · até ${f}h`;else{let dd=d,dia=0;if(h>=f){dd=(d+1)%7;dia=1}const [a2]=faixa(dd);txt=`Fechado · volta ${dia?(dd===0?'domingo':dd===6?'sábado':'amanhã'):'hoje'} às ${a2}h`}
+  const s=$('#status');s.classList.toggle('on',aberto);s.querySelector('span').textContent=txt}
+
+/* banner que passa sozinho */
+let slideAt=0,slideN=0,slideT=null;
+function montaBanner(){
+  const fotos=l=>l.filter(x=>x.foto).slice(0,4).map(x=>`<img src="${esc(fotoUrl(x.foto))}" alt="" loading="lazy">`).join('');
+  const pr=ITENS.filter(x=>x.pronta),de=ITENS.filter(x=>x.destaque);
+  const S=[`<div class="slide s-marca"><img class="arte" src="fundo.jpg" alt="DKM · Tecnologia, inovação, sem limites"><div class="txt"><button class="cta" type="button" data-ir="todos">Ver produtos ›</button></div></div>`];
+  if(pr.length)S.push(`<div class="slide s-pronta"><div class="colagem">${fotos(pr)}</div><div class="txt"><h2>⚡ Pronta entrega</h2><p>${pr.length} produtos prontos para sair hoje.</p><button class="cta" type="button" data-ir="pronta">Ver pronta entrega</button></div></div>`);
+  S.push(`<div class="slide s-paga"><div class="txt"><h2>Pague como preferir. A gente entrega.</h2><div class="icones"><span>💠 Pix</span><span>💳 Cartão de crédito</span><span>💳 Débito</span><span>💵 Dinheiro</span><span>🚚 Entregamos em todo lugar</span></div><button class="cta" type="button" data-ir="como">Como comprar</button></div></div>`);
+  if(de.length)S.push(`<div class="slide s-dest"><div class="colagem">${fotos(de)}</div><div class="txt"><h2>⭐ Destaques da semana</h2><p>Os escolhidos da DKM para você.</p><button class="cta" type="button" data-ir="dest">Ver destaques</button></div></div>`);
+  slideN=S.length;$('#slides').innerHTML=S.join('');
+  $('#pontos').innerHTML=S.map((_,i)=>`<button type="button" data-sl="${i}" aria-label="Ir para o banner ${i+1}"></button>`).join('');
+  vaiSlide(0);roda()}
+function vaiSlide(i){slideAt=(i+slideN)%slideN;$('#slides').style.transform=`translateX(-${slideAt*100}%)`;
+  [...$('#slides').children].forEach((s,k)=>s.classList.toggle('ativo',k===slideAt));$$('#pontos button').forEach((b,k)=>b.setAttribute('aria-current',k===slideAt))}
+function roda(){clearInterval(slideT);if(!reduz()&&slideN>1)slideT=setInterval(()=>{if(!document.hidden)vaiSlide(slideAt+1)},5500)}
+function ligaBanner(){const b=$('#banner');
+  $('#bEsq').onclick=()=>{vaiSlide(slideAt-1);roda()};$('#bDir').onclick=()=>{vaiSlide(slideAt+1);roda()};
+  $('#pontos').onclick=e=>{const p=e.target.closest('[data-sl]');if(p){vaiSlide(+p.dataset.sl);roda()}};
+  b.addEventListener('mouseenter',()=>clearInterval(slideT));b.addEventListener('mouseleave',roda);
+  let x0=null;b.addEventListener('pointerdown',e=>{x0=e.clientX});b.addEventListener('pointerup',e=>{if(x0==null)return;const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>40){vaiSlide(slideAt+(dx<0?1:-1));roda()}});
+  b.addEventListener('click',e=>{const c=e.target.closest('[data-ir]');if(c)irPara(c.dataset.ir)})}
+function irPara(o){if(o==='como'){$('#confia').scrollIntoView({behavior:reduz()?'auto':'smooth'});return}
+  if(o==='pronta')escolheCat('⚡ Pronta entrega');else if(o==='dest')escolheCat('⭐ Destaques');else if(o==='mais'){F.ordem='mais';escolheCat('Todos')}
+  else if(o==='barato'){F.max=20;escolheCat('Todos')}else if(o==='novos'){F.ordem='novos';escolheCat('Todos')}else escolheCat('Todos');
+  $('#todos').scrollIntoView({behavior:reduz()?'auto':'smooth'})}
+
+/* categorias: atalhos no topo e bolinhas com foto */
+const gruposComItens=()=>GRUPOS.map((g,i)=>({...g,i,itens:ITENS.filter(x=>grupoDe(x)===i)})).filter(g=>g.itens.length);
 function montaCats(){
-  const cont={};ITENS.forEach(x=>cont[x.categoria]=(cont[x.categoria]||0)+1);
-  const nomes=Object.keys(cont).sort((a,b)=>a.localeCompare(b,'pt-BR'));
   const tem=ITENS.some(x=>x.pronta),dest=ITENS.some(x=>x.destaque);
-  const chips=['Todos',...(dest?['⭐ Destaques']:[]),...(tem?['Pronta entrega']:[]),...nomes];
-  $('#cats').innerHTML=chips.map(c=>`<button type="button" data-c="${esc(c)}" aria-pressed="${c===cat}">${esc(c)}</button>`).join('');
-  $('#cats').querySelectorAll('button').forEach(b=>b.onclick=()=>{cat=b.dataset.c;limite=48;$('#cats').querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b));filtra();window.scrollTo({top:$('.topo').offsetTop,behavior:'smooth'})});
-}
+  const chips=['Todos',...(dest?['⭐ Destaques']:[]),...(tem?['⚡ Pronta entrega']:[]),...gruposComItens().map(g=>g.n)];
+  $('#cats').innerHTML=chips.map(c=>`<button type="button" data-c="${esc(c)}" aria-pressed="${c===cat}">${esc(c)}</button>`).join('')+`<button type="button" data-mais="1">☰ Mais categorias</button>`;
+  $('#cats').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.mais){abreFiltro(true);return}escolheCat(b.dataset.c);$('#todos').scrollIntoView({behavior:reduz()?'auto':'smooth'})};
+  const foto=l=>{const x=l.find(y=>y.foto&&(y.pronta||y.destaque))||l.find(y=>y.foto);return x?`<img src="${esc(fotoUrl(x.foto))}" alt="" loading="lazy">`:''};
+  $('#bolinhas').innerHTML=gruposComItens().map(g=>`<button type="button" class="bola${cat===g.n?' on':''}" data-bola="${esc(g.n)}"><span class="anel"><span>${foto(g.itens)||g.ic}</span></span>${esc(g.n)}</button>`).join('')
+    +`<button type="button" class="bola todas" data-bola="*"><span class="anel"><span>☰</span></span>Todas as categorias</button>`;
+  $('#bolinhas').onclick=e=>{const b=e.target.closest('[data-bola]');if(!b)return;if(b.dataset.bola==='*'){abreFiltro(true);return}escolheCat(b.dataset.bola);$('#todos').scrollIntoView({behavior:reduz()?'auto':'smooth'})}}
+function escolheCat(c){cat=c;limite=48;$$('#cats [data-c]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.c===c));$$('[data-bola]').forEach(x=>x.classList.toggle('on',x.dataset.bola===c));filtra()}
+
+/* filtro e ordem */
+function passa(x,q,semCat){
+  if(cat==='⭐ Destaques'&&!x.destaque)return false;if(cat==='⚡ Pronta entrega'&&!x.pronta)return false;
+  if(cat!=='Todos'&&cat[0]!=='⭐'&&cat[0]!=='⚡'){const g=GRUPOS.findIndex(y=>y.n===cat);if(g>=0&&grupoDe(x)!==g)return false}
+  if(F.pronta&&!x.pronta)return false;if(F.min!=null&&x.preco<F.min)return false;if(F.max!=null&&x.preco>F.max)return false;
+  if(!semCat&&F.cats.size&&!F.cats.has(x.categoria))return false;
+  return q.every(w=>x._b.includes(w))}
+function ordena(l){const n=(a,b)=>a.nome.localeCompare(b.nome,'pt-BR'),pos=x=>x.destaque?0:x.pronta?1:grupoDe(x)>=0?2+grupoDe(x):20;
+  const f={destaque:(a,b)=>pos(a)-pos(b)||(MAIS[b.id]||0)-(MAIS[a.id]||0)||n(a,b),mais:(a,b)=>(MAIS[b.id]||0)-(MAIS[a.id]||0)||pos(a)-pos(b)||n(a,b),
+    menor:(a,b)=>a.preco-b.preco||n(a,b),maior:(a,b)=>b.preco-a.preco||n(a,b),novos:(a,b)=>b.id-a.id,az:n,za:(a,b)=>n(b,a)}[F.ordem]||n;return l.sort(f)}
+function termos(){return sem($('#q').value.trim()).split(/\s+/).filter(Boolean)}
 function filtra(){
-  const q=sem($('#q').value.trim()).split(/\s+/).filter(Boolean);
-  lista=ITENS.filter(x=>(cat==='Todos'||(cat==='⭐ Destaques'&&x.destaque)||(cat==='Pronta entrega'&&x.pronta)||x.categoria===cat)&&q.every(w=>x._b.includes(w)));
-  $('#contagem').textContent=`${lista.length} produto${lista.length===1?'':'s'}${cat!=='Todos'?' em '+cat:''}`;
-  render();
-}
-function cartao(x){const q=SAC[x.id]||0,u=fotoUrl(x.foto);
-  return `<article class="card"><div class="foto">${u?`<img src="${esc(u)}" alt="${esc(x.nome)}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'sem',textContent:'DKM'}))">`:'<span class="sem">DKM</span>'}
-    <span class="selo ${x.pronta?'pronta':'encomenda'}">${x.pronta?'Pronta entrega':'Sob encomenda'}</span>${x.destaque?'<span class="selo dest">Destaque</span>':''}</div>
+  const q=termos();lista=ordena(ITENS.filter(x=>passa(x,q)));
+  $('#contagem').textContent=`${lista.length} produto${lista.length===1?'':'s'}${cat!=='Todos'?' · '+cat.replace(/^[⭐⚡] /,''):''}`;
+  $('#tTodos').textContent=q.length?`Resultado para “${$('#q').value.trim()}”`:cat==='Todos'?'Todos os produtos':cat;
+  $('#ordem').innerHTML=ORDENS.filter(o=>o[0]!=='mais'||Object.keys(MAIS).length).map(([k,t])=>`<option value="${k}"${F.ordem===k?' selected':''}>${t}</option>`).join('');
+  const at=[];if(F.min!=null||F.max!=null)at.push(['preco',F.min!=null&&F.max!=null?`${brl(F.min)} a ${brl(F.max)}`:F.max!=null?`Até ${brl(F.max)}`:`Acima de ${brl(F.min)}`]);
+  if(F.pronta)at.push(['pronta','Só pronta entrega']);F.cats.forEach(c=>at.push(['cat:'+c,c]));
+  $('#ativos').innerHTML=at.map(([k,t])=>`<button type="button" data-tira="${esc(k)}">${esc(t)} ✕</button>`).join('')+(at.length>1?'<button type="button" class="limpa" data-tira="*">Limpar filtros</button>':'');
+  const nb=$('#nFiltros');nb.hidden=!at.length;nb.textContent=at.length;
+  render();if(!$('#filtro').hidden)contaFiltro()}
+$('#ativos').onclick=e=>{const b=e.target.closest('[data-tira]');if(!b)return;const k=b.dataset.tira;
+  if(k==='*'){F.min=F.max=null;F.pronta=false;F.cats.clear()}else if(k==='preco'){F.min=F.max=null}else if(k==='pronta')F.pronta=false;else if(k.startsWith('cat:'))F.cats.delete(k.slice(4));limite=48;filtra()};
+$('#ordem').onchange=e=>{F.ordem=e.target.value;limite=48;filtra()};
+
+/* gaveta de filtro */
+const FAIXAS=[[null,20,'Até R$ 20'],[20,50,'R$ 20 a 50'],[50,100,'R$ 50 a 100'],[100,null,'Acima de R$ 100']];
+function abreFiltro(irCats){const f=$('#filtro');f.hidden=false;$('#fundoFiltro').hidden=false;document.body.style.overflow='hidden';montaFiltro();
+  if(irCats)setTimeout(()=>$('#fCatsSec').scrollIntoView({block:'start'}),60)}
+function fechaFiltro(){$('#filtro').hidden=true;$('#fundoFiltro').hidden=true;document.body.style.overflow=''}
+function montaFiltro(){
+  $('#fOrdem').innerHTML=ORDENS.filter(o=>o[0]!=='mais'||Object.keys(MAIS).length).map(([k,t])=>`<button type="button" data-fo="${k}" aria-pressed="${F.ordem===k}">${t}</button>`).join('');
+  $('#fFaixas').innerHTML=FAIXAS.map(([a,b,t],i)=>`<button type="button" data-ff="${i}" aria-pressed="${F.min===a&&F.max===b}">${t}</button>`).join('');
+  $('#fMin').value=F.min??'';$('#fMax').value=F.max??'';$('#fPronta').checked=F.pronta;
+  const q=termos(),cont={};ITENS.forEach(x=>{if(passa(x,q,true))cont[x.categoria]=(cont[x.categoria]||0)+1});
+  const todas=[...new Set(ITENS.map(x=>x.categoria))];const prin=todas.filter(c=>GRUPOS.some(g=>g.re.test(c))).sort((a,b)=>GRUPOS.findIndex(g=>g.re.test(a))-GRUPOS.findIndex(g=>g.re.test(b))||a.localeCompare(b,'pt-BR'));
+  const resto=todas.filter(c=>!prin.includes(c)).sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  const lb=c=>`<label><input type="checkbox" data-fc="${esc(c)}"${F.cats.has(c)?' checked':''}> ${esc(c)} <small>${cont[c]||0}</small></label>`;
+  $('#fCats').innerHTML=`<div class="sep">As mais vendidas</div>${prin.map(lb).join('')}${resto.length?`<div class="sep">Outras</div>${resto.map(lb).join('')}`:''}`;
+  contaFiltro()}
+function contaFiltro(){$('#fVer').textContent=`Ver ${lista.length} produto${lista.length===1?'':'s'}`}
+function ligaFiltro(){
+  $('#btFiltro').onclick=()=>abreFiltro(false);$('#fFecha').onclick=fechaFiltro;$('#fundoFiltro').onclick=fechaFiltro;$('#fVer').onclick=()=>{fechaFiltro();$('#todos').scrollIntoView({behavior:reduz()?'auto':'smooth'})};
+  $('#fLimpa').onclick=()=>{F.min=F.max=null;F.pronta=false;F.cats.clear();F.ordem='destaque';filtra();montaFiltro()};
+  $('#filtro').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    if(b.dataset.fo){F.ordem=b.dataset.fo;filtra();montaFiltro()}
+    if(b.dataset.ff!=null){const [a,c]=FAIXAS[+b.dataset.ff];const ja=F.min===a&&F.max===c;F.min=ja?null:a;F.max=ja?null:c;filtra();montaFiltro()}});
+  $('#filtro').addEventListener('change',e=>{const t=e.target;
+    if(t.id==='fPronta'){F.pronta=t.checked;filtra()}
+    if(t.dataset.fc){t.checked?F.cats.add(t.dataset.fc):F.cats.delete(t.dataset.fc);filtra()}
+    if(t.id==='fMin'||t.id==='fMax'){const v=x=>{const n=parseFloat(String(x).replace(',','.'));return isFinite(n)&&n>=0?n:null};F.min=v($('#fMin').value);F.max=v($('#fMax').value);filtra();montaFiltro()}})}
+
+/* cartões e prateleiras */
+function cartao(x){const q=SAC[x.id]||0,u=fotoUrl(x.foto),mais=MAIS[x.id]||0;
+  return `<article class="card" data-id="${x.id}"><div class="foto">${u?`<img src="${esc(u)}" alt="${esc(x.nome)}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'sem',textContent:'DKM'}))">`:'<span class="sem">DKM</span>'}
+    <span class="selo ${x.pronta?'pronta':'encomenda'}">${x.pronta?'⚡ Pronta entrega':'Sob encomenda'}</span>${x.destaque?'<span class="selo dest">⭐ Destaque</span>':mais>=3?'<span class="selo dest">🔥 Mais pedido</span>':''}</div>
     <div class="corpo"><div class="nome">${esc(x.nome)}</div>${custoTxt(x)}<div class="pe"><span class="preco num">${brl(x.preco)}</span>
     ${q?`<span class="qtd"><button type="button" data-m="${x.id}" aria-label="Tirar um">−</button><span class="num">${q}</span><button type="button" data-p="${x.id}" aria-label="Mais um">+</button></span>`:`<button class="add" type="button" data-p="${x.id}" aria-label="Adicionar ${esc(x.nome)}">+</button>`}</div></div></article>`}
+const entra=window.IntersectionObserver?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('entra');entra.unobserve(e.target)}}),{rootMargin:'0px 0px -40px 0px'}):null;
+function observa(box){if(!entra||reduz())return;box.querySelectorAll('.card:not(.entra)').forEach(c=>entra.observe(c))}
 function render(){
-  const g=$('#grade');g.innerHTML=lista.length?lista.slice(0,limite).map(cartao).join(''):'<div class="vazio" style="grid-column:1/-1">Nenhum produto encontrado. Tente outra palavra ou outra categoria.</div>';
-  $('#mais').hidden=lista.length<=limite;
-}
-function muda(id,d){id=String(id);SAC[id]=Math.max(0,(SAC[id]||0)+d);if(!SAC[id])delete SAC[id];salva();
-  const x=ITENS.find(i=>String(i.id)===id);const el=[...document.querySelectorAll(`[data-p="${id}"],[data-m="${id}"]`)].map(b=>b.closest('.card')).find(Boolean);
-  if(el&&x){const t=document.createElement('div');t.innerHTML=cartao(x);el.replaceWith(t.firstElementChild)}renderSacola()}
-$('#grade').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.p)muda(b.dataset.p,1);if(b.dataset.m)muda(b.dataset.m,-1)});
+  const g=$('#grade');g.innerHTML=lista.length?lista.slice(0,limite).map(cartao).join(''):'<div class="vazio" style="grid-column:1/-1">Nenhum produto encontrado. Tente outra palavra, outra categoria ou limpe os filtros.</div>';
+  $('#mais').hidden=lista.length<=limite;observa(g)}
+function renderPrateleiras(){
+  const principal=ITENS.filter(x=>grupoDe(x)>=0);
+  const P=[
+    ['s-dest','⭐ Destaques',ITENS.filter(x=>x.destaque).slice(0,20),'dest'],
+    ['s-pronta','⚡ Pronta entrega',ordena(ITENS.filter(x=>x.pronta)).slice(0,20),'pronta'],
+    ['s-mais','🔥 Mais pedidos',ITENS.filter(x=>MAIS[x.id]).sort((a,b)=>MAIS[b.id]-MAIS[a.id]).slice(0,20),'mais'],
+    ['s-barato','💸 Até R$ 20',principal.filter(x=>x.preco<=20).sort((a,b)=>grupoDe(a)-grupoDe(b)||a.preco-b.preco).slice(0,20),'barato'],
+    ['s-novos','🆕 Novidades',principal.slice().sort((a,b)=>b.id-a.id).slice(0,16),'novos']].filter(p=>p[2].length>=2);
+  $('#prateleiras').innerHTML=P.map(([c,t,l,ir])=>`<section class="secao ${c}"><div class="secao-top"><h2>${t}</h2><button class="ver" type="button" data-ir="${ir}">Ver todos ›</button></div>
+    <div class="prat"><button class="seta-p esq" type="button" data-rola="-1" aria-label="Voltar">‹</button><div class="trilho">${l.map(cartao).join('')}</div><button class="seta-p dir" type="button" data-rola="1" aria-label="Avançar">›</button></div></section>`).join('');
+  $$('#prateleiras .trilho').forEach(observa)}
+$('#prateleiras').addEventListener('click',e=>{const v=e.target.closest('[data-ir]');if(v){irPara(v.dataset.ir);return}
+  const r=e.target.closest('[data-rola]');if(r){const t=r.parentElement.querySelector('.trilho');t.scrollBy({left:+r.dataset.rola*t.clientWidth*.85,behavior:reduz()?'auto':'smooth'})}});
+/* prateleiras andam sozinhas devagar enquanto ninguém mexe */
+let mexeu=0;['pointerdown','wheel','touchstart'].forEach(ev=>document.addEventListener(ev,()=>mexeu=Date.now(),{passive:true}));
+setInterval(()=>{if(reduz()||document.hidden||Date.now()-mexeu<6000)return;$$('#prateleiras .trilho').forEach(t=>{const r=t.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight||t.matches(':hover'))return;
+  const fim=t.scrollLeft+t.clientWidth>=t.scrollWidth-4;t.scrollBy({left:fim?-t.scrollWidth:(t.firstElementChild?.offsetWidth||170)+12,behavior:'smooth'})})},3800);
+
+/* colocar na sacola: a foto voa até o pedido */
+function voaSacola(btn){if(reduz())return;const card=btn.closest('.card');const img=card&&card.querySelector('.foto img');const alvo=$('#abreSacola');if(!img||!alvo)return;
+  const a=img.getBoundingClientRect(),b=alvo.getBoundingClientRect();if(!b.width)return;const v=img.cloneNode();v.className='voa';v.removeAttribute('loading');
+  Object.assign(v.style,{left:a.left+'px',top:a.top+'px',width:a.width+'px',height:a.height+'px'});document.body.appendChild(v);
+  const dx=b.left+b.width/2-(a.left+a.width/2),dy=b.top+b.height/2-(a.top+a.height/2);
+  v.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${dx*.55}px,${dy*.35-80}px) scale(.55)`,opacity:1,offset:.55},{transform:`translate(${dx}px,${dy}px) scale(.12)`,opacity:.3}],{duration:720,easing:'cubic-bezier(.5,0,.3,1)'}).finished.then(()=>{v.remove();alvo.classList.remove('pula');void alvo.offsetWidth;alvo.classList.add('pula')})}
+function muda(id,d,btn){id=String(id);SAC[id]=Math.max(0,(SAC[id]||0)+d);if(!SAC[id])delete SAC[id];salva();
+  const x=ITENS.find(i=>String(i.id)===id);renderSacola();
+  if(d>0&&btn)voaSacola(btn);
+  if(x)$$(`.card[data-id="${id}"]`).forEach(el=>{const t=document.createElement('div');t.innerHTML=cartao(x);const n=t.firstElementChild;n.classList.add('entra');el.replaceWith(n)})}
+document.querySelector('main').addEventListener('click',e=>{const b=e.target.closest('.card button');if(!b)return;if(b.dataset.p)muda(b.dataset.p,1,b);if(b.dataset.m)muda(b.dataset.m,-1)});
 $('#maisBtn').onclick=()=>{limite+=48;render()};
 new IntersectionObserver(es=>{if(es.some(e=>e.isIntersecting)&&!$('#mais').hidden){limite+=48;render()}},{rootMargin:'600px'}).observe($('#mais'));
-let tq;$('#q').oninput=()=>{clearTimeout(tq);tq=setTimeout(()=>{limite=48;filtra()},150)};
+let tq;$('#q').oninput=()=>{clearTimeout(tq);tq=setTimeout(()=>{limite=48;if($('#q').value.trim()&&cat!=='Todos')escolheCat('Todos');else filtra()},150)}; /* a busca procura na loja toda */
+$('#q').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();$('#todos').scrollIntoView({behavior:reduz()?'auto':'smooth'})}});
+/* botão de voltar ao topo e WhatsApp flutuante */
+addEventListener('scroll',()=>{$('#topoBt').hidden=scrollY<1200},{passive:true});
+$('#topoBt').onclick=()=>scrollTo({top:0,behavior:reduz()?'auto':'smooth'});
+async function carregaMais(){try{const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/vitrine_mais_pedidos`,{method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:'{}'});
+  if(!r.ok)return;const l=await r.json();MAIS={};(l||[]).forEach(o=>MAIS[o.id]=+o.q);if(Object.keys(MAIS).length){renderPrateleiras();filtra()}}catch(e){}}
+function montaTudo(){montaCats();montaBanner();renderPrateleiras();filtra();renderSacola();
+  const num=String(CFG.whatsapp||'5562991153874').replace(/\D/g,'');$('#zapFlutua').href=`https://wa.me/${num}?text=${encodeURIComponent('Olá! Vim pelo catálogo da DKM e quero tirar uma dúvida.')}`}
+
 function itensSacola(){return Object.entries(SAC).map(([id,q])=>({x:ITENS.find(i=>String(i.id)===id),q})).filter(o=>o.x)}
 function renderSacola(){
   const its=itensSacola(),n=its.reduce((a,o)=>a+o.q,0),tot=its.reduce((a,o)=>a+o.q*o.x.preco,0);
   if(CUP.cod&&chaveSac()!==CUP.chave&&chaveSac()!==CUP.pend)validaCupom();
   const desc=descAtual(),fim=Math.max(0,tot-desc);
-  $('#barra').hidden=!n;$('#barraQtd').textContent=`Ver pedido · ${n} ite${n===1?'m':'ns'}`;$('#barraTot').innerHTML=desc?`<s class="old">${brl(tot)}</s>${brl(fim)}`:brl(tot);
+  $('#barra').hidden=!n;document.body.classList.toggle('com-barra',!!n);$('#barraQtd').textContent=`Ver pedido · ${n} ite${n===1?'m':'ns'}`;$('#barraTot').innerHTML=desc?`<s class="old">${brl(tot)}</s>${brl(fim)}`:brl(tot);
   $('#itens').innerHTML=its.length?its.map(({x,q})=>`<div class="it">${x.foto?`<img src="${esc(fotoUrl(x.foto))}" alt="">`:'<span class="mini"></span>'}<div class="n">${esc(x.nome)}<small>${brl(x.preco)} · ${x.pronta?'pronta entrega':'sob encomenda'}</small></div><span class="qtd"><button type="button" data-m="${x.id}" aria-label="Tirar um">−</button><span class="num">${q}</span><button type="button" data-p="${x.id}" aria-label="Mais um">+</button></span></div>`).join(''):'<p class="nota">Seu pedido está vazio.</p>';
   $('#totLinhas').hidden=!desc;$('#totCheio').textContent=brl(tot);$('#totDesc').textContent='− '+brl(desc);$('#totDescTxt').textContent='Cupom '+(CUP.r&&CUP.r.codigo||'');
   contaTotal(fim);
@@ -261,7 +565,7 @@ $('#itens').addEventListener('click',e=>{const b=e.target.closest('button');if(!
 const abreSacola=()=>{$('#sacola').hidden=false;$('#fundoSacola').hidden=false;document.body.style.overflow='hidden'};
 const fechaSacola=()=>{$('#sacola').hidden=true;$('#fundoSacola').hidden=true;document.body.style.overflow=''};
 $('#abreSacola').onclick=abreSacola;$('#fecha').onclick=fechaSacola;$('#fundoSacola').onclick=fechaSacola;
-document.addEventListener('keydown',e=>{if(e.key==='Escape')fechaSacola()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){fechaSacola();fechaFiltro()}});
 $('#limpar').onclick=()=>{SAC={};salva();PED={};salvaPed();renderSacola();render()};
 /* ao enviar: grava a encomenda no banco (o WhatsApp abre do mesmo jeito, mesmo se a internet falhar aqui) */
 $('#zap').addEventListener('click',()=>{const its=itensSacola();if(!its.length)return;renderSacola();const cod=PED.cod; /* renderSacola acerta o link antes de abrir */
@@ -318,7 +622,7 @@ try{VER=localStorage.getItem('dkm-app-oculta')!=='1'}catch(e){} /* mesmo olho do
 function custoTxt(x){const c=DONO&&CUSTO[x.id];if(!c||!(c.custo>0))return'';const m=x.preco>0?Math.round((1-c.custo/x.preco)*100):0;
   return `<div class="custo">${c.forn?esc(c.forn)+' ':''}<b class="num">${VER?brl(c.custo):'R$ *****'}</b> · margem ${VER?m+'%':'***'}</div>`}
 function mostraDono(){const b=$('#donoBtn');$('#dono').classList.toggle('on',DONO);b.setAttribute('aria-pressed',!VER);b.title=b.ariaLabel=VER?'Esconder valores':'Mostrar valores';$('#donoTxt').textContent=VER?'Só você vê o custo do fornecedor. O cliente não vê.':'Custo escondido.'}
-$('#donoBtn').onclick=()=>{VER=!VER;try{VER?localStorage.removeItem('dkm-app-oculta'):localStorage.setItem('dkm-app-oculta','1')}catch(e){}mostraDono();render()};
+$('#donoBtn').onclick=()=>{VER=!VER;try{VER?localStorage.removeItem('dkm-app-oculta'):localStorage.setItem('dkm-app-oculta','1')}catch(e){}mostraDono();render();renderPrateleiras()};
 async function modoDono(){
   let tem=false;try{tem=!!localStorage.getItem('sb-'+new URL(SUPABASE_URL).hostname.split('.')[0]+'-auth-token')}catch(e){}
   if(!tem)return;
@@ -328,9 +632,10 @@ async function modoDono(){
     const {data:{session}}=await sb.auth.getSession();if(!session)return;
     for(let de=0;;de+=1000){const {data,error}=await sb.from('catalogo_itens').select('id,custo,fornecedor,origem').range(de,de+999);if(error)return;
       data.forEach(x=>CUSTO[x.id]={custo:+x.custo,forn:x.origem==='ESTOQUE'?'Meu estoque':x.fornecedor||''});if(data.length<1000)break}
-    DONO=true;mostraDono();if(ITENS.length)render();
+    DONO=true;mostraDono();if(ITENS.length){render();renderPrateleiras()}
   }catch(e){}
 }
+montaLetreiro();statusLoja();setInterval(statusLoja,60000);ligaBanner();ligaFiltro();
 renderCupom();if(CUP.cod)validaCupom(true);
 carregar().then(modoDono);
 </script>

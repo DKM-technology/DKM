@@ -329,6 +329,11 @@ canvas.confete{position:fixed;inset:0;pointer-events:none;z-index:90}
 .dif-r{display:grid;text-align:right}.dif.neg .dif-r b{color:var(--bad)}.dif.pos .dif-r b{color:var(--warn)}.dif-r small{font-size:12px;color:var(--muted)}
 @media (max-width:640px){.prat-grade{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.cc{padding:10px 9px 9px}.cc-mod{font-size:17px}.cc-n{font-size:36px;margin:6px 0 4px}.cc-acoes{grid-template-columns:1fr 1fr}.cc-acoes [data-ccz]{grid-column:1/-1;order:3}.cc-acoes button{height:34px}.cc.foto .cc-mod,.cc.foto .cc-cat,.cc.foto .cc-nome{padding-right:40px}.cc img{width:36px;height:36px}.dif{grid-template-columns:minmax(0,1fr) auto}.dif-r{text-align:left}.prat-top{align-items:flex-start}.prat-anel{width:70px;height:70px}.prat-tit h2{font-size:16px}}
 @media (prefers-reduced-motion:reduce){.cc-n.pop,.cc-mais,.fim-conta .fim-ic{animation:none}}
+/* fotos sugeridas para o estoque */
+.sug-fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:8px;margin-top:10px;max-height:460px;overflow:auto}
+.sf{display:grid;grid-template-columns:18px 54px minmax(0,1fr);gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:8px;cursor:pointer;background:var(--surface)}
+.sf img{width:54px;height:54px;object-fit:contain;background:#fff;border-radius:8px}
+.sf span{display:grid;gap:2px;min-width:0}.sf b{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sf small{font-size:11.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sf em{font-style:normal;justify-self:start}
 /* encomendas */
 .lotes{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:14px;margin-bottom:14px;align-items:start}
 .lote-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.lote-top h2{margin:0}
@@ -683,8 +688,9 @@ table.lst th{font-size:11.5px;color:var(--muted);font-weight:500}table.lst .r{te
       <div class="grid g2" style="align-items:start">
         <div class="panel"><h2>Meu estoque na vitrine</h2>
           <p class="note">Coloca no catálogo os produtos que você já tem, com o preço de venda do estoque. Eles aparecem como <b>Pronta entrega</b> enquanto tiverem quantidade.</p>
-          <div class="row-f" style="margin-top:10px"><button class="btn pri" type="button" id="catEstoque">Colocar meu estoque no catálogo</button></div>
+          <div class="row-f" style="margin-top:10px"><button class="btn pri" type="button" id="catEstoque">Colocar meu estoque na vitrine</button><button class="btn" type="button" id="catFotos">Achar fotos para o estoque</button></div>
           <p class="note" id="catEstoqueMsg" style="margin-top:8px"></p>
+          <div id="fotosEst"></div>
         </div>
         <div class="panel"><h2>Configuração da vitrine</h2>
           <div class="grid" style="gap:10px">
@@ -1511,7 +1517,36 @@ $('#cfSalva').onclick=()=>busy($('#cfSalva'),async()=>{const z=$('#cfZap').value
 $('#catEstoque').onclick=()=>busy($('#catEstoque'),async()=>{if(!CAT.ok){toast('Rode antes o 02_catalogo.sql');return}
   const rows=S.est.filter(e=>e.v>0).map(e=>{const ref='EST:'+e.id,ja=CAT.itens.find(x=>x.ref===ref);return{ref,origem:'ESTOQUE',fornecedor:'',produto_id:e.id,nome:[cap(e.p),nz(e.m),nz(e.t)?cap(e.t):''].filter(Boolean).join(' '),categoria:e.cat,custo:e.c,preco:ja?ja.preco:e.v,preco_manual:true,foto:ja?ja.foto:'',ativo:ja?ja.ativo:true,destaque:ja?ja.destaque:false,atualizado_em:new Date().toISOString()}});
   for(let i=0;i<rows.length;i+=300)must(await sb.from('catalogo_itens').upsert(rows.slice(i,i+300),{onConflict:'ref'}));
-  $('#catEstoqueMsg').textContent=`${rows.length} produtos do estoque estão no catálogo. Toque no quadrinho "+ foto" de cada um para colocar a foto.`;await carregarCatalogo()});
+  $('#catEstoqueMsg').textContent=`${rows.length} produtos do estoque estão na vitrine. Agora veja as fotos sugeridas abaixo.`;await carregarCatalogo();sugereFotos()});
+/* fotos do fornecedor para o meu estoque: compara o nome e sugere; você aprova antes de salvar */
+const normT=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+const TIPOS_F=[['pelicula',/pelicula|protetor de camera/],['capafone',/\b(case|capa|capinha) (de |para )?(fone|air ?pods?)/],['capa',/\bcapa|\bcase\b|capinha/],['carregador',/carregador/],['fone',/\bfone|airpod|headset/],['cabo',/\bcabo\b/],['caixa',/caixa de som/],['pulseira',/pulseira/],['suporte',/suporte/],['adaptador',/adaptador/]];
+const VAR_PEL=['privacidade','ceramica','3d','9d','hidrogel','fosca','relogio'],SPEC=['20w','25w','35w','v8','lightning','iphone','bluetooth','magsafe','turbo','veicular'];
+const tipoF=t=>{const x=TIPOS_F.find(([,re])=>re.test(t));return x?x[0]:null};
+/* marca do celular pelo jeito do modelo: evita trocar "Note 12" (Xiaomi) por "12" (iPhone) */
+const marcaF=t=>/iphone|\bxr\b|\bxs\b|\b(6s|7|8|se)\b/.test(t)?'iphone':/\bnote\b|redmi|\brm\b|poco|xiaomi|\bmi\b/.test(t)?'xiaomi':/samsung|galaxy|\b[asm]\d{2}\b/.test(t)?'samsung':/moto|edge|\b[ge]\d{1,2}\b/.test(t)?'motorola':/\b1[0-6]\b/.test(t)?'iphone':null;
+const LINHA_CAPA=['space','silk','transparente','magsafe','anti impacto','antiimpacto','silicone','carteira','glitter'];
+function achaFoto(e){const t=normT(e.nome),tp=tipoF(t);if(!tp)return null;const tk=t.split(' ').filter(w=>w.length>1);const mods=tk.filter(w=>/\d/.test(w)&&!/^\d+[wdg]$/.test(w)); /* 20w, 3d, 9d, 4g, 5g não são modelo */
+  const precisa=(tp==='pelicula'?VAR_PEL:SPEC).filter(v=>t.includes(v));let best=null;
+  for(const c of CAT.itens){if(c.origem==='ESTOQUE'||!c.foto)continue;const n=normT(c.nome);if(tipoF(n)!==tp)continue;if(precisa.some(v=>!n.includes(v)))continue;
+    const ct=new Set(n.split(' '));const mt=marcaF(t),mn=marcaF(n);const mesmaMarca=!mt||!mn||mt===mn;
+    const mod=mesmaMarca&&mods.some(m=>ct.has(m));
+    if(tp==='capa'&&(!mod||!LINHA_CAPA.some(w=>t.includes(w)&&n.includes(w))))continue; /* capa só com o mesmo modelo e a mesma linha (space, silk…) */
+    let sc=tk.reduce((a,w)=>a+(ct.has(w)?(/\d/.test(w)?3:1):0),0)+(mod?4:0)+(c.destaque?.5:0);if(!best||sc>best.sc)best={c,sc,mod,tp}}
+  return best&&best.sc>=2?best:null}
+let SUG=[];
+function sugereFotos(){const box=$('#fotosEst');const est=CAT.itens.filter(x=>x.origem==='ESTOQUE'&&!x.foto);
+  if(!est.length){box.innerHTML=`<div class="alert info" style="margin-top:10px">${CAT.itens.some(x=>x.origem==='ESTOQUE')?'Todos os produtos do estoque já têm foto.':'Coloque o estoque na vitrine primeiro.'}</div>`;return}
+  SUG=est.map(e=>({e,s:achaFoto(e)})).filter(o=>o.s).sort((a,b)=>b.s.mod-a.s.mod||b.s.sc-a.s.sc);const sem=est.length-SUG.length;
+  box.innerHTML=SUG.length?`<div class="alert info" style="margin-top:10px">Achei foto para <b>${SUG.length}</b> de ${est.length} produtos sem foto${sem?` (os outros ${sem} você coloca no "+ foto")`:''}. Desmarque o que não ficou bom.</div>
+    <div class="sug-fotos">${SUG.map((o,i)=>`<label class="sf"><input type="checkbox" data-sf="${i}"${o.s.mod||o.s.tp==='pelicula'||o.s.tp==='pulseira'?' checked':''}><img src="${esc(fotoCat(o.s.c.foto))}" alt="" loading="lazy"><span><b>${esc(o.e.nome)}</b><small>foto de: ${esc(o.s.c.nome)} · ${esc(o.s.c.fornecedor||'')}</small><em class="pill ${o.s.mod?'p-good':'p-mute'}">${o.s.mod?'mesmo modelo':'mesmo tipo'}</em></span></label>`).join('')}</div>
+    <div class="row-f" style="margin-top:10px"><button class="btn pri" type="button" id="sfSalva">Usar as fotos marcadas</button><button class="btn" type="button" id="sfTodas">Marcar só "mesmo modelo"</button></div>`
+    :`<div class="alert warn" style="margin-top:10px">Não achei fotos parecidas para os ${est.length} produtos sem foto. Importe mais fornecedores ou coloque no "+ foto".</div>`;
+  if(!SUG.length)return;
+  $('#sfTodas').onclick=()=>$$('[data-sf]').forEach(i=>i.checked=SUG[+i.dataset.sf].s.mod);
+  $('#sfSalva').onclick=()=>busy($('#sfSalva'),async()=>{const sel=$$('[data-sf]').filter(i=>i.checked).map(i=>SUG[+i.dataset.sf]);if(!sel.length){toast('Marque pelo menos uma foto');return}
+    sel.forEach(o=>o.e.foto=o.s.c.foto);await salvaLote(sel.map(o=>o.e));box.innerHTML=`<div class="alert info" style="margin-top:10px">Pronto: ${sel.length} produtos do estoque com foto na vitrine.</div>`;renderCatalogo();toast(sel.length+' fotos colocadas')})}
+$('#catFotos').onclick=()=>{if(!CAT.ok){toast('O catálogo ainda não carregou');return}sugereFotos();$('#fotosEst').scrollIntoView({block:'nearest'})};
 /* importar o zip de um fornecedor (planilha .csv + fotos) */
 function carregaZip(){return window.JSZip?Promise.resolve():new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';s.onload=res;s.onerror=()=>rej(new Error('Não carregou o leitor de zip. Confira a internet.'));document.head.appendChild(s)})}
 function lerCSV(t){const linhas=[];let campo='',lin=[],q=false;for(let i=0;i<t.length;i++){const c=t[i];if(q){if(c==='"'){if(t[i+1]==='"'){campo+='"';i++}else q=false}else campo+=c}else if(c==='"')q=true;else if(c===';'){lin.push(campo);campo=''}else if(c==='\n'){lin.push(campo.replace(/\r$/,''));linhas.push(lin);lin=[];campo=''}else campo+=c}if(campo||lin.length){lin.push(campo);linhas.push(lin)}return linhas}
