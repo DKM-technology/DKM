@@ -1,0 +1,36 @@
+# Robô do Painel DKM: consulta o banco todo dia para o Supabase grátis não pausar
+# (o plano grátis pausa o projeto depois de 7 dias sem uso).
+# Se o banco não responder, o GitHub manda um e-mail avisando que o robô falhou.
+name: Manter o Supabase acordado
+
+on:
+  schedule:
+    - cron: '17 11 * * *'   # todo dia às 8:17 (horário de Brasília)
+  workflow_dispatch:         # botão "Run workflow" para testar na hora
+
+permissions:
+  contents: read
+  actions: write             # para o GitHub não desligar o robô por falta de mudanças no site
+
+jobs:
+  cutucar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Consultar o banco
+        env:
+          URL: https://slfukomaoygdtmlwylua.supabase.co
+          KEY: sb_publishable_Hlg2yivd6O1XtxzBRR-1Iw_Jc-td4f7   # chave pública (a mesma do site), nunca a secret
+        run: |
+          code=$(curl -s --retry 3 --retry-delay 20 -o resposta.json -w "%{http_code}" \
+            -X POST "$URL/rest/v1/rpc/catalogo_publico" \
+            -H "apikey: $KEY" -H "Content-Type: application/json" -d '{}')
+          echo "Resposta do Supabase: $code"
+          head -c 120 resposta.json; echo
+          if [ "$code" != "200" ]; then
+            echo "::error::O Supabase não respondeu (código $code). Se estiver pausado, entre em supabase.com e clique em Restore project."
+            exit 1
+          fi
+
+      - uses: actions/checkout@v4
+      - name: Não deixar o GitHub desligar este robô
+        uses: gautamkrishnar/keepalive-workflow@v2
