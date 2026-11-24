@@ -94,6 +94,15 @@ main.wrap{padding-block:18px 120px}
 :focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
 @media (max-width:520px){.linha1{flex-wrap:wrap;gap:8px}.busca{flex:1 1 100%;order:2}.marca{font-size:17px}.grade{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card .corpo{padding:9px 10px 10px}.preco{font-size:16px}.marca{font-size:18px}}
 @media (prefers-reduced-motion:reduce){.dot{animation:none}}
+.ped-num{font-size:12.5px;color:var(--muted);margin:-4px 0 0}.ped-num.ok{color:var(--good,#3ecf8e);font-weight:600}
+/* só para o dono logado: custo do fornecedor */
+.custo{font-size:11.5px;line-height:1.25;color:var(--muted);margin-bottom:-4px}
+.custo b{font-weight:600;color:var(--ink)}
+.dono{display:none;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:12px 0 0;padding:8px 12px;border:1px dashed var(--line);border-radius:10px;font-size:12.5px;color:var(--muted)}
+.dono.on{display:flex}
+.dono button{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;width:38px;height:32px;display:grid;place-items:center;cursor:pointer;flex:none}
+.dono button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dono .o-fechado,.dono [aria-pressed="true"] .o-aberto{display:none}.dono [aria-pressed="true"] .o-fechado{display:block}
 </style>
 </head>
 <body>
@@ -108,6 +117,7 @@ main.wrap{padding-block:18px 120px}
   </div>
 </div>
 <main class="wrap">
+  <div class="dono" id="dono"><span id="donoTxt">Só você vê o custo do fornecedor. O cliente não vê.</span><button type="button" id="donoBtn" aria-pressed="false"><svg class="o-aberto" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="o-fechado" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A10.6 10.6 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-3.2 4.1M6.6 6.6A17.4 17.4 0 0 0 2 12s3.6 7 10 7a10 10 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button></div>
   <div class="info"><span id="contagem"></span><span id="aviso"></span></div>
   <div id="grade" class="grade"></div>
   <div class="mais" id="mais" hidden><button class="btn" type="button" id="maisBtn">Ver mais produtos</button></div>
@@ -120,6 +130,7 @@ main.wrap{padding-block:18px 120px}
   <p class="nota" id="sacolaAviso"></p>
   <div id="itens"></div>
   <div class="tot"><span>Total</span><b class="num" id="sacolaTot"></b></div>
+  <p class="ped-num" id="pedNum"></p>
   <div class="campo"><label for="nome">Seu nome</label><input id="nome" autocomplete="name" placeholder="Para a gente saber quem é"></div>
   <div class="campo"><label for="obs">Observação (opcional)</label><textarea id="obs" rows="2" placeholder="Cor, modelo do celular, retirar ou entregar…"></textarea></div>
   <a class="zap" id="zap" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .2-1.2c-.1-.1-.2-.2-.5-.3z"/></svg>Enviar pedido pelo WhatsApp</a>
@@ -138,6 +149,10 @@ const sem=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase()
 const fotoUrl=f=>!f?'':/^https?:/.test(f)?f:`${SUPABASE_URL}/storage/v1/object/public/catalogo/${f.split('/').map(encodeURIComponent).join('/')}`;
 let CFG={},ITENS=[],cat='Todos',limite=48,lista=[];
 let SAC={};try{SAC=JSON.parse(localStorage.getItem('dkm-sacola')||'{}')||{}}catch(e){SAC={}}
+/* número do pedido: vai na mensagem e na encomenda gravada no Painel DKM */
+let PED={};try{PED=JSON.parse(localStorage.getItem('dkm-pedido')||'{}')||{}}catch(e){PED={}}
+const salvaPed=()=>{try{localStorage.setItem('dkm-pedido',JSON.stringify(PED))}catch(e){}};
+function codPedido(){if(!PED.cod||(PED.env&&Date.now()-PED.env>6*3600e3)){const L='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let c='';const r=new Uint32Array(6);(window.crypto||{getRandomValues:a=>a.map(()=>Math.random()*4e9)}).getRandomValues(r);r.forEach(v=>c+=L[v%L.length]);PED={cod:c};salvaPed()}return PED.cod}
 const salva=()=>{try{localStorage.setItem('dkm-sacola',JSON.stringify(SAC))}catch(e){}};
 try{$('#nome').value=localStorage.getItem('dkm-nome')||''}catch(e){}
 
@@ -172,7 +187,7 @@ function filtra(){
 function cartao(x){const q=SAC[x.id]||0,u=fotoUrl(x.foto);
   return `<article class="card"><div class="foto">${u?`<img src="${esc(u)}" alt="${esc(x.nome)}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'sem',textContent:'DKM'}))">`:'<span class="sem">DKM</span>'}
     <span class="selo ${x.pronta?'pronta':'encomenda'}">${x.pronta?'Pronta entrega':'Sob encomenda'}</span>${x.destaque?'<span class="selo dest">Destaque</span>':''}</div>
-    <div class="corpo"><div class="nome">${esc(x.nome)}</div><div class="pe"><span class="preco num">${brl(x.preco)}</span>
+    <div class="corpo"><div class="nome">${esc(x.nome)}</div>${custoTxt(x)}<div class="pe"><span class="preco num">${brl(x.preco)}</span>
     ${q?`<span class="qtd"><button type="button" data-m="${x.id}" aria-label="Tirar um">−</button><span class="num">${q}</span><button type="button" data-p="${x.id}" aria-label="Mais um">+</button></span>`:`<button class="add" type="button" data-p="${x.id}" aria-label="Adicionar ${esc(x.nome)}">+</button>`}</div></div></article>`}
 function render(){
   const g=$('#grade');g.innerHTML=lista.length?lista.slice(0,limite).map(cartao).join(''):'<div class="vazio" style="grid-column:1/-1">Nenhum produto encontrado. Tente outra palavra ou outra categoria.</div>';
@@ -193,7 +208,8 @@ function renderSacola(){
   $('#sacolaTot').textContent=brl(tot);
   const nome=$('#nome').value.trim(),obs=$('#obs').value.trim();
   const linhas=its.map(({x,q})=>`• ${q}x ${x.nome} (${brl(x.preco)})${x.pronta?'':' *'}`);
-  const msg=`Olá! Quero fazer este pedido no catálogo ${CFG.titulo||'DKM'}:\n\n${linhas.join('\n')}\n\n*Total: ${brl(tot)}*${its.some(o=>!o.x.pronta)?'\n(* sob encomenda)':''}${nome?`\nNome: ${nome}`:''}${obs?`\nObs.: ${obs}`:''}`;
+  const cod=n?codPedido():'';$('#pedNum').textContent=n?(PED.env?`Pedido nº ${cod} enviado. Mudou algo? Toque em enviar de novo.`:`Pedido nº ${cod}`):'';$('#pedNum').classList.toggle('ok',!!PED.env);
+  const msg=`Olá! Quero fazer este pedido (nº ${cod}) no catálogo ${CFG.titulo||'DKM'}:\n\n${linhas.join('\n')}\n\n*Total: ${brl(tot)}*${its.some(o=>!o.x.pronta)?'\n(* sob encomenda)':''}${nome?`\nNome: ${nome}`:''}${obs?`\nObs.: ${obs}`:''}`;
   const num=String(CFG.whatsapp||'5562991153874').replace(/\D/g,'');
   $('#zap').href=`https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
   if(!n)fechaSacola();
@@ -203,9 +219,33 @@ const abreSacola=()=>{$('#sacola').hidden=false;$('#fundoSacola').hidden=false;d
 const fechaSacola=()=>{$('#sacola').hidden=true;$('#fundoSacola').hidden=true;document.body.style.overflow=''};
 $('#abreSacola').onclick=abreSacola;$('#fecha').onclick=fechaSacola;$('#fundoSacola').onclick=fechaSacola;
 document.addEventListener('keydown',e=>{if(e.key==='Escape')fechaSacola()});
-$('#limpar').onclick=()=>{SAC={};salva();renderSacola();render()};
+$('#limpar').onclick=()=>{SAC={};salva();PED={};salvaPed();renderSacola();render()};
+/* ao enviar: grava a encomenda no banco (o WhatsApp abre do mesmo jeito, mesmo se a internet falhar aqui) */
+$('#zap').addEventListener('click',()=>{const its=itensSacola();if(!its.length)return;renderSacola();const cod=PED.cod; /* renderSacola acerta o link antes de abrir */
+  try{fetch(`${SUPABASE_URL}/rest/v1/rpc/registrar_encomenda`,{method:'POST',keepalive:true,headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({p_codigo:cod,p_cliente:$('#nome').value.trim(),p_obs:$('#obs').value.trim(),p_itens:its.map(({x,q})=>({id:x.id,q}))})}).catch(()=>{})}catch(e){}
+  PED.env=Date.now();salvaPed();setTimeout(renderSacola,300)});
 $('#nome').oninput=()=>{try{localStorage.setItem('dkm-nome',$('#nome').value)}catch(e){}renderSacola()};$('#obs').oninput=renderSacola;
-carregar();
+/* Modo dono: se este navegador está logado no Painel DKM, mostra o custo do fornecedor (o cliente nunca tem esse login) */
+let DONO=false,VER=true,CUSTO={};
+try{VER=localStorage.getItem('dkm-app-oculta')!=='1'}catch(e){} /* mesmo olho do Painel DKM */
+function custoTxt(x){const c=DONO&&CUSTO[x.id];if(!c||!(c.custo>0))return'';const m=x.preco>0?Math.round((1-c.custo/x.preco)*100):0;
+  return `<div class="custo">${c.forn?esc(c.forn)+' ':''}<b class="num">${VER?brl(c.custo):'R$ *****'}</b> · margem ${VER?m+'%':'***'}</div>`}
+function mostraDono(){const b=$('#donoBtn');$('#dono').classList.toggle('on',DONO);b.setAttribute('aria-pressed',!VER);b.title=b.ariaLabel=VER?'Esconder valores':'Mostrar valores';$('#donoTxt').textContent=VER?'Só você vê o custo do fornecedor. O cliente não vê.':'Custo escondido.'}
+$('#donoBtn').onclick=()=>{VER=!VER;try{VER?localStorage.removeItem('dkm-app-oculta'):localStorage.setItem('dkm-app-oculta','1')}catch(e){}mostraDono();render()};
+async function modoDono(){
+  let tem=false;try{tem=!!localStorage.getItem('sb-'+new URL(SUPABASE_URL).hostname.split('.')[0]+'-auth-token')}catch(e){}
+  if(!tem)return;
+  try{
+    if(!window.supabase)await new Promise((ok,erro)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.js';s.onload=ok;s.onerror=erro;document.head.appendChild(s)});
+    const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true}});
+    const {data:{session}}=await sb.auth.getSession();if(!session)return;
+    for(let de=0;;de+=1000){const {data,error}=await sb.from('catalogo_itens').select('id,custo,fornecedor,origem').range(de,de+999);if(error)return;
+      data.forEach(x=>CUSTO[x.id]={custo:+x.custo,forn:x.origem==='ESTOQUE'?'Meu estoque':x.fornecedor||''});if(data.length<1000)break}
+    DONO=true;mostraDono();if(ITENS.length)render();
+  }catch(e){}
+}
+carregar().then(modoDono);
 </script>
 </body>
 </html>
