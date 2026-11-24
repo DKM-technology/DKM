@@ -283,6 +283,52 @@ textarea.inp{resize:vertical;min-height:92px;line-height:1.4}
   .entrada::before{background:radial-gradient(90% 40% at 50% 75%,rgba(109,94,252,.18),transparent 70%),linear-gradient(180deg,#0c0c24,#07071a)}
   .card-login{padding:22px 18px 18px;background:rgba(22,22,40,.95)}
 }
+/* contagem em prateleira */
+#cnt-contar,#cnt-conferir,.prat{min-width:0;max-width:100%}
+.prat-top{display:flex;gap:16px;align-items:center;margin-bottom:14px}
+.prat-anel{position:relative;width:84px;height:84px;flex:none}
+.prat-anel svg{width:100%;height:100%;transform:rotate(-90deg)}
+.a-fundo{fill:none;stroke:var(--line);stroke-width:7}
+.a-cheio{fill:none;stroke:var(--accent);stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset .5s cubic-bezier(.3,.9,.3,1)}.a-cheio.ok{stroke:var(--good)}
+.prat-anel div{position:absolute;inset:0;display:grid;place-content:center;text-align:center;line-height:1.05}
+.prat-anel b{font-family:var(--f-display);font-size:22px}.prat-anel span{font-size:11px;color:var(--muted)}
+.prat-tit h2{font-size:18px;margin:0 0 4px;display:block}.prat-tit u{text-decoration-color:var(--accent);text-decoration-thickness:3px;text-underline-offset:4px}
+.prat-cats{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:10px}
+.prat-cats button{flex:none;position:relative;overflow:hidden;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 14px 11px;cursor:pointer;display:grid;text-align:left;color:var(--ink);font-weight:600;font-size:13px}
+.prat-cats small{font-weight:500;color:var(--muted);font-size:11.5px}.prat-cats i{position:absolute;left:0;bottom:0;height:4px;width:0;background:var(--accent);transition:width .4s}
+.prat-cats button.ok i{background:var(--good)}.prat-cats button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.prat-filtro{align-items:center}
+.prat-grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,168px),1fr));gap:10px;margin-top:12px}
+.cc{position:relative;border:2px dashed var(--line);border-radius:14px;padding:12px 12px 10px;background:var(--surface);cursor:pointer;display:grid;gap:2px;align-content:start;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;transition:border-color .2s,background .2s,transform .08s}
+.cc:active{transform:scale(.97)}.cc:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.cc.sim{border-style:solid;border-color:var(--accent);background:var(--accent-soft)}
+.cc.zero{border-style:solid;border-color:var(--muted);opacity:.8}
+.cc.foto .cc-mod,.cc.foto .cc-cat,.cc.foto .cc-nome{padding-right:50px}
+.cc img{width:44px;height:44px;object-fit:contain;border-radius:8px;background:#fff;position:absolute;right:10px;top:10px}
+.cc-cat{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.cc-mod{font-family:var(--f-display);font-weight:800;font-size:21px;line-height:1.1;overflow-wrap:anywhere}
+.cc-nome{font-size:12.5px;color:var(--muted);min-height:1.2em}
+.cc-n{font-family:var(--f-display);font-weight:800;font-size:46px;line-height:1;text-align:center;margin:8px 0 6px;color:var(--muted)}
+.cc.sim .cc-n{color:var(--ink)}
+.cc-n.pop{animation:ccpop .32s cubic-bezier(.2,1.6,.4,1)}@keyframes ccpop{0%{transform:scale(1.6)}100%{transform:scale(1)}}
+.cc-n input{width:100%;max-width:140px;text-align:center;font:inherit;font-size:34px;border:2px solid var(--accent);border-radius:10px;background:var(--surface);color:var(--ink)}
+.cc-mais{position:absolute;left:50%;top:44%;font-family:var(--f-display);font-weight:800;color:var(--accent);font-size:22px;pointer-events:none;animation:ccsobe .62s ease-out forwards}
+@keyframes ccsobe{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-40px)}}
+.cc-acoes{display:grid;grid-template-columns:42px minmax(0,1fr) 42px;gap:6px}
+.cc-acoes button{height:38px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);cursor:pointer;color:var(--ink);font-size:13px;font-weight:600}
+.cc-acoes button:first-child{font-size:21px;line-height:1}
+.prat-pe{display:flex;justify-content:center;margin-top:16px}.prat-pe .btn{min-width:min(100%,320px)}
+.fim-conta .fim-ic{font-size:56px;line-height:1;animation:ccpop .5s cubic-bezier(.2,1.6,.4,1)}
+canvas.confete{position:fixed;inset:0;pointer-events:none;z-index:90}
+.cnt-sum{cursor:pointer;font-weight:600}
+.difs{display:grid;gap:8px;margin-top:10px}
+.dif{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;gap:6px 16px;align-items:center;border:1px solid var(--line);border-left:5px solid var(--bad);border-radius:12px;padding:10px 14px;background:var(--surface)}
+.dif.pos{border-left-color:var(--warn)}
+.dif-p b{display:block;font-family:var(--f-display);font-size:17px}.dif-p span{font-size:12.5px;color:var(--muted)}
+.dif-n{display:flex;align-items:baseline;gap:8px;font-family:var(--f-display);font-size:24px}.dif-n span{color:var(--muted)}.dif-n .seta{font-size:16px}
+.dif-r{display:grid;text-align:right}.dif.neg .dif-r b{color:var(--bad)}.dif.pos .dif-r b{color:var(--warn)}.dif-r small{font-size:12px;color:var(--muted)}
+@media (max-width:640px){.prat-grade{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.cc{padding:10px 9px 9px}.cc-mod{font-size:17px}.cc-n{font-size:36px;margin:6px 0 4px}.cc-acoes{grid-template-columns:1fr 1fr}.cc-acoes [data-ccz]{grid-column:1/-1;order:3}.cc-acoes button{height:34px}.cc.foto .cc-mod,.cc.foto .cc-cat,.cc.foto .cc-nome{padding-right:40px}.cc img{width:36px;height:36px}.dif{grid-template-columns:minmax(0,1fr) auto}.dif-r{text-align:left}.prat-top{align-items:flex-start}.prat-anel{width:70px;height:70px}.prat-tit h2{font-size:16px}}
+@media (prefers-reduced-motion:reduce){.cc-n.pop,.cc-mais,.fim-conta .fim-ic{animation:none}}
 /* encomendas */
 .lotes{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:14px;margin-bottom:14px;align-items:start}
 .lote-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}.lote-top h2{margin:0}
@@ -546,19 +592,22 @@ table.lst th{font-size:11.5px;color:var(--muted);font-weight:500}table.lst .r{te
 
     <!-- CONTAGEM -->
     <section id="v-contagem" class="view" hidden>
-      <div class="head"><div><h1>Contagem</h1><p>Um produto por vez: é só dizer quantos tem na mão.</p></div>
+      <div class="head"><div><h1>Contagem</h1><p>Toque no produto uma vez para cada peça. O dono confere depois o que não bateu.</p></div>
         <div class="seg" role="group" aria-label="Contagem"><button type="button" data-cmodo="contar" aria-pressed="true">Contar</button><button type="button" data-cmodo="conferir" aria-pressed="false">Conferir</button></div></div>
       <div id="cnt-contar"></div>
       <div id="cnt-conferir" class="grid" style="gap:20px" hidden>
       <div class="row-f" style="justify-content:space-between;align-items:center"><p class="note">Aqui o dono vê o que bateu e o que não bateu com o sistema, e acerta o estoque.</p><span class="chip" id="cntData"></span></div>
       <div class="cnt-top" id="cntKpi"></div>
+      <div class="panel" id="cntDifs"></div>
       <div class="panel">
-        <div class="row-f" style="margin-bottom:12px">
+        <details id="cntTudo"><summary class="cnt-sum">Ver a lista completa (todos os produtos)</summary>
+        <div class="row-f" style="margin:12px 0">
           <div class="field" style="flex:1 1 220px"><label for="cq">Buscar</label><input id="cq" class="inp" placeholder="produto, modelo ou cor" autocomplete="off"></div>
           <div class="seg" role="group" aria-label="Mostrar"><button type="button" data-cf="todos" aria-pressed="true">Todos</button><button type="button" data-cf="falta" aria-pressed="false">Não contados</button><button type="button" data-cf="dif" aria-pressed="false">Com diferença</button></div>
         </div>
         <div class="chips" id="cntCats" style="margin-bottom:12px"></div>
         <div class="tbl-wrap"><table class="cnt-tbl"><thead><tr><th>Produto</th><th class="r">Sistema</th><th>Contado</th><th class="r">Diferença</th><th class="r">Valor (custo)</th></tr></thead><tbody id="cntBody"></tbody></table></div>
+        </details>
         <div class="row-f" style="margin-top:14px;justify-content:space-between">
           <div class="row-f"><button class="btn" id="cntIgual" type="button">Marcar visíveis como iguais</button><button class="btn danger" id="cntLimpa" type="button">Limpar contagem</button><button class="btn" id="cntCopia" type="button">Copiar relatório</button></div>
           <button class="btn pri" id="cntAplica" type="button">Acertar estoque</button>
@@ -905,7 +954,8 @@ function totais(){
   return{cheio:r2(cheio),sub:r2(sub),nivel:r2(cheio-sub),d,cup:r2(cup),tot:r2(t),lim,eco:r2(cheio-t)}}
 function validaCupom(cod,cli){const c=S.cupons.find(x=>String(x.codigo).toUpperCase()===cod);if(!c)return'Cupom não encontrado.';if(!c.ativo)return'Esse cupom foi desativado.';
   if(c.validade&&c.validade<hoje())return'Esse cupom venceu em '+dataBR(c.validade)+'.';if(c.usos_max!=null&&c.usos>=c.usos_max)return'Esse cupom já foi usado.';
-  if(c.cliente&&chave(c.cliente)!==cli)return'Esse cupom é só para '+cap(c.cliente)+'.';return c}
+  if(c.cliente&&chave(c.cliente)!==cli&&chave(c.cliente).split(' ')[0]!==String(cli||'').split(' ')[0])return'Esse cupom é só para '+cap(c.cliente)+'.';return c}
+const linkCupom=c=>VITRINE_URL+'?cupom='+encodeURIComponent(String(c||'').trim().toUpperCase());
 const descCupom=c=>c.tipo==='PCT'?(+c.valor).toLocaleString('pt-BR')+'%':brl(c.valor);
 function repreco(){const n=nivelPedido();cart.forEach(c=>{if(c.manual||c.id==null)return;const e=S.est.find(x=>x.id===c.id);if(e)c.v=precoNivel(e,n)})}
 function renderCliInfo(){const k=cliPedido(),box=$('#cliInfo');if(!k){box.innerHTML='';return}const c=S.cli[k],n=nivelDe(k),pr=P().niveis[n]||{};
@@ -1023,16 +1073,17 @@ function renderClientes(){
   // cupons
   const hj=hoje();const st=c=>!c.ativo?['desativado','p-mute']:(c.validade&&c.validade<hj)?['vencido','p-mute']:(c.usos_max!=null&&c.usos>=c.usos_max)?['usado','p-mute']:['ativo','p-good'];
   $('#cupSub').textContent=S.cupons.length?S.cupons.filter(c=>st(c)[0]==='ativo').length+' ativos':'';
-  $('#cupLista').innerHTML=S.cupons.length?S.cupons.map(c=>{const [t,cl]=st(c);return `<div class="cup"><div><code>${esc(c.codigo)}</code> <span class="pill ${cl}">${t}</span><div class="note">${descCupom(c)} de desconto${c.cliente?' · só '+esc(cap(c.cliente)):' · qualquer cliente'}${c.validade?' · até '+dataBR(c.validade):''} · usado ${c.usos}${c.usos_max!=null?'/'+c.usos_max:''}×</div></div>${t==='ativo'?`<button class="btn sm danger" type="button" data-desat="${esc(c.codigo)}">Desativar</button>`:''}</div>`}).join(''):'<div class="empty">Nenhum cupom ainda.</div>';
+  $('#cupLista').innerHTML=S.cupons.length?S.cupons.map(c=>{const [t,cl]=st(c);return `<div class="cup"><div><code>${esc(c.codigo)}</code> <span class="pill ${cl}">${t}</span><div class="note">${descCupom(c)} de desconto${c.cliente?' · só '+esc(cap(c.cliente)):' · qualquer cliente'}${c.validade?' · até '+dataBR(c.validade):''} · usado ${c.usos}${c.usos_max!=null?'/'+c.usos_max:''}×</div></div>${t==='ativo'?`<div class="row-f" style="gap:6px"><button class="btn sm" type="button" data-cuplink="${esc(c.codigo)}">Copiar link</button><button class="btn sm danger" type="button" data-desat="${esc(c.codigo)}">Desativar</button></div>`:''}</div>`}).join(''):'<div class="empty">Nenhum cupom ainda.</div>';
+  $$('[data-cuplink]').forEach(b=>b.onclick=()=>copy(linkCupom(b.dataset.cuplink)));
   $$('[data-desat]').forEach(b=>b.onclick=()=>busy(b,async()=>{must(await sb.from('cupons').update({ativo:false}).eq('codigo',b.dataset.desat));const c=S.cupons.find(x=>x.codigo===b.dataset.desat);if(c)c.ativo=false;renderClientes();toast('Cupom desativado')}));
   renderTabPreco();
 }
 $('#cliQ').oninput=()=>renderClientes();
 $('#novoCupom').onclick=()=>abrirCupom('','volta');
 const MODELOS={
-  volta:{nome:'Volta 15%',tipo:'PCT',valor:15,dias:30,usos:1,msg:'Oi {nome}! Faz tempo que você não passa na DKM 😊 Separei um cupom de {desconto} pra sua próxima compra: *{codigo}* (vale até {validade}). Chegaram películas e capas novas!'},
-  vip:{nome:'Cliente Ouro 10%',tipo:'PCT',valor:10,dias:60,usos:1,msg:'Oi {nome}! Você é cliente Ouro da DKM 🥇 Obrigado pela preferência! Use o cupom *{codigo}* e ganhe {desconto} na próxima compra (vale até {validade}).'},
-  reais:{nome:'R$ 10 em fone/carregador',tipo:'REAIS',valor:10,dias:30,usos:1,msg:'Oi {nome}! Tem cupom de {desconto} pra fone ou carregador na DKM: *{codigo}* (vale até {validade}).'}};
+  volta:{nome:'Volta 15%',tipo:'PCT',valor:15,dias:30,usos:1,msg:'Oi {nome}! Faz tempo que você não passa na DKM 😊 Separei um cupom de {desconto} pra sua próxima compra: *{codigo}* (vale até {validade}). Chegaram películas e capas novas!\n\nVeja o catálogo com o desconto já aplicado: {link}'},
+  vip:{nome:'Cliente Ouro 10%',tipo:'PCT',valor:10,dias:60,usos:1,msg:'Oi {nome}! Você é cliente Ouro da DKM 🥇 Obrigado pela preferência! Use o cupom *{codigo}* e ganhe {desconto} na próxima compra (vale até {validade}).\n\nPeça pelo catálogo com o desconto já aplicado: {link}'},
+  reais:{nome:'R$ 10 em fone/carregador',tipo:'REAIS',valor:10,dias:30,usos:1,msg:'Oi {nome}! Tem cupom de {desconto} pra fone ou carregador na DKM: *{codigo}* (vale até {validade}).\n\nPeça pelo catálogo com o desconto já aplicado: {link}'}};
 function codigoPara(cli,tipo,valor){const base=(cli?cli.split(' ')[0]:'DKM').normalize('NFD').replace(/[^A-Za-z]/g,'').toUpperCase().slice(0,10)||'DKM';let c=base+Math.round(valor)+(tipo==='REAIS'?'OFF':'');let i=2;while(S.cupons.some(x=>x.codigo===c))c=base+Math.round(valor)+(tipo==='REAIS'?'OFF':'')+'-'+(i++);return c}
 function abrirCupom(cli,mod){const m=MODELOS[mod]||MODELOS.volta,box=$('#cupomBox');box.hidden=false;
   box.innerHTML=`<h2>Criar cupom <span class="sub">o cliente usa o código no próximo pedido</span></h2>
@@ -1052,7 +1103,7 @@ function abrirCupom(cli,mod){const m=MODELOS[mod]||MODELOS.volta,box=$('#cupomBo
   let tipo=m.tipo,modelo=m;let codEditado=false;
   const montaMsg=()=>{const c=$('#kCli').value.trim(),v=dec($('#kVal').value),d=parseInt($('#kDias').value)||0;const val=d?dataBR(isoD(new Date(Date.now()+d*864e5))):'quando quiser';
     if(!codEditado)$('#kCod').value=codigoPara(chave(c),tipo,v);
-    $('#kMsg').value=modelo.msg.replace('{nome}',c?cap(c).split(' ')[0]:'').replace('Oi !','Oi!').replace('{desconto}',tipo==='PCT'?v.toLocaleString('pt-BR')+'%':brlR(v)).replace('{codigo}',$('#kCod').value.toUpperCase()).replace('{validade}',val)};
+    $('#kMsg').value=modelo.msg.replace('{nome}',c?cap(c).split(' ')[0]:'').replace('Oi !','Oi!').replace('{desconto}',tipo==='PCT'?v.toLocaleString('pt-BR')+'%':brlR(v)).replace('{codigo}',$('#kCod').value.toUpperCase()).replace('{validade}',val).replace('{link}',linkCupom($('#kCod').value))};
   montaMsg();
   $$('[data-mod]').forEach(b=>b.onclick=()=>abrirCupom($('#kCli').value,b.dataset.mod));
   $$('[data-kt]').forEach(b=>b.onclick=()=>{tipo=b.dataset.kt;$$('[data-kt]').forEach(x=>x.setAttribute('aria-pressed',x===b));montaMsg()});
@@ -1065,8 +1116,8 @@ function abrirCupom(cli,mod){const m=MODELOS[mod]||MODELOS.volta,box=$('#cupomBo
     must(await sb.from('cupons').insert(row));S.cupons.unshift({...row,criado_em:new Date().toISOString()});
     const fone=$('#kFone').value.replace(/\D/g,'');if(cl&&fone){must(await sb.from('clientes').upsert({nome:cl,telefone:fone,nivel:S.clientes[cl]?.nivel??null}));S.clientes[cl]={...(S.clientes[cl]||{nome:cl,obs:''}),telefone:fone,nivel:S.clientes[cl]?.nivel??null}}
     const msg=$('#kMsg').value,num=fone?(fone.length<=11?'55'+fone:fone):'';
-    $('#kFeito').innerHTML=`<div class="alert info">Cupom <b>${esc(cod)}</b> criado. Agora mande para o cliente:</div><div class="row-f" style="margin-top:10px"><button class="btn" type="button" id="kCopia">Copiar mensagem</button><a class="btn pri" href="https://wa.me/${num}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Abrir no WhatsApp</a></div>`;
-    $('#kCopia').onclick=()=>copy(msg);$('#kCria').disabled=true;renderClientes();toast('Cupom criado')});
+    $('#kFeito').innerHTML=`<div class="alert info">Cupom <b>${esc(cod)}</b> criado. O link abre o catálogo com o desconto já aplicado. Agora mande para o cliente:</div><div class="row-f" style="margin-top:10px"><button class="btn" type="button" id="kCopia">Copiar mensagem</button><button class="btn" type="button" id="kLink">Copiar só o link</button><a class="btn pri" href="https://wa.me/${num}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Abrir no WhatsApp</a></div>`;
+    $('#kCopia').onclick=()=>copy(msg);$('#kLink').onclick=()=>copy(linkCupom(cod));$('#kCria').disabled=true;renderClientes();toast('Cupom criado')});
   box.scrollIntoView({behavior:'smooth',block:'start'})}
 function renderTabPreco(){const pr=P(),box=$('#tabPreco');if(box.dataset.editando==='1')return;
   const quem={VAREJO:'quem ainda não é Prata nem Ouro',PRATA:`gastou R$ <input class="inp num" id="rg-prata" value="${pr.regras.prata}" style="width:76px"> ou fez <input class="inp num" id="rg-prc" value="${pr.regras.prata_compras}" style="width:52px"> compras em 12 meses`,OURO:`gastou R$ <input class="inp num" id="rg-ouro" value="${pr.regras.ouro}" style="width:76px"> ou mais em 12 meses`,ATACADO:'você marca na mão (quem revende)'};
@@ -1210,7 +1261,7 @@ function renderContagem(){
   $$('[data-cc]').forEach(b=>b.onclick=()=>{cntCat=b.dataset.cc;renderContagem()});
   const q=$('#cq').value.trim().toLowerCase().split(/\s+/).filter(Boolean);
   const vis=S.est.filter(e=>(cntCat==='Todas'||e.cat===cntCat)&&q.every(w=>(e.p+' '+e.m+' '+e.t).toLowerCase().includes(w))&&(cntF==='todos'||(cntF==='falta'&&S.cnt[e.id]==null)||(cntF==='dif'&&S.cnt[e.id]!=null&&S.cnt[e.id]!==e.qt)));
-  renderContagem.vis=vis;
+  renderContagem.vis=vis;renderDifs();
   $('#cntBody').innerHTML=vis.length?vis.map(e=>{const c=S.cnt[e.id];const d=c==null?null:c-e.qt;
     return `<tr class="cnt-row ${d==null?'':d===0?'done':'diff'}"><td class="prod"><b>${esc(cap(e.p))}</b><span>${esc(descr(e))}</span></td><td class="r num sis">${e.qt}</td>
     <td><div class="qty"><button type="button" data-cm="${e.id}" data-d="-1" aria-label="Menos">−</button><input class="num" data-ci="${e.id}" value="${c??''}" placeholder="–" inputmode="numeric" aria-label="Contado"><button type="button" data-cm="${e.id}" data-d="1" aria-label="Mais">+</button></div></td>
@@ -1225,54 +1276,85 @@ function setC(id,v){if(!S.cntDt)S.cntDt=new Date().toISOString();if(v==null)dele
     if(S.cnt[id]==null)must(await sb.from('contagem_itens').delete().eq('produto_id',id));
     else must(await sb.from('contagem_itens').upsert({produto_id:id,contado:S.cnt[id],atualizado_em:new Date().toISOString()}))}catch(e){toast('Não salvou a contagem: '+msgErro(e))}},400)}
 $('#cq').oninput=renderContagem;
-/* contagem simples: um produto por vez, sem mostrar o que o sistema tem */
-let contaModo='contar',contaLista=null,contaIdx=0,contaNome='';
+/* contagem em prateleira: toque no cartão = +1 peça. Quem conta não vê o que o sistema tem. */
+let contaModo='contar',contaLista=null,contaIdx=0,contaNome='',contaCat='Tudo',contaFalta=false,contaBusca='',contaFim=false;
 const ordemConta=l=>l.slice().sort((a,b)=>a.cat.localeCompare(b.cat)||a.p.localeCompare(b.p)||a.m.localeCompare(b.m,undefined,{numeric:true})||a.t.localeCompare(b.t));
 function setModoConta(m){contaModo=m;$$('[data-cmodo]').forEach(b=>b.setAttribute('aria-pressed',b.dataset.cmodo===m));$('#cnt-contar').hidden=m!=='contar';$('#cnt-conferir').hidden=m!=='conferir';if(m==='conferir')renderContagem();else renderConta()}
 $$('[data-cmodo]').forEach(b=>b.onclick=()=>setModoConta(b.dataset.cmodo));
+const fotoEst=id=>{try{const c=CAT.itens.find(x=>x.produto_id===id&&x.foto);return c?fotoCat(c.foto):''}catch(e){return''}};
+const grupoConta=()=>contaCat==='Tudo'?S.est:S.est.filter(e=>e.cat===contaCat);
+const feitosConta=l=>l.filter(e=>S.cnt[e.id]!=null).length;
+function anelConta(f,t){const R=26,C=2*Math.PI*R,p=t?f/t:0;return `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="${R}" class="a-fundo"/><circle cx="32" cy="32" r="${R}" class="a-cheio${p>=1?' ok':''}" style="stroke-dasharray:${C.toFixed(1)};stroke-dashoffset:${(C*(1-p)).toFixed(1)}"/></svg>`}
+function cartaoConta(e){const v=S.cnt[e.id],ft=fotoEst(e.id),mod=nz(e.m);
+  return `<div class="cc ${v==null?'nao':v===0?'zero':'sim'}${ft?' foto':''}" data-ccid="${e.id}" role="button" tabindex="0" aria-label="${esc(cap(e.p)+(mod?' '+mod:''))}: ${v==null?'ainda não contado':v+' peças'}. Toque para somar uma peça.">
+    ${ft?`<img src="${esc(ft)}" alt="" loading="lazy">`:''}
+    <span class="cc-cat">${esc(e.cat)}</span><b class="cc-mod">${esc(mod||cap(e.p))}</b>
+    <span class="cc-nome">${esc(mod?cap(e.p):'')}${nz(e.t)?(mod?' · ':'')+esc(cap(e.t)):''}</span>
+    <div class="cc-n num">${v==null?'?':v}</div>
+    <div class="cc-acoes"><button type="button" data-ccm="${e.id}" aria-label="Tirar uma peça">−</button><button type="button" data-ccz="${e.id}">Não tem</button><button type="button" data-cce="${e.id}" aria-label="Digitar a quantidade">✎</button></div></div>`}
+function topoConta(){const g=grupoConta(),f=feitosConta(g);const a=$('#ctAnel');if(!a)return;
+  a.innerHTML=anelConta(f,g.length)+`<div><b class="num">${f}</b><span>de ${g.length}</span></div>`;
+  $$('[data-ccat]').forEach(b=>{const c=b.dataset.ccat,l=c==='Tudo'?S.est:S.est.filter(e=>e.cat===c),k=feitosConta(l);b.querySelector('small').textContent=k+'/'+l.length;b.querySelector('i').style.width=(l.length?k/l.length*100:0)+'%';b.classList.toggle('ok',k===l.length&&l.length>0)})}
 function renderConta(){
   const box=$('#cnt-contar');
   if(!S.est.length){box.innerHTML='<div class="panel"><div class="empty">Estoque vazio. Importe a planilha em Gestão.</div></div>';return}
-  if(contaLista===null){
-    const grupos=[['Tudo',S.est],...CATS().map(c=>[c,S.est.filter(e=>e.cat===c)])];
-    const feitos=l=>l.filter(e=>S.cnt[e.id]!=null).length;
-    box.innerHTML=`<div class="panel"><h2>O que você vai contar agora?</h2><p class="note" style="margin-bottom:12px">Escolha uma parte. Vai aparecer um produto de cada vez.</p>
-      <div class="tiles">${grupos.map(([n,l],i)=>{const f=feitos(l);return `<button type="button" class="tile${i===0?' tudo':''}${f&&f===l.length&&i?' ok':''}" data-grupo="${i}"><b>${esc(n)}</b><span>${l.length} produto${l.length===1?'':'s'}</span><span>${f?(f===l.length?'✔ tudo contado':f+' já contado'+(f===1?'':'s')):'ainda não contado'}</span></button>`}).join('')}</div></div>`;
-    $$('[data-grupo]').forEach(b=>b.onclick=()=>{const [n,l]=grupos[+b.dataset.grupo];contaLista=ordemConta(l).map(e=>e.id);contaNome=n;const i=contaLista.findIndex(id=>S.cnt[id]==null);contaIdx=i<0?0:i;renderConta();$('#cnt-contar').scrollIntoView({block:'start'})});
-    return;
-  }
-  if(contaIdx>=contaLista.length){
-    const l=contaLista.map(id=>S.est.find(e=>e.id===id)).filter(Boolean),cont=l.filter(e=>S.cnt[e.id]!=null),dif=cont.filter(e=>S.cnt[e.id]!==e.qt);
-    box.innerHTML=`<div class="panel conta"><div style="font-size:48px;line-height:1">✅</div><h2 style="justify-content:center;font-size:22px;margin:0">Terminou: ${esc(contaNome)}</h2>
-      <p style="margin:0;font-size:16px">Você contou <b>${cont.length}</b> de ${l.length} produtos.</p>
-      ${dif.length?`<div class="alert warn">${dif.length} produto${dif.length===1?'':'s'} não bate${dif.length===1?'':'m'} com o sistema. O dono confere em <b>Conferir</b>.</div>`:'<div class="alert info">Tudo bateu com o sistema.</div>'}
-      <button class="btn pri big" type="button" id="ccOutra">Contar outra parte</button>
-      <button class="btn big" type="button" id="ccConf">Ver o que não bateu</button></div>`;
-    $('#ccOutra').onclick=()=>{contaLista=null;renderConta()};$('#ccConf').onclick=()=>setModoConta('conferir');
-    return;
-  }
-  const e=S.est.find(x=>x.id===contaLista[contaIdx]);if(!e){contaIdx++;return renderConta()}
-  const v=S.cnt[e.id];
-  box.innerHTML=`<div class="panel conta">
-    <div class="conta-top"><span>Produto <b>${contaIdx+1}</b> de ${contaLista.length} · ${esc(contaNome)}</span><button class="btn sm" type="button" id="ccParar">Parar</button></div>
-    <div class="bar" style="margin:0"><i style="width:${Math.round(contaIdx/contaLista.length*100)}%"></i></div>
-    <div class="conta-prod"><span class="pill p-acc">${esc(e.cat)}</span><div class="nome">${esc(cap(e.p))}</div><div class="mlbl">Modelo</div><div class="modelo">${esc(nz(e.m)||'—')}</div>${nz(e.t)?`<div class="cor">Cor: <b>${esc(cap(e.t))}</b></div>`:''}</div>
-    <p class="conta-q">Quantos tem na sua mão?</p>
-    <div class="conta-num"><button type="button" id="ccMenos" aria-label="Tirar um">−</button><input id="ccVal" class="num" inputmode="numeric" value="${v??''}" placeholder="?" aria-label="Quantidade contada" autocomplete="off"><button type="button" id="ccMais" aria-label="Somar um">+</button></div>
-    <button class="btn big" type="button" id="ccZero">Não tem nenhum</button>
-    <p class="note" id="ccMsg" style="min-height:1.3em;color:var(--bad)"></p>
-    <div class="conta-nav"><button class="btn big" type="button" id="ccVolta" ${contaIdx===0?'disabled':''}>◀ Voltar</button><button class="btn pri big" type="button" id="ccProx">Próximo ▶</button></div>
-  </div>`;
-  const inp=$('#ccVal'),val=()=>inp.value.trim()===''?null:Math.max(0,parseInt(inp.value)||0);
-  $('#ccMais').onclick=()=>{inp.value=(val()??0)+1;$('#ccMsg').textContent=''};
-  $('#ccMenos').onclick=()=>{inp.value=Math.max(0,(val()??0)-1)};
-  const avanca=n=>{setC(e.id,n);contaIdx++;renderConta();$('#cnt-contar').scrollIntoView({block:'start'})};
-  $('#ccZero').onclick=()=>avanca(0);
-  $('#ccProx').onclick=()=>{const n=val();if(n==null){$('#ccMsg').textContent='Toque no + uma vez para cada peça. Se não tiver nenhuma, toque em “Não tem nenhum”.';return}avanca(n)};
-  $('#ccVolta').onclick=()=>{if(contaIdx>0){contaIdx--;renderConta()}};
-  $('#ccParar').onclick=()=>{contaLista=null;renderConta()};
-  inp.onkeydown=ev=>{if(ev.key==='Enter'){ev.preventDefault();$('#ccProx').click()}};
+  const g=grupoConta();
+  if(contaFim){const f=feitosConta(g),falta=g.length-f;
+    box.innerHTML=`<div class="panel conta fim-conta"><div class="fim-ic">${falta?'👍':'🎉'}</div><h2 style="justify-content:center;font-size:24px;margin:0">${falta?'Boa! Quase lá':'Pronto! Tudo contado'}</h2>
+      <p style="margin:0;font-size:16px">Você contou <b>${f}</b> de ${g.length} produtos${contaCat==='Tudo'?'':' de <b>'+esc(contaCat)+'</b>'}.</p>
+      ${falta?`<button class="btn pri big" type="button" id="ctFaltam">Mostrar os ${falta} que faltam</button>`:''}
+      <button class="btn big${falta?'':' pri'}" type="button" id="ctOutra">Contar outra parte</button>
+      <button class="btn big" type="button" id="ctConf">Ver o que não bateu (dono)</button></div>`;
+    if(!falta)confeteConta();
+    if($('#ctFaltam'))$('#ctFaltam').onclick=()=>{contaFim=false;contaFalta=true;renderConta()};
+    $('#ctOutra').onclick=()=>{contaFim=false;contaFalta=false;contaCat='Tudo';renderConta()};$('#ctConf').onclick=()=>{contaFim=false;setModoConta('conferir')};return}
+  const lst=ordemConta(g).filter(e=>(!contaFalta||S.cnt[e.id]==null)&&(!contaBusca||chave(e.p+' '+e.m+' '+e.t+' '+e.cat).includes(chave(contaBusca))));
+  box.innerHTML=`<div class="panel prat">
+    <div class="prat-top"><div class="prat-anel" id="ctAnel"></div>
+      <div class="prat-tit"><h2>Toque no produto <u>uma vez para cada peça</u> que está na sua mão</h2><p class="note">Errou? Toque no <b>−</b>. Não achou nenhuma? <b>Não tem</b>. Muitas peças? <b>✎</b> e digite. Tudo é salvo na hora.</p></div></div>
+    <div class="prat-cats" role="group" aria-label="Partes do estoque">${['Tudo',...CATS()].map(c=>`<button type="button" data-ccat="${esc(c)}" aria-pressed="${c===contaCat}"><span>${esc(c)}</span><small class="num"></small><i></i></button>`).join('')}</div>
+    <div class="row-f prat-filtro"><input id="ctBusca" class="inp" placeholder="Achar: modelo, cor ou produto (ex.: A15)" value="${esc(contaBusca)}" autocomplete="off" aria-label="Achar produto" style="flex:1 1 220px"><label class="chk"><input type="checkbox" id="ctFalta"${contaFalta?' checked':''}> só os que faltam</label></div>
+    <div class="prat-grade" id="ctGrade">${lst.map(cartaoConta).join('')||`<div class="empty">${contaFalta?'Tudo desta parte já foi contado! 🎉':'Nenhum produto com esse nome.'}</div>`}</div>
+    <div class="prat-pe"><button class="btn pri big" type="button" id="ctFim">Terminei ${contaCat==='Tudo'?'a contagem':'“'+esc(contaCat)+'”'}</button></div></div>`;
+  topoConta();
+  $$('[data-ccat]').forEach(b=>b.onclick=()=>{contaCat=b.dataset.ccat;renderConta()});
+  const bu=$('#ctBusca');bu.oninput=()=>{contaBusca=bu.value;const p=bu.selectionStart;renderConta();const n=$('#ctBusca');n.focus();try{n.setSelectionRange(p,p)}catch(e){}};
+  $('#ctFalta').onchange=e=>{contaFalta=e.target.checked;renderConta()};
+  $('#ctFim').onclick=()=>{contaFim=true;renderConta();$('#cnt-contar').scrollIntoView({block:'start',behavior:'smooth'})};
+  const gr=$('#ctGrade');
+  gr.onclick=ev=>{const b=ev.target.closest('button');const card=ev.target.closest('[data-ccid]');if(!card||ev.target.closest('input'))return;const id=+card.dataset.ccid;
+    if(b){if(b.dataset.ccm){const v=S.cnt[id];if(v!=null)mudaConta(id,v>0?v-1:null,-1)}
+      else if(b.dataset.ccz)mudaConta(id,0,0);
+      else if(b.dataset.cce)digitaConta(card,id);return}
+    mudaConta(id,(S.cnt[id]??0)+1,1)};
+  gr.onkeydown=ev=>{const card=ev.target.closest('[data-ccid]');if(card&&ev.target===card&&(ev.key==='Enter'||ev.key===' ')){ev.preventDefault();const id=+card.dataset.ccid;mudaConta(id,(S.cnt[id]??0)+1,1)}};
 }
+function mudaConta(id,v,d){setC(id,v);const card=$(`[data-ccid="${id}"]`);if(!card)return;
+  card.classList.toggle('nao',v==null);card.classList.toggle('zero',v===0);card.classList.toggle('sim',v!=null&&v>0);
+  const n=card.querySelector('.cc-n');n.textContent=v==null?'?':v;n.classList.remove('pop');void n.offsetWidth;n.classList.add('pop');
+  if(d>0){const f=document.createElement('span');f.className='cc-mais';f.textContent='+1';card.appendChild(f);setTimeout(()=>f.remove(),650)}
+  try{navigator.vibrate&&navigator.vibrate(d>0?12:[8,40,8])}catch(e){}
+  topoConta()}
+function digitaConta(card,id){const n=card.querySelector('.cc-n');n.innerHTML=`<input type="number" min="0" inputmode="numeric" value="${S.cnt[id]??''}" aria-label="Quantidade">`;const i=n.querySelector('input');i.focus();i.select();
+  const ok=()=>{if(!i.isConnected)return;const t=i.value.trim();mudaConta(id,t===''?null:Math.max(0,parseInt(t)||0),0)};
+  i.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();ok()}if(e.key==='Escape'){mudaConta(id,S.cnt[id]??null,0)}};i.onblur=ok}
+function confeteConta(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const c=document.createElement('canvas');c.className='confete';document.body.appendChild(c);
+  const W=c.width=innerWidth,H=c.height=innerHeight,x=c.getContext('2d'),cores=['#6d5efc','#3ecf8e','#f2b45a','#8f7dff','#ff6b74'];
+  const P=Array.from({length:120},()=>({x:W/2,y:H/3,vx:(Math.random()-.5)*16,vy:-Math.random()*14-3,r:Math.random()*7+3,c:cores[Math.random()*5|0],a:Math.random()*6,g:.3+Math.random()*.2}));
+  const t0=performance.now();const f=t=>{x.clearRect(0,0,W,H);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.vx*=.99;p.a+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore()});if(t-t0<1800)requestAnimationFrame(f);else c.remove()};requestAnimationFrame(f)}
+/* Conferir: só o que não bateu, em cartões grandes */
+function renderDifs(){const box=$('#cntDifs');if(!box)return;const st=cntStats();
+  const dif=S.est.filter(e=>S.cnt[e.id]!=null&&S.cnt[e.id]!==e.qt).sort((a,b)=>Math.abs((S.cnt[b.id]-b.qt)*b.c)-Math.abs((S.cnt[a.id]-a.qt)*a.c));
+  const falta=S.est.length-st.feitos;
+  box.innerHTML=`<h2>O que não bateu <span class="sub">${dif.length?dif.length+' produto'+(dif.length===1?'':'s')+' · sistema → contado':''}</span></h2>
+    ${dif.length?`<div class="difs">${dif.map(e=>{const d=S.cnt[e.id]-e.qt;return `<div class="dif ${d<0?'neg':'pos'}"><div class="dif-p"><b>${esc(nz(e.m)||cap(e.p))}</b><span>${esc(nz(e.m)?cap(e.p):'')}${nz(e.t)?' · '+esc(cap(e.t)):''}</span></div>
+      <div class="dif-n" aria-label="Sistema ${e.qt}, contado ${S.cnt[e.id]}"><span class="num">${e.qt}</span><span class="seta">→</span><b class="num">${S.cnt[e.id]}</b></div>
+      <div class="dif-r"><b>${d<0?'faltam '+(-d):'sobram '+d}</b><small class="num">${brl(d*e.c)} no custo</small></div>
+      <button class="btn sm" type="button" data-recontar="${e.id}">Contar de novo</button></div>`}).join('')}</div>`
+    :`<div class="empty">${st.feitos?'Tudo o que foi contado bateu com o sistema. 👏':'Ainda não contaram nada. Use a aba Contar.'}</div>`}
+    ${falta&&st.feitos?`<p class="note" style="margin-top:10px">${falta} produto${falta===1?'':'s'} ainda sem contar. Eles ficam como estão quando você acertar o estoque.</p>`:''}`;
+  $$('[data-recontar]').forEach(b=>b.onclick=()=>{setC(+b.dataset.recontar,null);toast('Apagado. Conte esse produto de novo na aba Contar.')})}
+
 $$('[data-cf]').forEach(b=>b.onclick=()=>{cntF=b.dataset.cf;$$('[data-cf]').forEach(x=>x.setAttribute('aria-pressed',x===b));renderContagem()});
 $('#cntIgual').onclick=()=>busy($('#cntIgual'),async()=>{const novos=(renderContagem.vis||[]).filter(e=>S.cnt[e.id]==null);if(!novos.length){toast('Todos os visíveis já foram contados');return}
   must(await sb.from('contagem_itens').upsert(novos.map(e=>({produto_id:e.id,contado:e.qt}))));novos.forEach(e=>S.cnt[e.id]=e.qt);if(!S.cntDt)S.cntDt=new Date().toISOString();renderContagem();toast(novos.length+' produtos marcados como iguais')});
@@ -1490,7 +1572,9 @@ function uteisAte(alvo){const a=new Date();a.setHours(0,0,0,0);const b=new Date(
 const itensDe=e=>e.encomenda_itens||[];
 const diasCal=d=>{const a=new Date();a.setHours(0,0,0,0);const b=new Date(d);b.setHours(0,0,0,0);return Math.round((b-a)/864e5)};
 const pendentes=e=>itensDe(e).filter(i=>!i.pronta&&!i.comprado);
-const totEnc=e=>itensDe(e).reduce((a,i)=>a+i.qtd*(+i.preco),0);
+const totBruto=e=>itensDe(e).reduce((a,i)=>a+i.qtd*(+i.preco),0);
+const totEnc=e=>Math.max(0,r2(totBruto(e)-(+e.desconto||0)));
+const fatorEnc=e=>{const b=totBruto(e);return b>0?totEnc(e)/b:1};
 const grupoEnc=e=>e.status==='ABERTA'?(pendentes(e).length?'comprar':'entregar'):e.status==='COMPRADA'?'entregar':e.status;
 
 async function carregarEncomendas(){
@@ -1509,7 +1593,7 @@ function lotes(){
   Object.keys(ENC.comp).forEach(f=>{if(!L[f]&&Object.values(ENC.comp[f]||{}).some(q=>q>0))L[f]={f,itens:[],ped:new Set(),antigo:null}});
   return Object.values(L).map(l=>{const r=regraDe(l.f);
     const comp=Object.entries(ENC.comp[l.f]||{}).map(([id,q])=>{const c=CAT.itens.find(x=>String(x.id)===id);return c&&q>0?{c,q}:null}).filter(Boolean);
-    const pE=l.itens.reduce((a,i)=>a+i.qtd,0),cE=l.itens.reduce((a,i)=>a+i.qtd*i.custo,0),venda=l.itens.reduce((a,i)=>a+i.qtd*i.preco,0);
+    const pE=l.itens.reduce((a,i)=>a+i.qtd,0),cE=l.itens.reduce((a,i)=>a+i.qtd*i.custo,0),venda=r2(l.itens.reduce((a,i)=>a+i.qtd*i.preco*fatorEnc(i.enc),0));
     const pC=comp.reduce((a,o)=>a+o.q,0),cC=comp.reduce((a,o)=>a+o.q*o.c.custo,0);
     const pc=pE+pC,cu=r2(cE+cC);const usaP=+r.min_pecas>0,usaV=+r.min_valor>0;
     const atingiu=(!usaP&&!usaV)||(usaP&&pc>=r.min_pecas)||(usaV&&cu>=r.min_valor);
@@ -1576,7 +1660,7 @@ function encHTML(e){const its=itensDe(e),g=grupoEnc(e),pend=pendentes(e).reduce(
   if(g==='entregar')bt=`<button class="btn sm" type="button" data-eavisa="${e.id}">Avisar que chegou</button><button class="btn sm" type="button" data-epedido="${e.id}">Lançar no Pedido</button><button class="btn sm pri" type="button" data-eentregue="${e.id}">Entregue</button><button class="btn sm danger" type="button" data-ecan="${e.id}">Cancelar</button>`;
   if(g==='CANCELADA')bt=`<button class="btn sm" type="button" data-ereabre="${e.id}">Reabrir</button>`;
   return `<div class="enc"><div class="enc-top"><div><b>${esc(cap(e.cliente))}</b> <span class="note">nº ${esc(e.codigo)} · ${new Date(e.criado_em).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} · ${e.origem==='VITRINE'?'vitrine':'lançada aqui'}</span></div>${pill}</div>
-    <ul class="enc-it">${linhas}</ul>${e.obs?`<p class="note">Obs.: ${esc(e.obs)}</p>`:''}
+    <ul class="enc-it">${linhas}</ul>${e.cupom?`<p class="note">🎟️ Cupom <b>${esc(e.cupom)}</b>: − ${brl(e.desconto)} (de ${brl(totBruto(e))})</p>`:''}${e.obs?`<p class="note">Obs.: ${esc(e.obs)}</p>`:''}
     <div class="row-f enc-pe"><b class="num">${brl(totEnc(e))}</b>${pend&&g==='comprar'?`<span class="note">${qPecas(pend)} a buscar</span>`:''}<span style="flex:1"></span>${bt}</div></div>`}
 
 function renderEncomendas(){
@@ -1625,7 +1709,8 @@ $('#encLista').addEventListener('click',ev=>{const b=ev.target.closest('button')
     itensDe(e).forEach(i=>{const c=i.catalogo_id&&CAT.itens.find(x=>x.id===i.catalogo_id);const est=i.pronta&&c&&c.produto_id&&S.est.find(x=>x.id===c.produto_id);
       if(est)cart.push({id:est.id,p:est.p,m:est.m,cat:est.cat,q:i.qtd,cheio:i.preco,c:est.c,v:i.preco,manual:true});
       else cart.push({id:null,p:String(i.nome).toUpperCase(),m:'',cat:categoria(i.nome),q:i.qtd,v:i.preco,cheio:i.preco,manual:true})});
-    $('#cli').value=cap(e.cliente);location.hash='#pedido';try{renderCliInfo()}catch(x){}renderCart();toast('Confira o pedido e toque em Fechar. Depois marque a encomenda como Entregue.')}});
+    $('#cli').value=cap(e.cliente);location.hash='#pedido';try{renderCliInfo()}catch(x){}cupomAtivo=null;$('#cupom').value=e.cupom||'';$('#cupomInfo').innerHTML='';
+    if(e.cupom)$('#cupomOk').click();renderCart();toast(e.cupom?'Pedido montado com o cupom '+e.cupom+'. Confira e toque em Fechar.':'Confira o pedido e toque em Fechar. Depois marque a encomenda como Entregue.')}});
 $$('[data-es]').forEach(b=>b.onclick=()=>{ENC.filtro=b.dataset.es;$$('[data-es]').forEach(x=>x.setAttribute('aria-pressed',x===b));renderEncomendas()});
 
 /* nova encomenda lançada na mão */

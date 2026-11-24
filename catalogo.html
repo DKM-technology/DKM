@@ -95,6 +95,42 @@ main.wrap{padding-block:18px 120px}
 @media (max-width:520px){.linha1{flex-wrap:wrap;gap:8px}.busca{flex:1 1 100%;order:2}.marca{font-size:17px}.grade{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card .corpo{padding:9px 10px 10px}.preco{font-size:16px}.marca{font-size:18px}}
 @media (prefers-reduced-motion:reduce){.dot{animation:none}}
 .ped-num{font-size:12.5px;color:var(--muted);margin:-4px 0 0}.ped-num.ok{color:var(--good,#3ecf8e);font-weight:600}
+/* cupom: faixa no topo, bilhete na sacola, confete */
+.faixa-cupom{display:flex;align-items:center;gap:12px;margin:0 0 14px;padding:10px 14px;border-radius:12px;border:1.5px dashed var(--good);background:rgba(62,207,142,.08);animation:desce .5s cubic-bezier(.2,1.3,.4,1)}
+.faixa-cupom.ruim{border-color:var(--warn);background:rgba(242,180,90,.08)}
+.faixa-cupom .ic{font-size:22px;line-height:1}
+.faixa-cupom b{font-family:var(--f-display);letter-spacing:.04em}
+.faixa-cupom p{margin:0;font-size:13.5px}
+@keyframes desce{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+.cupom-area{margin:14px 0 4px}
+.cupom-form{display:flex;gap:8px}
+.cupom-form input{flex:1;min-width:0;border:1.5px dashed var(--line);background:var(--surface-2);border-radius:10px;padding:10px 12px;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.cupom-form input::placeholder{text-transform:none;letter-spacing:0;font-weight:400}
+.cupom-form input:focus{outline:none;border-color:var(--accent);border-style:solid}
+.cupom-form button{border:0;border-radius:10px;padding:0 16px;background:var(--surface-2);border:1px solid var(--line);font-weight:600;cursor:pointer}
+.cupom-msg{font-size:12.5px;margin:6px 0 0;color:var(--warn)}
+.treme{animation:treme .4s}
+@keyframes treme{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.ticket{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;background:linear-gradient(100deg,#1f6f53,#3ecf8e);color:#06261a;overflow:hidden}
+.ticket::before,.ticket::after{content:"";position:absolute;top:50%;width:18px;height:18px;border-radius:50%;background:var(--surface);transform:translateY(-50%)}
+.ticket::before{left:-9px}.ticket::after{right:-9px}
+.ticket .pct{font-family:var(--f-display);font-weight:800;font-size:26px;line-height:1;padding-right:12px;border-right:2px dashed rgba(6,38,26,.35)}
+.ticket .cod{font-family:var(--f-display);font-weight:800;letter-spacing:.08em;font-size:15px}
+.ticket small{display:block;font-size:12px;opacity:.85}
+.ticket .x{border:0;background:rgba(6,38,26,.15);color:#06261a;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px;line-height:1}
+.ticket.entra{animation:ticket .6s cubic-bezier(.2,1.4,.4,1)}
+@keyframes ticket{from{transform:scale(.7) rotate(-4deg);opacity:0}to{transform:none;opacity:1}}
+.ticket.espera{background:var(--surface-2);color:var(--muted)}.ticket.espera .x{background:var(--line);color:var(--ink)}.ticket.espera .pct{border-color:var(--line)}
+.carimbo{position:absolute;right:52px;top:6px;border:2px solid #06261a;color:#06261a;border-radius:6px;padding:1px 6px;font-family:var(--f-display);font-weight:800;font-size:11px;letter-spacing:.12em;transform:rotate(-8deg);opacity:.75}
+.carimbo.bate{animation:carimbo .5s cubic-bezier(.3,1.6,.5,1) .25s both}
+@keyframes carimbo{from{transform:scale(2.4) rotate(-20deg);opacity:0}to{transform:rotate(-8deg);opacity:.75}}
+.tot-linhas{display:grid;gap:4px;margin:14px 0 0;font-size:14px}
+.tot-linhas div{display:flex;justify-content:space-between}
+.tot-linhas .riscado{color:var(--muted)}.tot-linhas .riscado s{text-decoration-thickness:2px}
+.tot-linhas .desc{color:var(--good);font-weight:600}
+.barra .old{opacity:.7;font-weight:500;font-size:13px;margin-right:8px}
+#confete{position:fixed;inset:0;pointer-events:none;z-index:70}
+@media (prefers-reduced-motion:reduce){.faixa-cupom,.ticket.entra,.carimbo.bate,.treme{animation:none}}
 /* só para o dono logado: custo do fornecedor */
 .custo{font-size:11.5px;line-height:1.25;color:var(--muted);margin-bottom:-4px}
 .custo b{font-weight:600;color:var(--ink)}
@@ -118,6 +154,7 @@ main.wrap{padding-block:18px 120px}
 </div>
 <main class="wrap">
   <div class="dono" id="dono"><span id="donoTxt">Só você vê o custo do fornecedor. O cliente não vê.</span><button type="button" id="donoBtn" aria-pressed="false"><svg class="o-aberto" viewBox="0 0 24 24"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg><svg class="o-fechado" viewBox="0 0 24 24"><path d="M3 3l18 18M10.6 5.1A10.6 10.6 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-3.2 4.1M6.6 6.6A17.4 17.4 0 0 0 2 12s3.6 7 10 7a10 10 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button></div>
+  <div class="faixa-cupom" id="faixaCupom" hidden><span class="ic" aria-hidden="true">🎟️</span><p id="faixaTxt"></p></div>
   <div class="info"><span id="contagem"></span><span id="aviso"></span></div>
   <div id="grade" class="grade"></div>
   <div class="mais" id="mais" hidden><button class="btn" type="button" id="maisBtn">Ver mais produtos</button></div>
@@ -129,6 +166,8 @@ main.wrap{padding-block:18px 120px}
   <h2>Seu pedido</h2>
   <p class="nota" id="sacolaAviso"></p>
   <div id="itens"></div>
+  <div class="cupom-area" id="cupomArea"></div>
+  <div class="tot-linhas" id="totLinhas" hidden><div class="riscado"><span>Produtos</span><s class="num" id="totCheio"></s></div><div class="desc"><span id="totDescTxt">Cupom</span><span class="num" id="totDesc"></span></div></div>
   <div class="tot"><span>Total</span><b class="num" id="sacolaTot"></b></div>
   <p class="ped-num" id="pedNum"></p>
   <div class="campo"><label for="nome">Seu nome</label><input id="nome" autocomplete="name" placeholder="Para a gente saber quem é"></div>
@@ -138,6 +177,7 @@ main.wrap{padding-block:18px 120px}
   <div class="linha-acoes"><button class="link" type="button" id="limpar">Esvaziar pedido</button><button class="link" type="button" id="fecha">Continuar comprando</button></div>
 </section>
 
+<canvas id="confete" hidden></canvas>
 <script>
 /* Mesmo banco do Painel DKM: só lê o que está visível no catálogo */
 const SUPABASE_URL='https://slfukomaoygdtmlwylua.supabase.co';
@@ -203,13 +243,16 @@ let tq;$('#q').oninput=()=>{clearTimeout(tq);tq=setTimeout(()=>{limite=48;filtra
 function itensSacola(){return Object.entries(SAC).map(([id,q])=>({x:ITENS.find(i=>String(i.id)===id),q})).filter(o=>o.x)}
 function renderSacola(){
   const its=itensSacola(),n=its.reduce((a,o)=>a+o.q,0),tot=its.reduce((a,o)=>a+o.q*o.x.preco,0);
-  $('#barra').hidden=!n;$('#barraQtd').textContent=`Ver pedido · ${n} ite${n===1?'m':'ns'}`;$('#barraTot').textContent=brl(tot);
+  if(CUP.cod&&chaveSac()!==CUP.chave&&chaveSac()!==CUP.pend)validaCupom();
+  const desc=descAtual(),fim=Math.max(0,tot-desc);
+  $('#barra').hidden=!n;$('#barraQtd').textContent=`Ver pedido · ${n} ite${n===1?'m':'ns'}`;$('#barraTot').innerHTML=desc?`<s class="old">${brl(tot)}</s>${brl(fim)}`:brl(tot);
   $('#itens').innerHTML=its.length?its.map(({x,q})=>`<div class="it">${x.foto?`<img src="${esc(fotoUrl(x.foto))}" alt="">`:'<span class="mini"></span>'}<div class="n">${esc(x.nome)}<small>${brl(x.preco)} · ${x.pronta?'pronta entrega':'sob encomenda'}</small></div><span class="qtd"><button type="button" data-m="${x.id}" aria-label="Tirar um">−</button><span class="num">${q}</span><button type="button" data-p="${x.id}" aria-label="Mais um">+</button></span></div>`).join(''):'<p class="nota">Seu pedido está vazio.</p>';
-  $('#sacolaTot').textContent=brl(tot);
+  $('#totLinhas').hidden=!desc;$('#totCheio').textContent=brl(tot);$('#totDesc').textContent='− '+brl(desc);$('#totDescTxt').textContent='Cupom '+(CUP.r&&CUP.r.codigo||'');
+  contaTotal(fim);
   const nome=$('#nome').value.trim(),obs=$('#obs').value.trim();
   const linhas=its.map(({x,q})=>`• ${q}x ${x.nome} (${brl(x.preco)})${x.pronta?'':' *'}`);
   const cod=n?codPedido():'';$('#pedNum').textContent=n?(PED.env?`Pedido nº ${cod} enviado. Mudou algo? Toque em enviar de novo.`:`Pedido nº ${cod}`):'';$('#pedNum').classList.toggle('ok',!!PED.env);
-  const msg=`Olá! Quero fazer este pedido (nº ${cod}) no catálogo ${CFG.titulo||'DKM'}:\n\n${linhas.join('\n')}\n\n*Total: ${brl(tot)}*${its.some(o=>!o.x.pronta)?'\n(* sob encomenda)':''}${nome?`\nNome: ${nome}`:''}${obs?`\nObs.: ${obs}`:''}`;
+  const msg=`Olá! Quero fazer este pedido (nº ${cod}) no catálogo ${CFG.titulo||'DKM'}:\n\n${linhas.join('\n')}\n\n${desc?`Produtos: ${brl(tot)}\nCupom ${CUP.r.codigo}: − ${brl(desc)}\n*Total com desconto: ${brl(fim)}*`:`*Total: ${brl(tot)}*`}${its.some(o=>!o.x.pronta)?'\n(* sob encomenda)':''}${nome?`\nNome: ${nome}`:''}${obs?`\nObs.: ${obs}`:''}`;
   const num=String(CFG.whatsapp||'5562991153874').replace(/\D/g,'');
   $('#zap').href=`https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
   if(!n)fechaSacola();
@@ -223,9 +266,52 @@ $('#limpar').onclick=()=>{SAC={};salva();PED={};salvaPed();renderSacola();render
 /* ao enviar: grava a encomenda no banco (o WhatsApp abre do mesmo jeito, mesmo se a internet falhar aqui) */
 $('#zap').addEventListener('click',()=>{const its=itensSacola();if(!its.length)return;renderSacola();const cod=PED.cod; /* renderSacola acerta o link antes de abrir */
   try{fetch(`${SUPABASE_URL}/rest/v1/rpc/registrar_encomenda`,{method:'POST',keepalive:true,headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},
-    body:JSON.stringify({p_codigo:cod,p_cliente:$('#nome').value.trim(),p_obs:$('#obs').value.trim(),p_itens:its.map(({x,q})=>({id:x.id,q}))})}).catch(()=>{})}catch(e){}
+    body:JSON.stringify({p_codigo:cod,p_cliente:$('#nome').value.trim(),p_obs:$('#obs').value.trim(),p_itens:its.map(({x,q})=>({id:x.id,q})),...(descAtual()?{p_cupom:CUP.r.codigo}:{})})}).catch(()=>{})}catch(e){}
   PED.env=Date.now();salvaPed();setTimeout(renderSacola,300)});
 $('#nome').oninput=()=>{try{localStorage.setItem('dkm-nome',$('#nome').value)}catch(e){}renderSacola()};$('#obs').oninput=renderSacola;
+/* ===== Cupom: o painel cria, a vitrine confere no banco e dá o desconto ===== */
+let CUP={cod:'',r:null,chave:null,pend:null,erroAnim:false};
+try{CUP.cod=localStorage.getItem('dkm-cupom')||''}catch(e){}
+try{const q=new URLSearchParams(location.search).get('cupom');if(q){CUP.cod=q.trim().toUpperCase().replace(/[^A-Z0-9-]/g,'').slice(0,30);localStorage.setItem('dkm-cupom',CUP.cod);history.replaceState(null,'',location.pathname+location.hash)}}catch(e){}
+const chaveSac=()=>CUP.cod+'|'+JSON.stringify(itensSacola().map(({x,q})=>[x.id,q]))+'|'+$('#nome').value.trim().toUpperCase();
+const descAtual=()=>CUP.r&&CUP.r.ok&&CUP.chave===chaveSac()&&itensSacola().length?Math.max(0,+CUP.r.desconto||0):0;
+const rotulo=r=>r.tipo==='PCT'?'−'+(+r.valor).toLocaleString('pt-BR')+'%':'−'+brl(r.valor).replace(',00','');
+let tCup=null;
+function validaCupom(agora){clearTimeout(tCup);if(!CUP.cod){CUP.r=null;CUP.chave=null;renderCupom();return}
+  const k=chaveSac();CUP.pend=k;renderCupom();
+  tCup=setTimeout(async()=>{let r;
+    try{const res=await fetch(`${SUPABASE_URL}/rest/v1/rpc/cupom_vitrine`,{method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},
+        body:JSON.stringify({p_codigo:CUP.cod,p_cliente:$('#nome').value.trim(),p_itens:itensSacola().map(({x,q})=>({id:x.id,q}))})});
+      r=res.ok?await res.json():{ok:false,msg:res.status===404?'Os cupons ainda não estão ligados nesta loja.':'Não deu para conferir o cupom agora.'}}
+    catch(e){r={ok:false,msg:'Sem internet para conferir o cupom. Tente de novo.'}}
+    if(k!==chaveSac())return;
+    const antes=!!(CUP.r&&CUP.r.ok);CUP.r=r;CUP.chave=k;CUP.pend=null;
+    if(r.ok&&!antes){CUP.anim=true;if(itensSacola().length&&!$('#sacola').hidden)festa()}
+    if(!r.ok)CUP.erroAnim=true;
+    renderSacola();renderCupom()},agora?0:420)}
+function renderCupom(){
+  const a=$('#cupomArea'),r=CUP.r,esperando=CUP.pend!=null,temItens=itensSacola().length>0;
+  if(!CUP.cod){a.innerHTML=`<div class="cupom-form"><input id="cupomCod" placeholder="Tem cupom? Digite o código" autocomplete="off" aria-label="Código do cupom" maxlength="30"><button type="button" id="cupomOk">Aplicar</button></div>`;liga();faixa();return}
+  if(r&&!r.ok&&!esperando){a.innerHTML=`<div class="cupom-form${CUP.erroAnim?' treme':''}"><input id="cupomCod" value="${esc(CUP.cod)}" autocomplete="off" aria-label="Código do cupom" maxlength="30"><button type="button" id="cupomOk">Aplicar</button></div><p class="cupom-msg">${esc(r.msg)}${r.pessoal?' <button class="link" type="button" id="irNome">Escrever meu nome</button>':''}</p>`;CUP.erroAnim=false;liga();faixa();return}
+  const ok=r&&r.ok&&!esperando;
+  a.innerHTML=`<div class="ticket${ok?'':' espera'}${CUP.anim?' entra':''}"><span class="pct">${ok?rotulo(r):'…'}</span><div><span class="cod">${esc(CUP.cod)}</span><small>${ok?(temItens?`Desconto de ${brl(descAtual())} neste pedido${r.limitado?' (alguns itens já estão no preço mínimo)':''}`:'Escolha os produtos e o desconto entra sozinho'):'Conferindo o cupom…'}</small></div><button class="x" type="button" id="cupomTira" aria-label="Tirar o cupom">×</button>${ok?`<span class="carimbo${CUP.anim?' bate':''}">APLICADO</span>`:''}</div>`;
+  CUP.anim=false;$('#cupomTira').onclick=()=>{CUP={cod:'',r:null,chave:null,pend:null};try{localStorage.removeItem('dkm-cupom')}catch(e){}renderSacola();renderCupom()};faixa()}
+function liga(){const i=$('#cupomCod'),b=$('#cupomOk');const vai=()=>{const v=i.value.trim().toUpperCase().replace(/\s+/g,'');if(!v){i.focus();return}CUP.cod=v;CUP.r=null;try{localStorage.setItem('dkm-cupom',v)}catch(e){}validaCupom(true)};
+  b.onclick=vai;i.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();vai()}};const n=$('#irNome');if(n)n.onclick=()=>{$('#nome').focus();$('#nome').scrollIntoView({block:'center'})}}
+function faixa(){const f=$('#faixaCupom'),r=CUP.r;if(!CUP.cod||!r){f.hidden=true;return}
+  f.hidden=false;f.classList.toggle('ruim',!r.ok&&!r.pessoal);
+  $('#faixaTxt').innerHTML=r.ok?`Cupom <b>${esc(r.codigo)}</b> ativo: <b>${rotulo(r).replace('−','')}</b> de desconto no seu pedido${r.validade?` até ${new Date(r.validade+'T12:00').toLocaleDateString('pt-BR')}`:''}. Escolha os produtos!`
+    :r.pessoal?`Cupom <b>${esc(CUP.cod)}</b> é pessoal: escreva o seu nome no pedido para ativar.`:`Cupom <b>${esc(CUP.cod)}</b>: ${esc(r.msg)}`}
+/* total contando até o valor novo */
+let totMostrado=null;
+function contaTotal(v){const el=$('#sacolaTot');if(totMostrado==null||matchMedia('(prefers-reduced-motion: reduce)').matches||Math.abs(v-totMostrado)<.005){el.textContent=brl(v);totMostrado=v;return}
+  const de=totMostrado,t0=performance.now();totMostrado=v;const f=t=>{const p=Math.min(1,(t-t0)/650);el.textContent=brl(de+(v-de)*(1-Math.pow(1-p,3)));if(p<1&&totMostrado===v)requestAnimationFrame(f)};requestAnimationFrame(f)}
+/* confete quando o cupom entra */
+function festa(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const c=$('#confete');c.hidden=false;const W=c.width=innerWidth,H=c.height=innerHeight,x=c.getContext('2d');
+  const t=$('.ticket');const o=t?t.getBoundingClientRect():{left:W/2,top:H/2,width:0,height:0};const cores=['#3ecf8e','#6d5efc','#f2b45a','#ffffff','#8f7dff'];
+  const P=Array.from({length:90},()=>({x:o.left+o.width/2,y:o.top+o.height/2,vx:(Math.random()-.5)*12,vy:-Math.random()*12-4,r:Math.random()*6+3,c:cores[Math.random()*cores.length|0],a:Math.random()*6,g:.35+Math.random()*.2}));
+  const t0=performance.now();const f=t=>{x.clearRect(0,0,W,H);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.vx*=.99;p.a+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore()});
+    if(t-t0<1500)requestAnimationFrame(f);else{x.clearRect(0,0,W,H);c.hidden=true}};requestAnimationFrame(f)}
 /* Modo dono: se este navegador está logado no Painel DKM, mostra o custo do fornecedor (o cliente nunca tem esse login) */
 let DONO=false,VER=true,CUSTO={};
 try{VER=localStorage.getItem('dkm-app-oculta')!=='1'}catch(e){} /* mesmo olho do Painel DKM */
@@ -245,6 +331,7 @@ async function modoDono(){
     DONO=true;mostraDono();if(ITENS.length)render();
   }catch(e){}
 }
+renderCupom();if(CUP.cod)validaCupom(true);
 carregar().then(modoDono);
 </script>
 </body>
