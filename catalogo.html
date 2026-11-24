@@ -766,6 +766,33 @@ body.filtrando #secBolas{margin-top:16px}
 .p-xq.pula b{animation:bateTot .4s cubic-bezier(.3,1.7,.5,1)}
 #pPreco.bate{animation:bateTot .45s cubic-bezier(.3,1.7,.5,1)}
 .pc .pq .pc-novo{margin:0}
+
+.selo.mod{top:auto;bottom:8px;left:8px;background:#1d4ed8;color:#fff;border-color:transparent;font-weight:700}
+.aviso-mod{display:inline-block;padding:10px 14px;border-radius:12px;background:linear-gradient(100deg,rgba(29,78,216,.25),rgba(109,94,252,.18));border:1px solid rgba(79,179,255,.45);color:var(--ink);font-size:13.5px;animation:desce .5s cubic-bezier(.2,1.3,.4,1)}
+.mod-s{color:#4fb3ff}
+
+/* contagem regressiva */
+.cn-l2{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cd-txt{font-size:12px;color:#cfc8ff}
+.cd{display:flex;align-items:center;gap:3px}
+.cd i{font-style:normal;display:grid;justify-items:center;min-width:38px;padding:4px 5px 3px;border-radius:8px;background:rgba(0,0,0,.45);border:1px solid rgba(255,255,255,.14);box-shadow:inset 0 -2px 0 rgba(255,255,255,.06);perspective:200px}
+.cd i b{font-family:var(--f-display);font-size:17px;line-height:1;color:#fff;font-variant-numeric:tabular-nums;display:block}
+.cd i small{font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:#b9adff}
+.cd i.vira b{animation:vira .45s cubic-bezier(.3,1.4,.5,1)}
+@keyframes vira{0%{transform:rotateX(90deg);opacity:.2}100%{transform:none;opacity:1}}
+.cd-dp{color:#b9adff;font-weight:800;animation:pisca2 1s steps(2) infinite}
+.cd.urgente i{background:rgba(255,61,110,.35);border-color:rgba(255,61,110,.7)}.cd.urgente i b{color:#ffd3dc}
+.cd i.fim{background:#ff3d6e}.cd i.fim b{font-size:13px;text-transform:uppercase}
+/* explosão */
+.faixa-cupom.cine.explode{animation:explodeF .65s cubic-bezier(.5,0,.75,0) forwards!important;pointer-events:none}
+@keyframes explodeF{0%{transform:none;filter:none}18%{transform:scale(1.04);filter:brightness(2.2) saturate(1.6)}35%{transform:scale(1.02) rotate(-.6deg);filter:brightness(1.6)}100%{transform:scale(.3) rotate(3deg);opacity:0;filter:blur(8px) brightness(2)}}
+.estilhacos{position:fixed;z-index:400;pointer-events:none}
+.estilhacos i{position:absolute;border-radius:2px;opacity:0;animation:estilhaco 1.1s cubic-bezier(.15,.7,.4,1) forwards}
+@keyframes estilhaco{0%{opacity:1;transform:translate(0,0) rotate(0) scale(1)}70%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--r)) scale(.4)}}
+.estilhacos .bum{position:absolute;left:50%;top:50%;font-size:64px;transform:translate(-50%,-50%) scale(0);animation:bum .7s cubic-bezier(.3,1.6,.5,1) forwards}
+@keyframes bum{40%{transform:translate(-50%,-50%) scale(1.4);opacity:1}100%{transform:translate(-50%,-50%) scale(2);opacity:0}}
+@media (prefers-reduced-motion:reduce){.cd i.vira b,.cd-dp{animation:none}}
+@media (max-width:640px){.cd i{min-width:32px}.cd i b{font-size:15px}}
 </style>
 </head>
 <body>
@@ -1058,8 +1085,21 @@ function filtrando(){return cat!=='Todos'||termos().length>0||F.min!=null||F.max
 function modoFiltro(anima){const on=filtrando(),b=document.body,antes=b.classList.contains('filtrando');b.classList.toggle('filtrando',on);$('#voltaTudo').hidden=!on;
   if(anima&&!reduz()){const t=$('#todos');t.classList.remove('troca');void t.offsetWidth;t.classList.add('troca')}
   if(on!==antes||anima){const alvo=on?0:null;if(alvo!=null&&scrollY>2)scrollTo({top:0,behavior:'auto'})}}
+/* busca por modelo de celular (ex.: A15, iPhone 13): mostra também películas e capinhas que servem em qualquer modelo */
+const TEM_MODELO={test:n=>/\b(iphone|redmi|poco|galaxy|xr|xs)\b/i.test(n)||String(n).split(/[\s\/,()|]+/).some(t=>/^[a-z]{0,2}\d{1,2}[a-z]{0,2}$/i.test(t)&&!/^\d+(d|g|w|v|a|m|mm|un|x)$/i.test(t))};
+const NAO_E_CEL=/airpods?|fone|rel[oó]gio|watch|tablet|carregador|cabo|garrafa|copo|caixa|notebook|mochila/i;
+function modeloBusca(){const t=$('#q').value.trim();if(!t)return '';const ws=sem(t).split(/\s+/);
+  if(!ws.some(w=>/\d/.test(w)&&w.length<=6&&!/^\d+(w|mah|d|g|m|v|a|mm|cm|gb|tb|pcs|pc|x)$/i.test(w)))return '';return t.toUpperCase().replace(/\s+/g,' ').slice(0,24)}
+const serveTodos=x=>{const g=grupoDe(x),gn=g>=0?GRUPOS[g].n:'';return (gn==='Películas'||gn==='Capinhas')&&!TEM_MODELO.test(x.nome)&&!NAO_E_CEL.test(x.nome)};
+let MODELO='';
+let SACM={};try{SACM=JSON.parse(localStorage.getItem('dkm-sacola-mod')||'{}')||{}}catch(e){SACM={}}
+const salvaM=()=>{try{localStorage.setItem('dkm-sacola-mod',JSON.stringify(SACM))}catch(e){}};
 function filtra(anima){
-  const q=termos();lista=ordena(ITENS.filter(x=>passa(x,q)));modoFiltro(anima);
+  const q=termos();lista=ordena(ITENS.filter(x=>passa(x,q)));MODELO=modeloBusca();
+  if(MODELO&&(cat==='Todos'||cat==='Películas'||cat==='Capinhas')){const ja=new Set(lista.map(x=>x.id));const extra=ordena(ITENS.filter(x=>!ja.has(x.id)&&serveTodos(x)&&(cat==='Todos'||GRUPOS[grupoDe(x)].n===cat)&&passa(x,[],true)));
+    const cel=x=>{const g=grupoDe(x);return g>=0&&(GRUPOS[g].n==='Películas'||GRUPOS[g].n==='Capinhas')};const n=extra.length;lista=[...lista.filter(cel),...extra,...lista.filter(x=>!cel(x))];lista.extraModelo=n}
+  $('#aviso').innerHTML=MODELO&&lista.extraModelo?`<span class="aviso-mod">📱 Para o seu <b>${esc(MODELO)}</b>: ${lista.extraModelo} películas e capinhas que fazemos no seu modelo. Coloque na sacola que o modelo vai junto no pedido.</span>`:esc(CFG.aviso_encomenda||'');
+  modoFiltro(anima);
   $('#contagem').innerHTML=`<b class="num" id="nProd">${lista.length}</b> produto${lista.length===1?'':'s'}${cat!=='Todos'?' · '+esc(cat.replace(/^[⭐⚡] /,''))+(SUB?' › '+esc(rotSub(SUB)):''):''}`;contaNum($('#nProd'),lista.length,null,500);
   $('#tTodos').textContent=q.length?`Resultado para “${$('#q').value.trim()}”`:cat==='Todos'?'Todos os produtos':SUB?(cat==='Películas'?'Película '+rotSub(SUB).toLowerCase().replace('3d','3D'):SUB):cat;
   montaOrdem();
@@ -1124,7 +1164,7 @@ function ligaFiltro(){
 /* cartões e prateleiras */
 function cartao(x){const q=SAC[x.id]||0,u=imgDe(x),mais=MAIS[x.id]||0;
   return `<article class="card" data-id="${x.id}"><div class="foto">${u?`<img src="${esc(u)}" alt="${esc(x.nome)}" loading="lazy" onerror="this.onerror=null;this.src=arte(ITENS.find(i=>i.id==${x.id})||{id:0,nome:'',categoria:''})"${x.foto?'':' class="arte"'}>`:'<span class="sem">DKM</span>'}
-    <span class="selo ${x.pronta?'pronta':'encomenda'}">${x.pronta?'⚡ Pronta entrega':'Sob encomenda'}</span>${x.destaque?'<span class="selo dest">⭐ Destaque</span>':mais>=3?'<span class="selo dest">🔥 Mais pedido</span>':''}</div>
+    <span class="selo ${x.pronta?'pronta':'encomenda'}">${x.pronta?'⚡ Pronta entrega':'Sob encomenda'}</span>${MODELO&&serveTodos(x)&&!TEM_MODELO.test(x.nome)?`<span class="selo mod">📱 faz no ${esc(MODELO)}</span>`:SACM[x.id]?`<span class="selo mod">📱 ${esc(SACM[x.id])}</span>`:''}${x.destaque?'<span class="selo dest">⭐ Destaque</span>':mais>=3?'<span class="selo dest">🔥 Mais pedido</span>':''}</div>
     <div class="corpo"><div class="nome">${esc(x.nome)}</div>${custoTxt(x)}<div class="pe"><span class="preco num" data-preco="${x.preco}">${brl(x.preco)}</span>
     ${q?`<span class="qtd"><button type="button" data-m="${x.id}" aria-label="Tirar um">−</button><span class="num">${q}</span><button type="button" data-p="${x.id}" aria-label="Mais um">+</button></span>`:`<button class="add" type="button" data-p="${x.id}" aria-label="Adicionar ${esc(x.nome)}">+</button>`}</div></div></article>`}
 const entra=window.IntersectionObserver?new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('entra');entra.unobserve(e.target)}}),{rootMargin:'0px 0px -40px 0px'}):null;
@@ -1161,6 +1201,7 @@ function voaDe(img){if(reduz())return;const top=$('#btCarrinho'),tr=top.getBound
   const dx=b.left+b.width/2-(a.left+a.width/2),dy=b.top+b.height/2-(a.top+a.height/2);
   v.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${dx*.55}px,${dy*.35-80}px) scale(.55)`,opacity:1,offset:.55},{transform:`translate(${dx}px,${dy}px) scale(.12)`,opacity:.3}],{duration:720,easing:'cubic-bezier(.5,0,.3,1)'}).finished.then(()=>{v.remove();[alvo,top].forEach(a=>{a.classList.remove('pula');void a.offsetWidth;a.classList.add('pula')})})}
 function muda(id,d,btn){id=String(id);SAC[id]=Math.max(0,(SAC[id]||0)+d);if(!SAC[id])delete SAC[id];salva();
+  {const x=ITENS.find(i=>String(i.id)===id);if(d>0&&MODELO&&x&&serveTodos(x))SACM[id]=MODELO;if(!SAC[id])delete SACM[id];salvaM()}
   const x=ITENS.find(i=>String(i.id)===id);renderSacola();
   if(d>0&&btn)voaSacola(btn);
   if(x)$$(`.card[data-id="${id}"]`).forEach(el=>{const t=document.createElement('div');t.innerHTML=cartao(x);const n=t.firstElementChild;n.classList.add('entra');el.replaceWith(n)})}
@@ -1187,11 +1228,11 @@ function renderSacola(){
   if(CUP.cod&&chaveSac()!==CUP.chave&&chaveSac()!==CUP.pend)validaCupom();
   const desc=descAtual(),fim=Math.max(0,tot-desc);
   $('#barra').hidden=!n;{const ps=$('#abreSacola .pista');if(ps&&n)requestAnimationFrame(()=>ps.style.setProperty('--w',ps.clientWidth+'px'))}document.body.classList.toggle('com-barra',!!n);const nc=$('#nCarrinho');if(+nc.textContent!==n){nc.textContent=n;nc.classList.remove('pop');void nc.offsetWidth;nc.classList.add('pop')}nc.classList.toggle('zero',!n);$('#barraQtd').textContent=`Ver pedido · ${n} ite${n===1?'m':'ns'}`;$('#barraTot').innerHTML=desc?`<s class="old">${brl(tot)}</s>${brl(fim)}`:brl(tot);
-  $('#itens').innerHTML=its.length?its.map(({x,q})=>`<div class="it"><img src="${esc(imgDe(x))}" alt=""><div class="n">${esc(x.nome)}<small>${brl(x.preco)} · ${x.pronta?'pronta entrega':'sob encomenda'}</small><button class="tira" type="button" data-rm="${x.id}">Remover</button></div><span class="qtd"><button type="button" data-m="${x.id}" aria-label="Tirar um">−</button><span class="num">${q}</span><button type="button" data-p="${x.id}" aria-label="Mais um">+</button></span></div>`).join(''):'<p class="nota">Seu pedido está vazio.</p>';
+  $('#itens').innerHTML=its.length?its.map(({x,q})=>`<div class="it"><img src="${esc(imgDe(x))}" alt=""><div class="n">${esc(x.nome)}<small>${brl(x.preco)} · ${x.pronta?'pronta entrega':'sob encomenda'}${SACM[x.id]?` · <b class="mod-s">📱 ${esc(SACM[x.id])}</b>`:''}</small><button class="tira" type="button" data-rm="${x.id}">Remover</button></div><span class="qtd"><button type="button" data-m="${x.id}" aria-label="Tirar um">−</button><span class="num">${q}</span><button type="button" data-p="${x.id}" aria-label="Mais um">+</button></span></div>`).join(''):'<p class="nota">Seu pedido está vazio.</p>';
   $('#totLinhas').hidden=!desc;$('#totCheio').textContent=brl(tot);$('#totDesc').textContent='− '+brl(desc);$('#totDescTxt').textContent='Cupom '+(CUP.r&&CUP.r.codigo||'');
   contaTotal(fim);
   const nome=$('#nome').value.trim(),obs=$('#obs').value.trim();
-  const linhas=its.map(({x,q})=>`• ${q}x ${x.nome} (${brl(x.preco)})${x.pronta?'':' *'}`);
+  const linhas=its.map(({x,q})=>`• ${q}x ${x.nome}${SACM[x.id]?` — modelo *${SACM[x.id]}*`:''} (${brl(x.preco)})${x.pronta?'':' *'}`);
   const cod=n?codPedido():'';$('#pedNum').textContent=n?(PED.env?`Pedido nº ${cod} enviado. Mudou algo? Toque em enviar de novo.`:`Pedido nº ${cod}`):'';$('#pedNum').classList.toggle('ok',!!PED.env);
   const fone=$('#fone').value.trim(),end=$('#combinar').checked?'':$('#endereco').value.trim(),pg=PAGA+(PAGA==='Dinheiro'&&$('#troco').value.trim()?` (troco para R$ ${$('#troco').value.trim()})`:'');
   const msg=`Olá! Quero fazer este pedido (nº ${cod}) no catálogo ${CFG.titulo||'DKM'}:\n\n${linhas.join('\n')}\n\n${desc?`Produtos: ${brl(tot)}\nCupom ${CUP.r.codigo}: − ${brl(desc)}\n*Total com desconto: ${brl(fim)}*`:`*Total: ${brl(tot)}*`}${its.some(o=>!o.x.pronta)?'\n(* sob encomenda)':''}${nome?`\n\nNome: ${nome}`:''}${fone?`\nWhatsApp: ${fone}`:''}\nEntrega: ${end||'combinar pelo WhatsApp'}${pg?`\nPagamento: ${pg}`:''}${obs?`\nObs.: ${obs}`:''}\n\nAcompanhe o pedido: ${LINK_LOJA}#pedido-${cod}`;
@@ -1206,18 +1247,18 @@ const abreSacola=()=>{if(PASSO===4){vaiPasso(1);PASSO_MAX=1}$('#sacola').hidden=
 const fechaSacola=()=>{$('#sacola').hidden=true;$('#fundoSacola').hidden=true;document.body.style.overflow=''};
 $('#abreSacola').onclick=abreSacola;$('#fecha').onclick=fechaSacola;$('#fundoSacola').onclick=fechaSacola;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#prod').hidden)fechaProd();else if(!$('#acomp').hidden)fechaAcomp();else{fechaSacola();fechaFiltro()}}});
-$('#limpar').onclick=()=>{SAC={};salva();PED={};salvaPed();renderSacola();render()};
+$('#limpar').onclick=()=>{SAC={};salva();SACM={};salvaM();PED={};salvaPed();renderSacola();render()};
 /* ao enviar: grava a encomenda no banco (o WhatsApp abre do mesmo jeito, mesmo se a internet falhar aqui) */
 $('#zap').addEventListener('click',e=>{const its=itensSacola();if(!its.length){e.preventDefault();return}
   if(!PAGA){e.preventDefault();const m=$('#msg3');m.textContent='Escolha a forma de pagamento.';$('#pagamentos').classList.remove('treme');void $('#pagamentos').offsetWidth;$('#pagamentos').classList.add('treme');return}
   renderSacola();const cod=PED.cod; /* renderSacola acerta o link antes de abrir */
-  const base={p_codigo:cod,p_cliente:$('#nome').value.trim(),p_obs:$('#obs').value.trim(),p_itens:its.map(({x,q})=>({id:x.id,q})),...(descAtual()?{p_cupom:CUP.r.codigo}:{})};
+  const base={p_codigo:cod,p_cliente:$('#nome').value.trim(),p_obs:[$('#obs').value.trim(),its.filter(({x})=>SACM[x.id]).map(({x})=>x.nome.slice(0,40)+': modelo '+SACM[x.id]).join('; ')].filter(Boolean).join(' | ').slice(0,300),p_itens:its.map(({x,q})=>({id:x.id,q})),...(descAtual()?{p_cupom:CUP.r.codigo}:{})};
   const extra={p_telefone:$('#fone').value.trim(),p_endereco:$('#combinar').checked?'Combinar pelo WhatsApp':$('#endereco').value.trim(),p_pagamento:PAGA+(PAGA==='Dinheiro'&&$('#troco').value.trim()?' (troco p/ R$ '+$('#troco').value.trim()+')':'')};
   const manda=b=>fetch(`${SUPABASE_URL}/rest/v1/rpc/registrar_encomenda`,{method:'POST',keepalive:true,headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify(b)});
   try{manda({...base,...extra}).then(r=>{if(!r.ok)return manda(base)}).catch(()=>{})}catch(e){} /* se o banco ainda não tem os campos novos, grava do jeito antigo */
   guardaPedido(cod,fim0());PED.env=Date.now();salvaPed();
   setTimeout(()=>{$('#okTxt').innerHTML=`Pedido nº <b>${esc(cod)}</b>. Confira a mensagem no WhatsApp e toque em enviar. Você acompanha tudo por aqui: <b>separando → saiu para entrega → entregue</b>.`;
-    vaiPasso(4);SAC={};salva();PED={};salvaPed();renderSacola();render();renderPrateleiras()},400)});
+    vaiPasso(4);SAC={};salva();SACM={};salvaM();PED={};salvaPed();renderSacola();render();renderPrateleiras()},400)});
 function fim0(){const its=itensSacola();return Math.max(0,its.reduce((a,o)=>a+o.q*o.x.preco,0)-descAtual())}
 $('#nome').oninput=()=>{try{localStorage.setItem('dkm-nome',$('#nome').value)}catch(e){}renderSacola()};$('#obs').oninput=renderSacola;
 ['fone','endereco'].forEach(k=>{try{$('#'+k).value=localStorage.getItem('dkm-'+k)||''}catch(e){}$('#'+k).addEventListener('input',()=>{try{localStorage.setItem('dkm-'+k,$('#'+k).value)}catch(e){}renderSacola()})});
@@ -1415,12 +1456,13 @@ function faltaV(iso){const ms=new Date(iso)-Date.now();if(ms<=0)return'acabou';c
 setInterval(()=>{const r=CUP.r;if(!r||!r.ok||!r.expira_em)return;if(new Date(r.expira_em)<=Date.now()){validaCupom(true);return}renderCupom()},30000);
 function liga(){const i=$('#cupomCod'),b=$('#cupomOk');const vai=()=>{const v=i.value.trim().toUpperCase().replace(/\s+/g,'');if(!v){i.focus();return}CUP.cod=v;CUP.r=null;CUP.digitado=true;try{localStorage.setItem('dkm-cupom',v)}catch(e){}validaCupom(true)};
   b.onclick=vai;i.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();vai()}};const n=$('#irNome');if(n)n.onclick=()=>{if(itensSacola().length)vaiPasso(2);setTimeout(()=>{$('#nome').focus();$('#nome').scrollIntoView({block:'center'})},60)}}
-function faixa(){const f=$('#faixaCupom'),r=CUP.r;if(!CUP.cod||!r){f.hidden=true;f.dataset.cod='';return}
+function faixa(){const f=$('#faixaCupom'),r=CUP.r;if(!CUP.cod||!r){if(!f.hidden&&f.classList.contains('cine')&&!reduz())explodeFaixa(f);else f.hidden=true;f.dataset.cod='';return}
   f.hidden=false;f.classList.toggle('ruim',!r.ok&&!r.pessoal);f.classList.toggle('cine',!!r.ok);
   if(!r.ok){f.classList.remove('entra');f.dataset.cod='';f.innerHTML=`<span class="ic" aria-hidden="true">🎟️</span><p id="faixaTxt">${r.pessoal?`Cupom <b>${esc(CUP.cod)}</b> é pessoal: escreva o seu nome no pedido para ativar.`:`Cupom <b>${esc(CUP.cod)}</b>: ${esc(r.msg)}`}</p>`;return}
   const novo=f.dataset.cod!==r.codigo;f.dataset.cod=r.codigo;
   const pct=r.tipo==='PCT',v=pct?String(+r.valor).replace('.',','):'R$'+(+r.valor%1?(+r.valor).toFixed(2).replace('.',','):+r.valor);
-  const prazo=r.expira_em?`⏳ <b class="relogio">${faltaV(r.expira_em)}</b>`:r.validade?`válido até ${new Date(r.validade+'T12:00').toLocaleDateString('pt-BR')}`:'por tempo limitado';
+  CD_ALVO=r.expira_em?new Date(r.expira_em):r.validade?new Date(r.validade+'T23:59:59'):null;
+  const prazo=CD_ALVO?`<span class="cd-txt">⏳ termina em</span><span class="cd" id="cnCd"></span>`:'por tempo limitado';
   const fx=Array.from({length:14},(_,i)=>`<i style="left:${(i*37+11)%100}%;top:${(i*53+7)%100}%;--d:${(i*0.37)%3}s;--t:${2+(i%4)*.6}s"></i>`).join('');
   if(novo||!f.querySelector('.cn-pct')){f.innerHTML=`<span class="cn-luz" aria-hidden="true"></span><span class="cn-faiscas" aria-hidden="true">${fx}</span><span class="cn-barra cima" aria-hidden="true"></span><span class="cn-barra baixo" aria-hidden="true"></span>
     <div class="cn-esq"><small class="cn-sobre">PROMOÇÃO ATIVA</small><div class="cn-pct"><span class="cn-num">${esc(v)}</span>${pct?'<span class="cn-por">%</span>':''}<em>OFF</em></div></div>
@@ -1428,7 +1470,25 @@ function faixa(){const f=$('#faixaCupom'),r=CUP.r;if(!CUP.cod||!r){f.hidden=true
     <button type="button" class="cn-cta" id="cnCta">Aproveitar <span>›</span></button>`;
     $('#cnCta').onclick=()=>{if(itensSacola().length)abreSacola();else{const t=$('#secBolas')||$('#todos');t.scrollIntoView({behavior:reduz()?'auto':'smooth',block:'start'})}};
     if(novo&&!reduz()){f.classList.remove('entra');void f.offsetWidth;f.classList.add('entra')}}
-  else{const p=$('#cnPrazo');if(p)p.innerHTML=prazo}}
+  tickCd(true)}
+/* contagem regressiva do cupom (segundo a segundo) */
+let CD_ALVO=null;
+function tickCd(novo){const el=$('#cnCd');if(!el||!CD_ALVO)return;let ms=CD_ALVO-Date.now();
+  if(ms<=0){el.innerHTML='<i class="fim"><b>acabou</b></i>';if(!tickCd.foi){tickCd.foi=true;setTimeout(()=>{tickCd.foi=false;validaCupom(true)},400)}return}
+  const d=Math.floor(ms/864e5);ms-=d*864e5;const h=Math.floor(ms/36e5);ms-=h*36e5;const m=Math.floor(ms/6e4);const sg=Math.floor((ms-m*6e4)/1000);
+  const U=[...(d?[['d',d,d===1?'dia':'dias']]:[]),['h',h,'h'],['m',m,'min'],['s',sg,'seg']].map(([k,v,l])=>[k,k==='d'?String(v):String(v).padStart(2,'0'),l]);
+  if(novo||el.dataset.forma!==U.map(u=>u[0]).join('')){el.dataset.forma=U.map(u=>u[0]).join('');el.innerHTML=U.map(([k,v,l])=>`<i data-u="${k}"><b>${v}</b><small>${l}</small></i>`).join('<span class="cd-dp">:</span>');return}
+  U.forEach(([k,v])=>{const b=el.querySelector(`[data-u="${k}"] b`);if(b&&b.textContent!==v){b.textContent=v;const i=b.parentElement;i.classList.remove('vira');void i.offsetWidth;i.classList.add('vira')}});
+  el.classList.toggle('urgente',CD_ALVO-Date.now()<36e5)}
+setInterval(()=>{if(!$('#faixaCupom').hidden)tickCd(false)},1000);
+/* faixa explodindo quando o cupom acaba ou é desligado */
+function explodeFaixa(f){const r=f.getBoundingClientRect();const box=document.createElement('div');box.className='estilhacos';box.style.cssText=`left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px`;
+  const cores=['#ffd166','#ff3d6e','#8f7dff','#3ecf8e','#fff','#4fb3ff'];
+  for(let i=0;i<46;i++){const p=document.createElement('i');const x=Math.random()*100,y=Math.random()*100,a=Math.atan2(y-50,x-50),dist=120+Math.random()*260;
+    p.style.cssText=`left:${x}%;top:${y}%;--dx:${Math.cos(a)*dist}px;--dy:${Math.sin(a)*dist+80}px;--r:${(Math.random()*720-360)|0}deg;background:${cores[i%cores.length]};width:${4+Math.random()*10}px;height:${4+Math.random()*10}px;animation-delay:${Math.random()*.12}s`;box.appendChild(p)}
+  const bum=document.createElement('b');bum.className='bum';bum.textContent='💥';box.appendChild(bum);
+  document.body.appendChild(box);f.classList.remove('entra');f.classList.add('explode');
+  setTimeout(()=>{f.hidden=true;f.classList.remove('explode')},650);setTimeout(()=>box.remove(),1500)}
 /* total contando até o valor novo */
 let totMostrado=null;
 function contaTotal(v){const el=$('#sacolaTot');if(totMostrado==null||matchMedia('(prefers-reduced-motion: reduce)').matches||Math.abs(v-totMostrado)<.005){el.textContent=brl(v);totMostrado=v;return}
