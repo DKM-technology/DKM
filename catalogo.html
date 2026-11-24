@@ -278,7 +278,6 @@ body.com-barra .topo-bt{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 </style>
 </head>
 <body>
-<div class="letreiro" aria-label="Avisos da loja"><div class="trilha" id="letreiro"></div></div>
 <section class="banner" id="banner" aria-roledescription="carrossel" aria-label="Novidades da DKM"><div class="slides" id="slides"><div class="slide s-marca ativo"><img class="arte" src="fundo.jpg" alt="DKM · Tecnologia, inovação, sem limites"></div></div>
   <button class="seta-b esq" type="button" id="bEsq" aria-label="Banner anterior">‹</button><button class="seta-b dir" type="button" id="bDir" aria-label="Próximo banner">›</button><div class="pontos" id="pontos"></div></section>
 <div class="topo">
@@ -394,7 +393,7 @@ const ORDENS=[['destaque','Destaques primeiro'],['mais','Mais pedidos'],['menor'
 const reduz=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* letreiro e "aberto agora" */
-function montaLetreiro(){const t=AVISOS.map(a=>`<span>${esc(a)}</span>`).join('');$('#letreiro').innerHTML=t+t}
+function montaLetreiro(){const el=$('#letreiro');if(!el)return;const t=AVISOS.map(a=>`<span>${esc(a)}</span>`).join('');el.innerHTML=t+t} /* faixa do topo desligada a pedido */
 function statusLoja(){
   const agora=new Date(new Date().toLocaleString('en-US',{timeZone:'America/Sao_Paulo'}));const d=agora.getDay(),h=agora.getHours()+agora.getMinutes()/60;
   const faixa=dd=>dd===0||dd===6?HORARIO.fimdesemana:HORARIO.semana;const [a,f]=faixa(d);const aberto=h>=a&&h<f;
