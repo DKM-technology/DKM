@@ -721,6 +721,9 @@ details.compra[open]{background:var(--surface-2)}
 .fe-forma{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
 .tag-venda{display:inline-block;font-size:11.5px;font-weight:600;color:var(--good);background:color-mix(in srgb,var(--good) 14%,transparent);border-radius:99px;padding:2px 9px;margin-top:4px}
 .tag-venda.falta{color:var(--warn);background:color-mix(in srgb,var(--warn) 16%,transparent)}
+
+.ren{margin-top:10px;padding:10px;border-radius:12px;border:1.5px dashed var(--accent);background:color-mix(in srgb,var(--accent) 8%,var(--surface));animation:abreCli .25s ease-out}
+.ren-l{display:block;font-size:12.5px;margin-bottom:6px;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -1421,6 +1424,16 @@ function nivelAuto(c,pr=P()){const r=pr.regras;if(!c)return'VAREJO';if(c.tot12>=
 function nivelDe(k){const man=S.clientes[k]?.nivel;return man||nivelAuto(S.cli[k])}
 const sumido=c=>c.tot>=80&&c.semComprar!=null&&c.semComprar>120;
 let cliFiltro='Todos',cliTodos=false,cliAberto=null,cupFiltro='todos';
+/* troca o nome do cliente em todo lugar (cadastro, vendas, encomendas e cupons) */
+async function renomeiaCliente(velho,novoTxt){const novo=chave(novoTxt),pat=String(velho).trim().replace(/[\\%_]/g,m=>'\\'+m);
+  const r=await sb.from('clientes').select('*').ilike('nome',pat);const antigo=(r.data||[])[0];
+  if(antigo&&chave(antigo.nome)!==novo){const ex=await sb.from('clientes').select('nome').eq('nome',novo);
+    if(!(ex.data||[]).length){const row={...antigo};delete row.id;row.nome=novo;must(await sb.from('clientes').insert(row))}}
+  must(await sb.from('vendas').update({cliente:novo}).ilike('cliente',pat));
+  {const e=await sb.from('encomendas').update({cliente:cap(novoTxt)}).ilike('cliente',pat);if(e.error)console.warn(e.error)}
+  {const c=await sb.from('cupons').update({cliente:novo}).ilike('cliente',pat);if(c.error)console.warn(c.error)}
+  if(antigo&&chave(antigo.nome)!==novo)must(await sb.from('clientes').delete().eq('nome',antigo.nome));
+  else if(antigo&&antigo.nome!==novo)await sb.from('clientes').update({nome:novo}).eq('nome',antigo.nome)}
 function contaN(el,para){if(matchMedia('(prefers-reduced-motion: reduce)').matches||!para){el.textContent=para;return}const t0=performance.now();const f=t=>{const p=Math.min(1,(t-t0)/700);el.textContent=Math.round(para*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
 function renderClientes(){
   const L=Object.values(S.cli),tot=L.reduce((a,c)=>a+c.tot,0)||1,top10=L.slice().sort((a,b)=>b.tot-a.tot).slice(0,10).reduce((a,c)=>a+c.tot,0);
@@ -1451,10 +1464,18 @@ function renderClientes(){
       ${ab?`<div class="cc2-mais">
         <div class="cc2-info"><span>🧾 <b>${c.compras}</b> compra${c.compras===1?'':'s'} no total</span><span>💰 <b>${brl0(c.tot)}</b> no total</span><span>📅 última: <b>${c.ult?dataBR(c.ult):'—'}</b></span>${fone?`<span>📱 <b>${esc(fone)}</b></span>`:''}</div>
         <label class="cc2-niv">Nível<select class="inp" data-niv="${esc(c.nome)}" aria-label="Nível de ${esc(cap(c.nome))}"><option value="">Automático (${NOME_NIVEL[nivelAuto(c)]})</option>${NIVEIS.map(x=>`<option value="${x}"${man===x?' selected':''}>${ICONE[x]} ${NOME_NIVEL[x]}</option>`).join('')}</select></label>
-        <div class="row-f" style="gap:6px"><button class="btn sm pri" type="button" data-cup="${esc(c.nome)}">🎟️ Mandar cupom</button>${fone.length>=10?`<a class="btn sm" href="https://wa.me/${fone.length<=11?'55'+fone:fone}" target="_blank" rel="noopener">💬 WhatsApp</a>`:''}<button class="btn sm" type="button" data-novoped="${esc(c.nome)}">🛒 Novo pedido</button></div></div>`:''}
+        <div class="row-f" style="gap:6px"><button class="btn sm pri" type="button" data-cup="${esc(c.nome)}">🎟️ Mandar cupom</button>${fone.length>=10?`<a class="btn sm" href="https://wa.me/${fone.length<=11?'55'+fone:fone}" target="_blank" rel="noopener">💬 WhatsApp</a>`:''}<button class="btn sm" type="button" data-novoped="${esc(c.nome)}">🛒 Novo pedido</button><button class="btn sm" type="button" data-renome="${esc(c.nome)}">✏️ Mudar nome</button></div><div class="ren" hidden></div></div>`:''}
     </article>`}).join(''):'<div class="panel"><div class="empty">Nenhum cliente nesse grupo.</div></div>')+(mostra.length<vis.length?`<div class="cli-mais"><button class="btn" type="button" id="cliMais">Ver todos os ${vis.length}</button></div>`:'');
   if($('#cliMais'))$('#cliMais').onclick=()=>{cliTodos=true;renderClientes()};
   $$('[data-abre]').forEach(b=>b.onclick=()=>{cliAberto=cliAberto===b.dataset.abre?null:b.dataset.abre;renderClientes()});
+  $$('[data-renome]').forEach(b=>b.onclick=()=>{const velho=b.dataset.renome,box=b.closest('.row-f').nextElementSibling;box.hidden=false;
+    box.innerHTML=`<label class="ren-l">Novo nome de <b>${esc(cap(velho))}</b></label><div class="row-f" style="gap:6px;flex-wrap:nowrap"><input class="inp" id="renInp" value="${esc(cap(velho))}" autocomplete="off" style="flex:1;min-width:0"><button class="btn sm pri" type="button" id="renOk">Salvar</button><button class="btn sm" type="button" id="renX">✕</button></div><p class="note" id="renAviso" style="margin:6px 0 0">Troca o nome nas vendas, encomendas, cupons e no cadastro.</p>`;
+    const inp=$('#renInp');inp.focus();inp.select();$('#renX').onclick=()=>{box.hidden=true;box.innerHTML=''};
+    inp.oninput=()=>{const n=chave(inp.value),ja=n&&n!==chave(velho)&&(S.ven.some(v=>chave(v.who)===n)||S.clientes[n]);$('#renAviso').innerHTML=ja?`⚠️ Já existe <b>${esc(cap(n))}</b>. Salvando, os dois viram um cliente só.`:'Troca o nome nas vendas, encomendas, cupons e no cadastro.'};
+    inp.onkeydown=e=>{if(e.key==='Enter')$('#renOk').click();if(e.key==='Escape')$('#renX').click()};
+    $('#renOk').onclick=()=>busy($('#renOk'),async()=>{const novoTxt=inp.value.trim().replace(/\s+/g,' ');if(!novoTxt){toast('Escreva o nome');return}
+      const novo=chave(novoTxt);if(novo===chave(velho)&&cap(novoTxt)===cap(velho)){box.hidden=true;return}
+      await renomeiaCliente(velho,novoTxt);cliAberto=novo;toast(`✏️ Agora é ${cap(novoTxt)}`);await carregar()})});
   $$('[data-novoped]').forEach(b=>b.onclick=()=>{$('#cli').value=cap(b.dataset.novoped);location.hash='#pedido';try{renderCliInfo();repreco();renderCart()}catch(x){}toast('Pedido para '+cap(b.dataset.novoped))});
   $$('[data-niv]').forEach(sel=>sel.onchange=()=>busy(sel,async()=>{const k=sel.dataset.niv,nv=sel.value||null;
     must(await sb.from('clientes').upsert({nome:k,nivel:nv,atualizado_em:new Date().toISOString()}));S.clientes[k]={...(S.clientes[k]||{nome:k,telefone:'',obs:''}),nivel:nv};
@@ -2071,7 +2092,7 @@ async function encAoVivo(){if(document.visibilityState!=='visible'||typeof usuar
     $$('[data-k="encomendas"]').forEach(b=>{b.classList.remove('sino');void b.offsetWidth;b.classList.add('sino')})}}
 function avisoPainel(t,tipo){const a=document.createElement('button');a.type='button';a.className='aviso-vivo '+(tipo||'');a.innerHTML=esc(t)+' <span>ver ›</span>';a.onclick=()=>{location.hash='#encomendas';ENC.escolheu=true;ENC.filtro=tipo==='canc'?'CANCELADA':'comprar';renderEncomendas();a.remove()};
   let box=$('#avisosVivo');if(!box){box=document.createElement('div');box.id='avisosVivo';document.body.appendChild(box)}box.appendChild(a);setTimeout(()=>a.classList.add('vai'),9000);setTimeout(()=>a.remove(),9600)}
-setInterval(encAoVivo,20000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')encAoVivo()});
+setInterval(encAoVivo,8000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')encAoVivo()});
 /* ===== FINANCEIRO ===== */
 let FIN={mes:null,aba:'tudo'};
 const FORMAS=['Pix','Dinheiro','Cartão de crédito','Cartão de débito','Outro'];
