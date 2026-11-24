@@ -178,6 +178,8 @@ td.r,th.r{text-align:right}
 .ideia{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:4px;background:var(--surface-2)}
 .ideia b{font-size:13.5px}
 .ideia p{margin:0;font-size:12.5px;color:var(--muted)}
+.chips.prazo button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.pz-falta{color:var(--warn);font-weight:600}
 .cup{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;padding:9px 2px;border-bottom:1px solid var(--line);align-items:center}
 .cup:last-child{border-bottom:0}
 .cup code{font-family:var(--f-mono);font-size:13px;font-weight:500}
@@ -398,6 +400,127 @@ table.lst th{font-size:11.5px;color:var(--muted);font-weight:500}table.lst .r{te
 }
 @media (max-width:480px){.kpi .val{font-size:22px}.sr{grid-template-columns:minmax(0,1fr) auto}.sr .st{grid-column:1;grid-row:2}.head h1{font-size:24px}}
 @media (prefers-reduced-motion:reduce){.dot,.icon-btn.spin svg{animation:none}}
+
+/* ===== encomendas: esteira de etapas ===== */
+.esteira{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:8px;position:relative}
+.esteira button{position:relative;display:grid;justify-items:center;gap:2px;padding:14px 8px 12px;border-radius:16px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:transform .15s,border-color .2s,box-shadow .2s,background .2s;overflow:hidden}
+.esteira button:hover{transform:translateY(-2px);border-color:var(--accent)}
+.esteira button i{font-style:normal;font-size:26px;line-height:1}
+.esteira button b{font-size:28px;line-height:1.1;font-family:var(--f-display,inherit)}
+.esteira button span{font-size:12px;color:var(--muted);text-align:center}
+.esteira button[aria-selected="true"]{border-color:var(--accent);background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 22%,var(--surface)),var(--surface));box-shadow:0 10px 26px color-mix(in srgb,var(--accent) 25%,transparent)}
+.esteira button[aria-selected="true"] span{color:var(--ink);font-weight:600}
+.esteira button.tem::after{content:"";position:absolute;top:10px;right:10px;width:9px;height:9px;border-radius:50%;background:var(--warn);box-shadow:0 0 0 0 var(--warn);animation:pisca 1.8s infinite}
+.esteira button[data-es="rota"].tem i{animation:anda 1.6s ease-in-out infinite}
+.esteira button:not(:last-child)::before{content:"›";position:absolute;right:-9px;top:50%;transform:translateY(-50%);font-size:18px;color:var(--muted);z-index:2}
+@keyframes pisca{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--warn) 60%,transparent)}70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+@keyframes anda{0%,100%{transform:translateX(-4px)}50%{transform:translateX(4px)}}
+.num.pula{animation:pulaN .45s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pulaN{40%{transform:scale(1.35)}}
+.es-dica{font-size:13px;color:var(--muted);margin:4px 2px 14px;min-height:1em}
+.link-bt{border:0;background:none;color:var(--muted);text-decoration:underline;cursor:pointer;font-size:12.5px}
+.enc-h3{font-size:14px;margin:6px 2px 10px}
+@media (max-width:620px){.esteira{gap:6px}.esteira button{padding:10px 2px 8px;border-radius:12px}.esteira button i{font-size:19px}.esteira button b{font-size:20px}.esteira button span{font-size:10px;line-height:1.15}.esteira button::before{display:none}.esteira button.tem::after{top:6px;right:6px;width:7px;height:7px}}
+/* lote do fornecedor */
+.lotes{grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr))}
+.lote.aberto{grid-column:1/-1}
+.lote-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:18px;align-items:center}
+.anel{position:relative;width:108px;height:108px;display:grid;place-items:center;align-content:center}
+.anel svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.anel circle{fill:none;stroke-width:9}.anel .fundo{stroke:var(--surface-2)}.anel .cheio{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(.3,1,.4,1);animation:enche .9s cubic-bezier(.3,1,.4,1)}
+@keyframes enche{from{stroke-dashoffset:264}}
+.lote-ir .anel .cheio{stroke:var(--good)}.lote-completar .anel .cheio{stroke:var(--warn)}
+.anel b{position:relative;font-size:24px;line-height:1}.anel small{position:relative;font-size:10.5px;color:var(--muted)}
+.lote-st{font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:99px;background:var(--surface-2)}
+.lote-ir .lote-st{background:color-mix(in srgb,var(--good) 18%,transparent);color:var(--good)}.lote-completar .lote-st{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}
+.lote-chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 10px}.lote-chips span{font-size:12px;border:1px solid var(--line);border-radius:99px;padding:3px 9px;background:var(--surface-2)}
+.lote-bts{gap:8px}.btn.on{border-color:var(--accent);color:var(--accent)}
+.fui-lista{display:grid;gap:6px}
+.fui-it{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer;background:var(--surface-2);transition:opacity .2s}
+.fui-it input{width:20px;height:20px;accent-color:var(--good)}.fui-it small{display:block;color:var(--muted);font-size:11.5px}
+.fui-it:has(input:not(:checked)){opacity:.5}.fui-it.est{border-style:dashed}
+@media (max-width:520px){.lote-row{grid-template-columns:1fr;justify-items:start}.anel{width:92px;height:92px}}
+/* card do pedido */
+.enc-lista{display:grid;gap:12px}
+.enc{border:1.5px solid var(--line);border-left:5px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--surface);animation:entraEnc .35s cubic-bezier(.2,.9,.3,1) both;margin:0}
+.enc.est-comprar{border-left-color:var(--warn)}.enc.est-separar{border-left-color:var(--accent)}.enc.est-rota{border-left-color:#4fb3ff}.enc.est-entregue{border-left-color:var(--good)}.enc.est-cancelada{border-color:color-mix(in srgb,#e5484d 55%,transparent);border-left-color:#e5484d;background:linear-gradient(160deg,color-mix(in srgb,#e5484d 12%,var(--surface)),var(--surface) 55%)}
+.enc.est-cancelada .enc-nome,.enc.est-cancelada .enc-tot{color:#e5484d}.enc.est-cancelada .enc-tot{text-decoration:line-through}
+.enc-can{display:flex;align-items:center;gap:10px;margin:10px 0 4px;font-weight:700;color:#e5484d;text-transform:uppercase;letter-spacing:.04em;font-size:13px}
+.enc-can i{font-style:normal;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#e5484d;color:#fff;font-size:17px;animation:pulsaR 2s infinite}
+.enc.est-cancelada .enc-it li{text-decoration:line-through;opacity:.7}
+@keyframes pulsaR{0%{box-shadow:0 0 0 0 color-mix(in srgb,#e5484d 55%,transparent)}70%{box-shadow:0 0 0 10px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.esteira~p .link-bt.tem-can{color:#e5484d;font-weight:700;text-decoration:none;border:1px solid color-mix(in srgb,#e5484d 50%,transparent);border-radius:99px;padding:6px 14px;animation:pulsaR 2s infinite}
+.enc.sai{animation:saiEnc .45s ease-in forwards}
+@keyframes entraEnc{from{opacity:0;transform:translateY(8px)}}
+@keyframes saiEnc{to{opacity:0;transform:translateX(40px) scale(.97)}}
+.enc-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.enc-nome{font-size:16px;display:block}.enc-top .note{font-size:12px}
+.enc-tot{font-size:20px;white-space:nowrap}
+.trilha{--k:0;--n:4;list-style:none;margin:14px 0 8px;padding:0;display:grid;grid-template-columns:repeat(var(--n),1fr);position:relative}
+.trilha li{display:grid;justify-items:center;gap:4px;font-size:11.5px;color:var(--muted);position:relative;z-index:1}
+.trilha i{font-style:normal;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);border:2px solid var(--line);font-size:16px;filter:grayscale(1);opacity:.55;transition:all .3s}
+.trilha li.ok i{filter:none;opacity:1;border-color:var(--good)}
+.trilha li.agora i{filter:none;opacity:1;border-color:var(--accent);animation:pulsaE 1.8s infinite,quica 1.8s ease-in-out infinite}
+.trilha li.ok,.trilha li.agora{color:var(--ink)}.trilha li.agora{font-weight:700}
+@keyframes pulsaE{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 55%,transparent)}70%{box-shadow:0 0 0 10px transparent}100%{box-shadow:0 0 0 0 transparent}}
+@keyframes quica{0%,100%{transform:translateY(0)}40%{transform:translateY(-4px)}}
+.tr-linha{position:absolute;top:17px;left:calc(50% / var(--n));right:calc(50% / var(--n));height:3px;background:var(--line);border-radius:3px}
+.tr-linha em{position:absolute;left:0;top:0;bottom:0;border-radius:3px;width:calc(var(--k) / (var(--n) - 1) * 100%);background:linear-gradient(90deg,var(--good),var(--accent));background-size:200% 100%;animation:fluxo 2s linear infinite}
+@keyframes fluxo{to{background-position:-200% 0}}
+.est-entregue .tr-linha em{width:100%;background:var(--good);animation:none}
+.tr-caminhao{position:absolute;top:-6px;font-size:20px;z-index:2;transform:scaleX(-1);left:calc(100% / var(--n) * (var(--k) + .5) - 10px);animation:dirigeE 2.4s ease-in-out infinite}
+@keyframes dirigeE{0%,100%{margin-left:0}50%{margin-left:calc(100% / var(--n) * .55)}}
+.enc-it{list-style:none;margin:6px 0;padding:0;display:grid;gap:4px;font-size:13.5px}
+.enc-it .tag{font-size:11px;border-radius:99px;padding:1px 8px;margin-left:4px;background:var(--surface-2);color:var(--muted)}
+.enc-it .tag.warn{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--warn)}.enc-it .tag.ok{background:color-mix(in srgb,var(--good) 15%,transparent);color:var(--good)}
+.enc-ct{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}.enc-ct span{font-size:12px;border:1px solid var(--line);border-radius:8px;padding:3px 8px;background:var(--surface-2)}
+.enc-pe{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px}
+.btn.grande{padding:11px 18px;font-size:14.5px;font-weight:700;border-radius:12px}
+.btn.grande.ok{background:var(--good);border-color:var(--good);color:#06261a}
+.ic-bt{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);display:grid;place-items:center;cursor:pointer;text-decoration:none;font-size:16px;color:var(--ink)}
+.ic-bt:hover{border-color:var(--accent)}.ic-bt.perigo{color:var(--bad,#e5484d)}
+@media (prefers-reduced-motion:reduce){.trilha li.agora i,.tr-linha em,.tr-caminhao,.esteira button.tem::after,.esteira button i,.enc,.anel .cheio{animation:none}}
+
+.enc-lista{grid-template-columns:repeat(auto-fill,minmax(min(100%,460px),1fr));align-items:start}
+.enc-lista>.enc-h3,.enc-lista>.panel{grid-column:1/-1}
+.lista-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:22px;align-items:start}
+.lista-cols>div:first-child{border-right:1px solid var(--line);padding-right:22px}
+.lista .sug{grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr))}
+@media (max-width:900px){.lista-cols{grid-template-columns:1fr}.lista-cols>div:first-child{border-right:0;padding-right:0}}
+
+@media (min-width:1250px){.enc-corpo.lado{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px;align-items:start}
+  .enc-corpo.lado .lotes{grid-template-columns:1fr;margin:0}.enc-corpo.lado .enc-lista{grid-template-columns:1fr}.enc-corpo.lado .enc-h3{margin-top:0}}
+
+/* ===== modo compra (na loja do fornecedor) ===== */
+body.mc-aberto{overflow:hidden}
+.mc{position:fixed;inset:0;z-index:200;background:var(--bg);box-shadow:0 0 0 100vmax rgba(0,0,0,.75);display:grid;grid-template-rows:auto auto minmax(0,1fr) auto;max-width:900px;margin:0 auto;animation:entraEnc .3s ease-out}
+.mc-top{display:flex;justify-content:space-between;align-items:center;padding:calc(14px + env(safe-area-inset-top,0px)) 18px 6px}
+.mc-top small{color:var(--muted);font-size:12px}.mc-top h2{margin:0;font-size:24px}
+.mc-x{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-size:24px;cursor:pointer}
+.mc-prog{padding:6px 18px 10px}.mc-n{font-size:14px;color:var(--muted);margin-bottom:6px}.mc-n b{color:var(--ink);font-size:18px}
+.mc-bar{height:10px;border-radius:99px;background:var(--surface-2);overflow:hidden}.mc-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--good));border-radius:99px;transition:width .4s cubic-bezier(.3,1,.4,1)}
+.mc-lista{overflow:auto;padding:4px 14px 16px;display:grid;gap:8px;align-content:start}
+.mc-lista h3{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:10px 4px 0}
+.mc-it{display:grid;grid-template-columns:auto auto auto minmax(0,1fr) auto;align-items:center;gap:12px;text-align:left;width:100%;padding:12px 14px;border-radius:14px;border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;transition:background .2s,border-color .2s,transform .12s,opacity .2s}
+.mc-lista.entra .mc-it{animation:entraEnc .35s cubic-bezier(.2,.9,.3,1) both;animation-delay:calc(var(--i) * 35ms)}
+.mc-it:active{transform:scale(.98)}
+.mc-ck{width:30px;height:30px;border-radius:50%;border:2.5px solid var(--muted);display:grid;place-items:center;font-weight:900;font-size:16px;color:#06261a;transition:all .2s}
+.mc-it img,.mc-sem{width:52px;height:52px;border-radius:10px;object-fit:contain;background:#fff;display:grid;place-items:center;font-size:24px}
+.mc-q{font-size:26px;font-weight:800;min-width:48px;text-align:center;color:var(--accent)}
+.mc-nome{font-size:15px;font-weight:600;line-height:1.25}.mc-nome small{display:block;font-weight:400;font-size:12px;color:var(--muted);margin-top:3px}
+.mc-v{font-size:15px;white-space:nowrap}
+.mc-it.est{border-style:dashed}
+.mc-it.ok{background:color-mix(in srgb,var(--good) 12%,var(--surface));border-color:var(--good)}
+.mc-it.ok .mc-ck{background:var(--good);border-color:var(--good);animation:pulaN .35s cubic-bezier(.3,1.6,.5,1)}
+.mc-it.ok .mc-nome{text-decoration:line-through;opacity:.7}.mc-it.ok .mc-q{color:var(--good)}
+.mc-pe{display:flex;align-items:center;gap:14px;justify-content:space-between;padding:12px 18px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);background:var(--surface)}
+.mc-pagar{display:grid}.mc-pagar span{font-size:12px;color:var(--muted)}.mc-pagar b{font-size:26px;line-height:1.1}.mc-pagar small{font-size:12px;color:var(--warn)}
+.mc.completo .mc-pagar small{color:var(--good)}.mc.completo #mcFim{background:var(--good);border-color:var(--good);color:#06261a}
+.mc-conf{position:absolute;inset:0;background:rgba(0,0,0,.55);display:grid;place-items:end center;padding:16px}
+.mc-conf-box{width:min(560px,100%);background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;animation:entraEnc .25s ease-out}
+.mc-conf-box h3{margin:0 0 8px;font-size:18px}.mc-aviso{color:var(--warn);font-size:13px}
+@media (max-width:520px){.mc-it{grid-template-columns:auto auto minmax(0,1fr) auto;gap:10px;padding:11px}.mc-it img,.mc-sem{display:none}.mc-q{font-size:22px;min-width:40px}.mc-v{font-size:13px}.mc-pagar b{font-size:22px}}
+@media (prefers-reduced-motion:reduce){.mc,.mc-lista.entra .mc-it,.mc-it.ok .mc-ck{animation:none}}
 </style>
 </head>
 <body>
@@ -558,7 +681,7 @@ table.lst th{font-size:11.5px;color:var(--muted);font-weight:500}table.lst .r{te
     <section id="v-cupons" class="view" hidden>
       <div class="head"><div><h1>Cupons</h1><p>Crie o cupom aqui, mande o link para o cliente e ele ganha o desconto direto na vitrine.</p></div><button class="btn pri" type="button" id="novoCupom">+ Criar cupom</button></div>
       <div class="panel" id="cupomBox" hidden></div>
-      <div class="panel"><h2>Seus cupons <span class="sub" id="cupSub"></span></h2><div id="cupLista"></div></div>
+      <div class="panel"><h2>Seus cupons <span class="sub" id="cupSub"></span></h2><div id="cupConfirm" class="confirm" hidden style="margin-bottom:10px"></div><div id="cupLista"></div></div>
       <div class="panel"><h2>Como funciona</h2><ol class="note" style="margin:0;padding-left:18px;line-height:1.7"><li>Toque em <b>+ Criar cupom</b>, escolha o desconto (% ou R$) e para quem é.</li><li>Toque em <b>Copiar link</b> e mande no WhatsApp do cliente.</li><li>O cliente abre o link e o cupom já vem aplicado na vitrine. Também pode digitar o código na sacola.</li><li>O desconto nunca passa da sua margem mínima sobre o custo.</li></ol></div>
     </section>
 
@@ -637,7 +760,7 @@ table.lst th{font-size:11.5px;color:var(--muted);font-weight:500}table.lst .r{te
 
     <!-- ENCOMENDAS -->
     <section id="v-encomendas" class="view" hidden>
-      <div class="head"><div><h1>Encomendas</h1><p>Os pedidos sob encomenda juntos por fornecedor. O painel mostra quando já dá para ir buscar no preço de atacado.</p></div>
+      <div class="head"><div><h1>Encomendas</h1><p>Do pedido à entrega: toque numa etapa e faça o próximo passo de cada pedido.</p></div>
         <div class="row-f"><button class="btn pri" type="button" id="encNovaBtn">+ Nova encomenda</button></div></div>
       <div id="encErro" class="alert warn" hidden></div>
       <div class="panel" id="encNova" hidden>
@@ -651,12 +774,22 @@ table.lst th{font-size:11.5px;color:var(--muted);font-weight:500}table.lst .r{te
         <div id="enItens" style="margin-top:10px"></div>
         <div class="row-f" style="margin-top:12px"><button class="btn pri" type="button" id="enSalva">Salvar encomenda</button><button class="btn" type="button" id="enFecha">Fechar</button><span class="note" id="enMsg"></span></div>
       </div>
-      <div id="encLotes" class="lotes"></div>
-      <div class="panel">
-        <h2>Pedidos <span class="sub" id="encSub"></span></h2>
-        <div class="seg" role="group" aria-label="Mostrar" style="margin-bottom:12px;flex-wrap:wrap"><button type="button" data-es="comprar" aria-pressed="true">A comprar</button><button type="button" data-es="entregar" aria-pressed="false">Para entregar</button><button type="button" data-es="ENTREGUE" aria-pressed="false">Entregues</button><button type="button" data-es="CANCELADA" aria-pressed="false">Canceladas</button></div>
-        <div id="encConfirm" class="confirm" hidden style="margin-bottom:10px"></div>
-        <div id="encLista"></div>
+      <div class="esteira" id="esteira" role="tablist" aria-label="Etapas dos pedidos">
+        <button type="button" data-es="comprar" role="tab"><i>🛒</i><b class="num" data-n="comprar">0</b><span>Comprar no fornecedor</span></button>
+        <button type="button" data-es="separar" role="tab"><i>📦</i><b class="num" data-n="separar">0</b><span>Separar</span></button>
+        <button type="button" data-es="rota" role="tab"><i>🚚</i><b class="num" data-n="rota">0</b><span>Em entrega</span></button>
+        <button type="button" data-es="ENTREGUE" role="tab"><i>✅</i><b class="num" data-n="ENTREGUE">0</b><span>Entregues</span></button>
+      </div>
+      <p class="es-dica" id="esDica"></p>
+      <div id="encConfirm" class="confirm" hidden style="margin-bottom:10px"></div>
+      <div class="enc-corpo" id="encCorpo"><div id="encLotes" class="lotes"></div><div id="encLista" class="enc-lista"></div></div>
+      <p style="text-align:center;margin-top:10px"><button class="link-bt" type="button" data-es="CANCELADA" id="verCanc">Ver canceladas</button></p>
+      <div class="mc" id="modoCompra" hidden role="dialog" aria-modal="true" aria-labelledby="mcTit">
+        <div class="mc-top"><div><small>Comprando na</small><h2 id="mcTit"></h2></div><button class="mc-x" type="button" id="mcFecha" aria-label="Fechar">×</button></div>
+        <div class="mc-prog"><div class="mc-n"><b class="num" id="mcPegos">0</b> de <b class="num" id="mcTotal">0</b> peças na mão</div><div class="mc-bar"><i id="mcBar"></i></div></div>
+        <div class="mc-lista" id="mcLista"></div>
+        <div class="mc-pe"><div class="mc-pagar"><span>Total da compra</span><b class="num" id="mcValor">R$ 0,00</b><small id="mcFalta"></small></div><button class="btn pri grande" type="button" id="mcFim">✓ Terminei a compra</button></div>
+        <div class="mc-conf" id="mcConf" hidden></div>
       </div>
     </section>
 
@@ -973,7 +1106,7 @@ function totais(){
   if(t<piso-0.001&&sub>=piso){lim=true;const falta=piso-t;t=piso;if(cup){cup=Math.max(0,cup-falta)}}
   return{cheio:r2(cheio),sub:r2(sub),nivel:r2(cheio-sub),d,cup:r2(cup),tot:r2(t),lim,eco:r2(cheio-t)}}
 function validaCupom(cod,cli){const c=S.cupons.find(x=>String(x.codigo).toUpperCase()===cod);if(!c)return'Cupom não encontrado.';if(!c.ativo)return'Esse cupom foi desativado.';
-  if(c.validade&&c.validade<hoje())return'Esse cupom venceu em '+dataBR(c.validade)+'.';if(c.usos_max!=null&&c.usos>=c.usos_max)return'Esse cupom já foi usado.';
+  if(c.validade&&c.validade<hoje())return'Esse cupom venceu em '+dataBR(c.validade)+'.';if(c.expira_em&&new Date(c.expira_em)<Date.now())return'Esse cupom expirou '+quandoTxt(new Date(c.expira_em))+'.';if(c.usos_max!=null&&c.usos>=c.usos_max)return'Esse cupom já foi usado.';
   if(c.cliente&&chave(c.cliente)!==cli&&chave(c.cliente).split(' ')[0]!==String(cli||'').split(' ')[0])return'Esse cupom é só para '+cap(c.cliente)+'.';return c}
 const linkCupom=c=>VITRINE_URL+'?cupom='+encodeURIComponent(String(c||'').trim().toUpperCase());
 const descCupom=c=>c.tipo==='PCT'?(+c.valor).toLocaleString('pt-BR')+'%':brl(c.valor);
@@ -1091,10 +1224,16 @@ function renderClientes(){
   ideias.push(`<div class="ideia"><b>Fone e carregador: desconto em R$</b><p>A margem desses é menor. Prefira um cupom de R$ 10 do que porcentagem. O app nunca deixa passar da margem mínima da tabela.</p></div>`);
   $('#ideias').innerHTML=ideias.join('');if($('#verSumidos'))$('#verSumidos').onclick=()=>{cliFiltro='Sumidos';renderClientes();$('#cliLista').scrollIntoView({block:'start'})};
   // cupons
-  const hj=hoje();const st=c=>!c.ativo?['desativado','p-mute']:(c.validade&&c.validade<hj)?['vencido','p-mute']:(c.usos_max!=null&&c.usos>=c.usos_max)?['usado','p-mute']:['ativo','p-good'];
+  const hj=hoje(),agora=Date.now();const st=c=>!c.ativo?['desativado','p-mute']:((c.validade&&c.validade<hj)||(c.expira_em&&new Date(c.expira_em)<agora))?['vencido','p-mute']:(c.usos_max!=null&&c.usos>=c.usos_max)?['usado','p-mute']:['ativo','p-good'];
   $('#cupSub').textContent=S.cupons.length?S.cupons.filter(c=>st(c)[0]==='ativo').length+' ativos':'';badge('cupons',S.cupons.filter(c=>st(c)[0]==='ativo').length||'');
-  $('#cupLista').innerHTML=S.cupons.length?S.cupons.map(c=>{const [t,cl]=st(c);return `<div class="cup"><div><code>${esc(c.codigo)}</code> <span class="pill ${cl}">${t}</span><div class="note">${descCupom(c)} de desconto${c.cliente?' · só '+esc(cap(c.cliente)):' · qualquer cliente'}${c.validade?' · até '+dataBR(c.validade):''} · usado ${c.usos}${c.usos_max!=null?'/'+c.usos_max:''}×</div></div>${t==='ativo'?`<div class="row-f" style="gap:6px"><button class="btn sm" type="button" data-cuplink="${esc(c.codigo)}">Copiar link</button><button class="btn sm danger" type="button" data-desat="${esc(c.codigo)}">Desativar</button></div>`:''}</div>`}).join(''):'<div class="empty">Nenhum cupom ainda.</div>';
+  $('#cupLista').innerHTML=S.cupons.length?S.cupons.map(c=>{const [t,cl]=st(c);return `<div class="cup"><div><code>${esc(c.codigo)}</code> <span class="pill ${cl}">${t}</span><div class="note">${descCupom(c)} de desconto${c.cliente?' · só '+esc(cap(c.cliente)):' · qualquer cliente'}${c.expira_em?(st(c)[0]==='ativo'?` · <b class="pz-falta">⏳ ${faltaCup(c.expira_em)}</b>`:' · até '+quandoTxt(new Date(c.expira_em))):c.validade?' · até '+dataBR(c.validade):''} · usado ${c.usos}${c.usos_max!=null?'/'+c.usos_max:''}×</div></div>${t==='ativo'?`<div class="row-f" style="gap:6px"><button class="btn sm" type="button" data-cuplink="${esc(c.codigo)}">Copiar link</button><button class="btn sm danger" type="button" data-desat="${esc(c.codigo)}">Desativar</button></div>`:`<div class="row-f" style="gap:6px"><button class="btn sm pri" type="button" data-reat="${esc(c.codigo)}">${t==='vencido'?(c.expira_em?'Reativar por mais '+pzNome(Math.round(Math.max(36e5,new Date(c.expira_em)-new Date(c.criado_em||agora-72e5))/6e4)):'Reativar por +30 dias'):t==='usado'?'Liberar mais 1 uso':'Reativar'}</button><button class="btn sm danger" type="button" data-apaga="${esc(c.codigo)}">Apagar de vez</button></div>`}</div>`}).join(''):'<div class="empty">Nenhum cupom ainda.</div>';
   $$('[data-cuplink]').forEach(b=>b.onclick=()=>copy(linkCupom(b.dataset.cuplink)));
+  $$('[data-reat]').forEach(b=>b.onclick=()=>busy(b,async()=>{const c=S.cupons.find(x=>x.codigo===b.dataset.reat);if(!c)return;const [t]=st(c);const up={ativo:true};
+    if(c.expira_em&&new Date(c.expira_em)<agora){const dur=Math.max(36e5,new Date(c.expira_em)-new Date(c.criado_em||agora-72e5));const f=new Date(agora+dur);up.expira_em=f.toISOString();up.validade=isoD(f)}
+    else if(c.validade&&c.validade<hj){const d=new Date();d.setDate(d.getDate()+30);up.validade=isoD(d)}
+    if(c.usos_max!=null&&c.usos>=c.usos_max)up.usos_max=c.usos+1;
+    must(await sb.from('cupons').update(up).eq('codigo',c.codigo));Object.assign(c,up);renderClientes();toast('Cupom '+c.codigo+' reativado')}));
+  $$('[data-apaga]').forEach(b=>b.onclick=()=>{const cod=b.dataset.apaga;confirmBox($('#cupConfirm'),`Apagar o cupom <b>${esc(cod)}</b> de vez? Ele some da lista e o link para de funcionar. Os pedidos que já usaram continuam com o desconto.`,'Apagar de vez',()=>busy(b,async()=>{must(await sb.from('cupons').delete().eq('codigo',cod));S.cupons=S.cupons.filter(x=>x.codigo!==cod);renderClientes();toast('Cupom apagado')}));$('#cupConfirm').scrollIntoView({block:'center',behavior:'smooth'})});
   $$('[data-desat]').forEach(b=>b.onclick=()=>busy(b,async()=>{must(await sb.from('cupons').update({ativo:false}).eq('codigo',b.dataset.desat));const c=S.cupons.find(x=>x.codigo===b.dataset.desat);if(c)c.ativo=false;renderClientes();toast('Cupom desativado')}));
   renderTabPreco();
 }
@@ -1104,6 +1243,12 @@ const MODELOS={
   volta:{nome:'Volta 15%',tipo:'PCT',valor:15,dias:30,usos:1,msg:'Oi {nome}! Faz tempo que você não passa na DKM 😊 Separei um cupom de {desconto} pra sua próxima compra: *{codigo}* (vale até {validade}). Chegaram películas e capas novas!\n\nVeja o catálogo com o desconto já aplicado: {link}'},
   vip:{nome:'Cliente Ouro 10%',tipo:'PCT',valor:10,dias:60,usos:1,msg:'Oi {nome}! Você é cliente Ouro da DKM 🥇 Obrigado pela preferência! Use o cupom *{codigo}* e ganhe {desconto} na próxima compra (vale até {validade}).\n\nPeça pelo catálogo com o desconto já aplicado: {link}'},
   reais:{nome:'R$ 10 em fone/carregador',tipo:'REAIS',valor:10,dias:30,usos:1,msg:'Oi {nome}! Tem cupom de {desconto} pra fone ou carregador na DKM: *{codigo}* (vale até {validade}).\n\nPeça pelo catálogo com o desconto já aplicado: {link}'}};
+const PRAZOS=[[60,'1 hora'],[120,'2 horas'],[360,'6 horas'],[1440,'24 horas'],[4320,'3 dias'],[10080,'7 dias'],[43200,'30 dias'],[86400,'60 dias'],[0,'Sem prazo']];
+const pzNome=mn=>mn<1440?(mn%60?mn+' min':(mn/60)+(mn===60?' hora':' horas')):(mn/1440)+(mn===1440?' dia':' dias');
+function quandoTxt(d){const h=new Date(),am=new Date(h.getFullYear(),h.getMonth(),h.getDate()+1),hh=d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  if(d.toDateString()===h.toDateString())return'hoje às '+hh;if(d.toDateString()===am.toDateString())return'amanhã às '+hh;return d.toLocaleDateString('pt-BR')+(d.getHours()||d.getMinutes()?' às '+hh:'')}
+function faltaCup(iso){const ms=new Date(iso)-Date.now();if(ms<=0)return'expirou';const m=Math.ceil(ms/6e4);if(m<60)return'acaba em '+m+' min';const h=Math.floor(m/60);if(h<48)return'acaba em '+h+'h'+(m%60?' '+String(m%60).padStart(2,'0')+'min':'');return'até '+quandoTxt(new Date(iso))}
+setInterval(()=>{if(location.hash==='#cupons'&&S.cupons.some(c=>c.expira_em))renderClientes()},30000);
 function codigoPara(cli,tipo,valor){const base=(cli?cli.split(' ')[0]:'DKM').normalize('NFD').replace(/[^A-Za-z]/g,'').toUpperCase().slice(0,10)||'DKM';let c=base+Math.round(valor)+(tipo==='REAIS'?'OFF':'');let i=2;while(S.cupons.some(x=>x.codigo===c))c=base+Math.round(valor)+(tipo==='REAIS'?'OFF':'')+'-'+(i++);return c}
 function abrirCupom(cli,mod){const m=MODELOS[mod]||MODELOS.volta,box=$('#cupomBox');if(location.hash!=='#cupons'){location.hash='#cupons';route()}box.hidden=false;setTimeout(()=>box.scrollIntoView({behavior:'smooth',block:'start'}),60);
   box.innerHTML=`<h2>Criar cupom <span class="sub">o cliente usa o código no próximo pedido</span></h2>
@@ -1112,28 +1257,33 @@ function abrirCupom(cli,mod){const m=MODELOS[mod]||MODELOS.volta,box=$('#cupomBo
     <div class="field" style="flex:1 1 180px"><label for="kCli">Para quem (vazio = qualquer cliente)</label><input id="kCli" class="inp" list="clientes" value="${esc(cap(cli))}" autocomplete="off"></div>
     <div class="field" style="width:110px"><label for="kVal">Desconto</label><input id="kVal" class="inp num" inputmode="decimal" value="${m.valor}"></div>
     <div class="seg" role="group" aria-label="Tipo de desconto"><button type="button" data-kt="PCT" aria-pressed="${m.tipo==='PCT'}">%</button><button type="button" data-kt="REAIS" aria-pressed="${m.tipo==='REAIS'}">R$</button></div>
-    <div class="field" style="width:110px"><label for="kDias">Vale por (dias)</label><input id="kDias" class="inp num" inputmode="numeric" value="${m.dias}"></div>
+
     <div class="field" style="width:130px"><label for="kUsos">Pode usar</label><select id="kUsos" class="inp"><option value="1"${m.usos===1?' selected':''}>1 vez</option><option value="">quantas vezes quiser</option></select></div>
     <div class="field" style="width:160px"><label for="kCod">Código</label><input id="kCod" class="inp" style="text-transform:uppercase" autocomplete="off"></div>
    </div>
+   <div class="field" style="margin-top:10px"><label>Prazo: depois disso o cupom para sozinho</label><div class="chips prazo" id="kPrazo" role="group" aria-label="Prazo do cupom">${PRAZOS.map(([mn,t])=>`<button type="button" data-pz="${mn}" aria-pressed="${mn===(m.dias*1440)}">${t}</button>`).join('')}</div><p class="note" id="kPzTxt" style="margin-top:6px"></p></div>
    <div class="row-f" style="margin-top:10px"><div class="field" style="flex:1 1 300px"><label for="kMsg">Mensagem para o WhatsApp</label><textarea id="kMsg" class="inp"></textarea></div>
     <div class="field" style="width:190px"><label for="kFone">WhatsApp do cliente (opcional)</label><input id="kFone" class="inp" inputmode="tel" placeholder="(62) 9 9999-9999" value="${esc(S.clientes[chave(cli)]?.telefone||'')}"></div></div>
    <div class="row-f" style="margin-top:12px;justify-content:flex-end"><button class="btn" type="button" id="kCancela">Cancelar</button><button class="btn pri" type="button" id="kCria">Criar cupom</button></div>
    <div id="kFeito" style="margin-top:12px"></div>`;
-  let tipo=m.tipo,modelo=m;let codEditado=false;
-  const montaMsg=()=>{const c=$('#kCli').value.trim(),v=dec($('#kVal').value),d=parseInt($('#kDias').value)||0;const val=d?dataBR(isoD(new Date(Date.now()+d*864e5))):'quando quiser';
+  let tipo=m.tipo,modelo=m;let codEditado=false;let pz=m.dias*1440;
+  const montaMsg=()=>{const c=$('#kCli').value.trim(),v=dec($('#kVal').value);const fim=pz?new Date(Date.now()+pz*60000):null;const val=fim?quandoTxt(fim)+(pz<1440?`, corre que é só ${pzNome(pz)}! ⏰`:''):'quando quiser';
+    $('#kPzTxt').innerHTML=fim?`Vale até <b>${quandoTxt(fim)}</b>.`:'Sem prazo: vale até você desativar.';
     if(!codEditado)$('#kCod').value=codigoPara(chave(c),tipo,v);
     $('#kMsg').value=modelo.msg.replace('{nome}',c?cap(c).split(' ')[0]:'').replace('Oi !','Oi!').replace('{desconto}',tipo==='PCT'?v.toLocaleString('pt-BR')+'%':brlR(v)).replace('{codigo}',$('#kCod').value.toUpperCase()).replace('{validade}',val).replace('{link}',linkCupom($('#kCod').value))};
   montaMsg();
   $$('[data-mod]').forEach(b=>b.onclick=()=>abrirCupom($('#kCli').value,b.dataset.mod));
   $$('[data-kt]').forEach(b=>b.onclick=()=>{tipo=b.dataset.kt;$$('[data-kt]').forEach(x=>x.setAttribute('aria-pressed',x===b));montaMsg()});
-  ['#kCli','#kVal','#kDias'].forEach(id=>$(id).oninput=montaMsg);$('#kCod').oninput=()=>{codEditado=true;montaMsg()};
+  ['#kCli','#kVal'].forEach(id=>$(id).oninput=montaMsg);
+  $('#kPrazo').onclick=e=>{const b=e.target.closest('[data-pz]');if(!b)return;pz=+b.dataset.pz;$$('#kPrazo [data-pz]').forEach(x=>x.setAttribute('aria-pressed',x===b));montaMsg()};$('#kCod').oninput=()=>{codEditado=true;montaMsg()};
   $('#kCancela').onclick=()=>{box.hidden=true};
-  $('#kCria').onclick=()=>busy($('#kCria'),async()=>{const cod=$('#kCod').value.trim().toUpperCase().replace(/\s+/g,''),v=dec($('#kVal').value),d=parseInt($('#kDias').value)||0,cl=chave($('#kCli').value);
+  $('#kCria').onclick=()=>busy($('#kCria'),async()=>{const cod=$('#kCod').value.trim().toUpperCase().replace(/\s+/g,''),v=dec($('#kVal').value),fim=pz?new Date(Date.now()+pz*60000):null,cl=chave($('#kCli').value);
     if(!cod||v<=0){toast('Preencha o código e o desconto');return}if(S.cupons.some(x=>x.codigo===cod)){toast('Já existe um cupom com esse código');return}
     if(tipo==='PCT'&&v>50){toast('Desconto acima de 50%? Confira o valor');return}
-    const row={codigo:cod,tipo,valor:v,cliente:cl||null,validade:d?isoD(new Date(Date.now()+d*864e5)):null,usos_max:$('#kUsos').value?1:null,usos:0,ativo:true,descricao:modelo.nome};
-    must(await sb.from('cupons').insert(row));S.cupons.unshift({...row,criado_em:new Date().toISOString()});
+    const row={codigo:cod,tipo,valor:v,cliente:cl||null,validade:fim?isoD(fim):null,expira_em:fim?fim.toISOString():null,usos_max:$('#kUsos').value?1:null,usos:0,ativo:true,descricao:modelo.nome};
+    let ins=await sb.from('cupons').insert(row);
+    if(ins.error&&/expira_em/i.test(ins.error.message||'')){delete row.expira_em;ins=await sb.from('cupons').insert(row);if(!ins.error&&pz&&pz<1440)toast('Rode o 9-cupom-prazo.sql no Supabase para o prazo em horas valer. Por enquanto ele vale até o fim do dia.')}
+    must(ins);S.cupons.unshift({...row,criado_em:new Date().toISOString()});
     const fone=$('#kFone').value.replace(/\D/g,'');if(cl&&fone){must(await sb.from('clientes').upsert({nome:cl,telefone:fone,nivel:S.clientes[cl]?.nivel??null}));S.clientes[cl]={...(S.clientes[cl]||{nome:cl,obs:''}),telefone:fone,nivel:S.clientes[cl]?.nivel??null}}
     const msg=$('#kMsg').value,num=fone?(fone.length<=11?'55'+fone:fone):'';
     $('#kFeito').innerHTML=`<div class="alert info">Cupom <b>${esc(cod)}</b> criado. O link abre o catálogo com o desconto já aplicado. Agora mande para o cliente:</div><div class="row-f" style="margin-top:10px"><button class="btn" type="button" id="kCopia">Copiar mensagem</button><button class="btn" type="button" id="kLink">Copiar só o link</button><a class="btn pri" href="https://wa.me/${num}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener">Abrir no WhatsApp</a></div>`;
@@ -1624,6 +1774,7 @@ const pendentes=e=>itensDe(e).filter(i=>!i.pronta&&!i.comprado);
 const totBruto=e=>itensDe(e).reduce((a,i)=>a+i.qtd*(+i.preco),0);
 const totEnc=e=>Math.max(0,r2(totBruto(e)-(+e.desconto||0)));
 const fatorEnc=e=>{const b=totBruto(e);return b>0?totEnc(e)/b:1};
+const estagio=e=>{const g=grupoEnc(e);return g==='entregar'?(e.etapa==='SAIU'?'rota':'separar'):g};
 const grupoEnc=e=>e.status==='ABERTA'?(pendentes(e).length?'comprar':'entregar'):e.status==='COMPRADA'?'entregar':e.status;
 
 async function carregarEncomendas(){
@@ -1664,34 +1815,33 @@ function sugestoes(l,n=8){const pop={};ENC.lista.forEach(e=>{if(e.status!=='CANC
     .map(c=>({c,sc:(c.preco-c.custo)*(1+(pop[c.id]||0)*2)*(c.destaque?1.5:1)/Math.sqrt(c.custo)})).sort((a,b)=>b.sc-a.sc).slice(0,n).map(x=>x.c)}
 
 function faltaTxt(l){const p=[];if(l.usaP&&l.faltaP>0)p.push(`<b>${qPecas(l.faltaP)}</b>`);if(l.usaV&&l.faltaV>0)p.push(`<b>${brl(l.faltaV)}</b> em custo`);return p.join(' ou ')}
-function loteHTML(l){const r=l.r,pctP=r.min_pecas>0?Math.min(100,l.pc/r.min_pecas*100):0,pctV=r.min_valor>0?Math.min(100,l.cu/r.min_valor*100):0;
-  const pill={ir:'<span class="pill p-good">Pode ir buscar</span>',completar:'<span class="pill p-warn">Prazo vencendo</span>',esperar:'<span class="pill p-mute">Juntando pedidos</span>'}[l.st];
-  const prazo=l.vence?`Prazo prometido ao cliente: <b>${dataCurta(l.vence)}</b>${l.resta<0?' (já passou)':l.resta===0?' (hoje)':diasCal(l.vence)===1?' (amanhã)':l.resta===1?' (próximo dia útil)':` (${l.resta} dias úteis)`}`:'';
-  let msg;
-  if(l.st==='ir')msg=`Fechou o mínimo de atacado${l.pC?' (contando o que você vai levar para o estoque)':''}. Pode ir buscar.${l.lucro<0&&l.ped.size?` <span class="neg">Atenção: o lucro destas encomendas não paga a viagem.</span>`:''}`;
-  else if(l.st==='completar')msg=`O prazo está vencendo e ainda faltam ${faltaTxt(l)}. Complete com peças para o seu estoque (abra a <b>lista de compra</b>, tem sugestões) e vá, ou avise os clientes que atrasa.`;
-  else msg=l.ped.size?`Faltam ${faltaTxt(l)} para o preço de atacado.${l.prev?` No ritmo atual dos pedidos, fecha em uns <b>${l.prev} dia${l.prev===1?'':'s'}</b>.`:''}`:`Só tem peças para o estoque aqui. Faltam ${faltaTxt(l)||'0'} para o atacado.`;
-  const ab=ENC.abre[l.f];
-  return `<div class="panel lote lote-${l.st}"><div class="lote-top"><h2>${esc(l.f)}</h2>${pill}</div>
-    <div class="metas">${r.min_pecas>0?`<div><div class="m-l"><span>Peças</span><b class="num">${l.pc} de ${r.min_pecas}</b></div><div class="bar"><i style="width:${pctP}%"></i></div></div>`:''}
-      ${r.min_valor>0?`<div><div class="m-l"><span>Custo no atacado</span><b class="num">${brl(l.cu)} de ${brl(r.min_valor)}</b></div><div class="bar"><i style="width:${pctV}%"></i></div></div>`:''}</div>
-    <p class="lote-msg">${msg}</p>
-    ${l.ped.size?`<div class="lote-num">${l.ped.size} pedido${l.ped.size===1?'':'s'} · venda ${brl(l.venda)} · custo ${brl(l.cE)} · viagem ${brl(r.viagem)} → <b class="${l.lucro<0?'neg':''}">lucro ${brl(l.lucro)}</b></div>`:''}
-    ${l.pC?`<div class="lote-num">Para o estoque: ${qPecas(l.pC)} · ${brl(l.cC)}</div>`:''}
-    ${prazo?`<div class="lote-num">${prazo}</div>`:''}
-    <div class="row-f" style="margin-top:10px"><button class="btn sm${ab==='lista'?' pri':''}" type="button" data-lab="lista" data-f="${esc(l.f)}">Lista de compra</button><button class="btn sm${ab==='regra'?' pri':''}" type="button" data-lab="regra" data-f="${esc(l.f)}">Regra do fornecedor</button></div>
-    ${ab==='lista'?listaHTML(l):ab==='regra'?regraHTML(l):''}</div>`}
-
-function agrupa(l){const m={};l.itens.forEach(i=>{const k=i.catalogo_id||i.nome;const o=m[k]=m[k]||{nome:i.nome,q:0,custo:i.custo,cat:i.categoria,clientes:new Set()};o.q+=i.qtd;o.clientes.add(cap(i.enc.cliente).split(' ')[0])});return Object.values(m).sort((a,b)=>a.cat.localeCompare(b.cat,'pt-BR')||a.nome.localeCompare(b.nome,'pt-BR'))}
+function loteHTML(l){const r=l.r,pctP=r.min_pecas>0?Math.min(100,l.pc/r.min_pecas*100):0,pctV=r.min_valor>0?Math.min(100,l.cu/r.min_valor*100):0,pct=Math.round(Math.max(pctP,pctV));
+  const prazo=l.vence?`${dataCurta(l.vence)}${l.resta<0?' (já passou)':l.resta===0?' (hoje)':diasCal(l.vence)===1?' (amanhã)':''}`:'';
+  const tit={ir:'Pode ir buscar! ✅',completar:'Prazo vencendo ⚠️',esperar:'Juntando pedidos'}[l.st];
+  const frase=l.st==='ir'?`Já deu o mínimo do atacado: ${qPecas(l.pc)} · ${brl(l.cu)}.`:`Faltam ${faltaTxt(l)} para o preço de atacado.${l.st==='completar'?' Complete com peças para o estoque (📋 Lista) ou avise o cliente.':l.prev?` Fecha em uns ${l.prev} dia${l.prev===1?'':'s'}.`:''}`;
+  const ab=ENC.abre[l.f];const C=2*Math.PI*42;
+  return `<div class="panel lote lote-${l.st}${ab?' aberto':''}"><div class="lote-row">
+    <div class="anel" style="--p:${pct}"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="42" class="fundo"/><circle cx="50" cy="50" r="42" class="cheio" style="stroke-dasharray:${C};stroke-dashoffset:${C*(1-pct/100)}"/></svg><b class="num">${pct}%</b><small>do atacado</small></div>
+    <div class="lote-info"><div class="lote-top"><h2>${esc(l.f)}</h2><span class="lote-st">${tit}</span></div>
+      <p class="lote-msg">${frase}</p>
+      <div class="lote-chips">${l.ped.size?`<span>🧾 ${l.ped.size} pedido${l.ped.size===1?'':'s'}</span>`:''}<span>📦 ${qPecas(l.pc)} de ${r.min_pecas||'—'}</span><span>💰 ${brl(l.cu)} de ${brl(r.min_valor)}</span>${prazo?`<span>⏰ prometido: ${prazo}</span>`:''}${l.ped.size?`<span class="${l.lucro<0?'neg':''}">📈 lucro ${brl(l.lucro)}</span>`:''}${l.pC?`<span>➕ estoque: ${qPecas(l.pC)}</span>`:''}</div>
+      <div class="row-f lote-bts">${l.itens.length||l.comp.length?`<button class="btn pri" type="button" data-fuiabre="${esc(l.f)}">🛒 Fui buscar</button>`:''}<button class="btn sm${ab==='lista'?' on':''}" type="button" data-lab="lista" data-f="${esc(l.f)}">📋 Lista de compra</button><button class="btn sm${ab==='regra'?' on':''}" type="button" data-lab="regra" data-f="${esc(l.f)}">⚙️ Regra</button></div></div></div>
+    ${ab==='fui'?fuiHTML(l):ab==='lista'?listaHTML(l):ab==='regra'?regraHTML(l):''}</div>`}
+function fuiHTML(l){const g=agrupa(l);
+  return `<div class="lote-extra fui"><h3>O que você comprou na ${esc(l.f)}? <span class="sub">desmarque o que não tinha</span></h3>
+    <div class="fui-lista">${g.map(o=>`<label class="fui-it"><input type="checkbox" checked data-fuik="${esc(o.k)}"><span><b>${o.q}x</b> ${esc(o.nome)}<small>para ${esc([...o.clientes].join(', '))}</small></span><em class="num">${brl(o.q*o.custo)}</em></label>`).join('')}
+    ${l.comp.map(o=>`<label class="fui-it est"><input type="checkbox" checked disabled><span><b>${o.q}x</b> ${esc(o.c.nome)}<small>para o seu estoque</small></span><em class="num">${brl(o.q*o.c.custo)}</em></label>`).join('')}</div>
+    <div class="row-f" style="margin-top:12px"><button class="btn pri" type="button" data-fui="${esc(l.f)}">✓ Confirmar compra</button><button class="btn" type="button" data-lab="fui" data-f="${esc(l.f)}">Fechar</button></div>
+    <p class="note" style="margin-top:8px">Os pedidos que ficarem completos vão para <b>📦 Separar</b>.${l.pC?' As peças do estoque: dê entrada em Compras.':''}</p></div>`}
+function agrupa(l){const m={};l.itens.forEach(i=>{const k=String(i.catalogo_id||i.nome);const o=m[k]=m[k]||{k,ids:[],nome:i.nome,q:0,custo:i.custo,cat:i.categoria,clientes:new Set()};o.ids.push(i.id);o.q+=i.qtd;o.clientes.add(cap(i.enc.cliente).split(' ')[0])});return Object.values(m).sort((a,b)=>a.cat.localeCompare(b.cat,'pt-BR')||a.nome.localeCompare(b.nome,'pt-BR'))}
 function listaHTML(l){const g=agrupa(l),sug=sugestoes(l);
-  return `<div class="lote-extra">
+  return `<div class="lote-extra lista"><div class="lista-cols"><div>
     ${g.length?`<h3>Das encomendas</h3><div class="tbl-wrap"><table class="lst"><thead><tr><th>Produto</th><th class="r">Qtd</th><th class="r">Custo</th><th class="r">Total</th></tr></thead><tbody>${g.map(o=>`<tr><td>${esc(o.nome)}<small>${esc([...o.clientes].join(', '))}</small></td><td class="r num">${o.q}</td><td class="r num">${brl(o.custo)}</td><td class="r num">${brl(o.q*o.custo)}</td></tr>`).join('')}</tbody></table></div>`:''}
-    <h3>Para o seu estoque <span class="sub">completa o mínimo e fica para vender</span></h3>
+    </div><div><h3>Para o seu estoque <span class="sub">completa o mínimo e fica para vender</span></h3>
     ${l.comp.length?`<div class="tbl-wrap"><table class="lst"><tbody>${l.comp.map(o=>`<tr><td>${esc(o.c.nome)}<small>vende a ${brl(o.c.preco)} · margem ${Math.round((1-o.c.custo/o.c.preco)*100)}%</small></td><td class="r"><span class="qtd-mini"><button type="button" data-cq="-1" data-cid="${o.c.id}" data-f="${esc(l.f)}" aria-label="Menos">−</button><b class="num">${o.q}</b><button type="button" data-cq="1" data-cid="${o.c.id}" data-f="${esc(l.f)}" aria-label="Mais">+</button></span></td><td class="r num">${brl(o.c.custo)}</td><td class="r num">${brl(o.q*o.c.custo)}</td></tr>`).join('')}</tbody></table></div>`:'<p class="note">Nada ainda. Toque em uma sugestão abaixo para somar.</p>'}
     ${sug.length?`<p class="note" style="margin-top:8px">Sugestões de ${esc(l.f)}: baratas, com margem boa e as que mais pedem.</p><div class="sug">${sug.map(c=>`<button type="button" class="sug-it" data-cq="1" data-cid="${c.id}" data-f="${esc(l.f)}"><span>${esc(c.nome)}</span><small>custo ${brl(c.custo)} · vende ${brl(c.preco)}</small><b>+</b></button>`).join('')}</div>`:''}
-    <div class="lote-tot"><span>Levar: <b class="num">${qPecas(l.pc)}</b> · <b class="num">${brl(l.cu)}</b> no atacado</span>${l.atingiu?'<span class="pill p-good">mínimo ok</span>':`<span class="pill p-warn">faltam ${l.usaP&&l.faltaP?qPecas(l.faltaP):''}${l.usaP&&l.faltaP&&l.usaV&&l.faltaV?' ou ':''}${l.usaV&&l.faltaV?brl(l.faltaV):''}</span>`}</div>
-    <div class="row-f" style="margin-top:10px"><button class="btn" type="button" data-copialista="${esc(l.f)}">Copiar lista</button>${l.itens.length||l.comp.length?`<button class="btn pri" type="button" data-fui="${esc(l.f)}">Fui buscar</button>`:''}</div>
-    <div class="confirm" data-fuiconf="${esc(l.f)}" hidden style="margin-top:10px"></div></div>`}
+    </div></div><div class="lote-tot"><span>Levar: <b class="num">${qPecas(l.pc)}</b> · <b class="num">${brl(l.cu)}</b> no atacado</span>${l.atingiu?'<span class="pill p-good">mínimo ok</span>':`<span class="pill p-warn">faltam ${l.usaP&&l.faltaP?qPecas(l.faltaP):''}${l.usaP&&l.faltaP&&l.usaV&&l.faltaV?' ou ':''}${l.usaV&&l.faltaV?brl(l.faltaV):''}</span>`}</div>
+    <div class="row-f" style="margin-top:10px"><button class="btn" type="button" data-copialista="${esc(l.f)}">📋 Copiar lista</button>${l.itens.length||l.comp.length?`<button class="btn pri" type="button" data-fuiabre="${esc(l.f)}">🛒 Fui buscar</button>`:''}</div></div>`}
 function regraHTML(l){const r=l.r;
   return `<div class="lote-extra"><div class="row-f">
     <div class="field" style="width:120px"><label>Peças mínimas</label><input class="inp num" data-rg="min_pecas" value="${r.min_pecas}" inputmode="numeric"></div>
@@ -1701,36 +1851,45 @@ function regraHTML(l){const r=l.r;
     <p class="note" style="margin-top:6px">Fecha o atacado quando chegar nas peças <b>ou</b> no custo. Deixe 0 no que o fornecedor não exige.</p>
     <div class="row-f" style="margin-top:8px"><button class="btn pri sm" type="button" data-rgsalva="${esc(l.f)}">Salvar regra de ${esc(l.f)}</button></div></div>`}
 
-function encHTML(e){const its=itensDe(e),g=grupoEnc(e),pend=pendentes(e).reduce((a,i)=>a+i.qtd,0);
-  const pill=g==='comprar'?'<span class="pill p-warn">Falta comprar</span>':g==='entregar'?'<span class="pill p-good">Pronta para entregar</span>':g==='ENTREGUE'?'<span class="pill p-mute">Entregue</span>':'<span class="pill p-bad">Cancelada</span>';
-  const linhas=its.map(i=>`<li><b class="num">${i.qtd}x</b> ${esc(i.nome)} <span class="note">${i.pronta?'pronta entrega':esc(i.fornecedor||'')+(i.comprado?' · comprado':' · a buscar')}</span></li>`).join('');
-  let bt='';const tem=('etapa' in e),et=e.etapa||'RECEBIDO';
-  const ETS=[['RECEBIDO','Recebido'],['SEPARANDO','Separando'],['SAIU','Saiu p/ entrega'],['ENTREGUE','Entregue']],k=g==='ENTREGUE'?3:Math.max(0,ETS.findIndex(x=>x[0]===et));
-  const linhaEt=tem&&g!=='CANCELADA'?`<ol class="enc-et">${ETS.map(([c,n],j)=>`<li class="${j<k?'ok':j===k?(j===3?'ok':'ag'):''}">${n}</li>`).join('')}</ol>`:'';
-  const contato=[e.telefone?`<span>📱 <b>${esc(e.telefone)}</b></span>`:'',e.endereco?`<span>📍 <b>${esc(e.endereco)}</b></span>`:'',e.pagamento?`<span>💳 <b>${esc(e.pagamento)}</b></span>`:''].filter(Boolean).join('');
-  const btEt=tem&&g==='entregar'?(et==='RECEBIDO'?`<button class="btn sm" type="button" data-eetapa="SEPARANDO" data-eid="${e.id}">📦 Separando</button>`:'')+(et!=='SAIU'?`<button class="btn sm pri" type="button" data-eetapa="SAIU" data-eid="${e.id}">🚚 Saiu para entrega</button>`:`<button class="btn sm" type="button" data-eetapa="SAIU" data-eid="${e.id}">🚚 Avisar de novo</button>`):'';
-  if(g==='comprar')bt=`<button class="btn sm danger" type="button" data-ecan="${e.id}">Cancelar</button>`;
-  if(g==='entregar')bt=btEt+`${e.origem==='VITRINE'&&tem?'':`<button class="btn sm" type="button" data-eavisa="${e.id}">Avisar que chegou</button>`}<button class="btn sm" type="button" data-epedido="${e.id}">Lançar no Pedido</button><button class="btn sm pri" type="button" data-eentregue="${e.id}">Entregue</button><button class="btn sm danger" type="button" data-ecan="${e.id}">Cancelar</button>`;
-  if(g==='CANCELADA')bt=`<button class="btn sm" type="button" data-ereabre="${e.id}">Reabrir</button>`;
-  return `<div class="enc"><div class="enc-top"><div><b>${esc(cap(e.cliente))}</b> <span class="note">nº ${esc(e.codigo)} · ${new Date(e.criado_em).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} · ${e.origem==='VITRINE'?'vitrine':'lançada aqui'}</span></div>${pill}</div>
-    ${contato?`<div class="enc-ct">${contato}</div>`:''}${linhaEt}<ul class="enc-it">${linhas}</ul>${e.cupom?`<p class="note">🎟️ Cupom <b>${esc(e.cupom)}</b>: − ${brl(e.desconto)} (de ${brl(totBruto(e))})</p>`:''}${e.obs?`<p class="note">Obs.: ${esc(e.obs)}</p>`:''}
-    <div class="row-f enc-pe"><b class="num">${brl(totEnc(e))}</b>${pend&&g==='comprar'?`<span class="note">${qPecas(pend)} a buscar</span>`:''}<span style="flex:1"></span>${bt}</div></div>`}
+function encHTML(e){const its=itensDe(e),st=estagio(e),pend=pendentes(e).reduce((a,i)=>a+i.qtd,0),tem=('etapa' in e),et=e.etapa||'RECEBIDO';
+  const sob=its.some(i=>!i.pronta);const P=[...(sob?[['comprar','🛒','Comprar']]:[]),['separar','📦','Separar'],['rota','🚚','Entrega'],['ENTREGUE','✅','Entregue']];
+  const k=Math.max(0,P.findIndex(x=>x[0]===st));const fone=String(e.telefone||'').replace(/\D/g,'');
+  const linhas=its.map(i=>`<li><b class="num">${i.qtd}x</b> ${esc(i.nome)} <span class="tag ${i.pronta?'ok':i.comprado?'ok':'warn'}">${i.pronta?'pronta entrega':i.comprado?'comprado':'buscar na '+esc(i.fornecedor||'fornecedor')}</span></li>`).join('');
+  let pri='',sec='';
+  if(st==='comprar')pri=`<button class="btn pri grande" type="button" data-ecomprei="${e.id}">🛒 Já comprei ${pend>1?'os itens':'o item'}</button>`;
+  if(st==='separar')pri=tem?(et==='SEPARANDO'?`<button class="btn pri grande" type="button" data-eetapa="SAIU" data-eid="${e.id}">🚚 Saiu para entrega</button>`:`<button class="btn pri grande" type="button" data-eetapa="SEPARANDO" data-eid="${e.id}">📦 Começar a separar</button><button class="btn" type="button" data-eetapa="SAIU" data-eid="${e.id}">🚚 Já saiu</button>`):`<button class="btn pri grande" type="button" data-eentregue="${e.id}">✅ Entregue</button>`;
+  if(st==='rota')pri=`<button class="btn pri grande ok" type="button" data-eentregue="${e.id}">✅ Foi entregue</button><button class="btn" type="button" data-eetapa="SAIU" data-eid="${e.id}">💬 Avisar de novo</button>`;
+  if(st==='CANCELADA')pri=`<button class="btn" type="button" data-ereabre="${e.id}">↩️ Reabrir</button>`;
+  if(st!=='CANCELADA'){sec+=fone.length>=10?`<a class="ic-bt" href="https://wa.me/${fone.length<=11?'55'+fone:fone}" target="_blank" rel="noopener" title="Conversar no WhatsApp">💬</a>`:'';
+    if(st!=='comprar')sec+=`<button class="ic-bt" type="button" data-epedido="${e.id}" title="Lançar no Pedido (baixa o estoque e registra a venda)">🧾</button>`;
+    if(st!=='ENTREGUE')sec+=`<button class="ic-bt perigo" type="button" data-ecan="${e.id}" title="Cancelar">✕</button>`}
+  const quando=new Date(e.criado_em).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+  return `<article class="enc est-${st.toLowerCase()}"><div class="enc-top"><div><b class="enc-nome">${esc(cap(e.cliente))}</b><span class="note">nº ${esc(e.codigo)} · ${quando} · ${e.origem==='VITRINE'?'🛍️ vitrine':'✍️ lançada aqui'}</span></div><b class="num enc-tot">${brl(totEnc(e))}</b></div>
+    ${st==='CANCELADA'?`<div class="enc-can"><i>✕</i>${/cancelado pelo cliente/i.test(e.obs||'')||e.cancelado_por==='CLIENTE'?'Cancelado pelo cliente':'Pedido cancelado'}</div>`:''}${st!=='CANCELADA'?`<ol class="trilha" style="--k:${k};--n:${P.length}">${P.map(([c,ic,n],j)=>`<li class="${j<k||st==='ENTREGUE'?'ok':j===k?'agora':''}"><i>${ic}</i><span>${n}</span></li>`).join('')}<span class="tr-linha"><em></em></span>${st==='rota'?'<span class="tr-caminhao" aria-hidden="true">🚚</span>':''}</ol>`:''}
+    <ul class="enc-it">${linhas}</ul>
+    ${[e.telefone?`<span>📱 ${esc(e.telefone)}</span>`:'',e.endereco?`<span>📍 ${esc(e.endereco)}</span>`:'',e.pagamento?`<span>💳 ${esc(e.pagamento)}</span>`:'',e.cupom?`<span>🎟️ ${esc(e.cupom)} − ${brl(e.desconto)}</span>`:'',e.obs?`<span>📝 ${esc(e.obs)}</span>`:''].filter(Boolean).length?`<div class="enc-ct">${[e.telefone?`<span>📱 ${esc(e.telefone)}</span>`:'',e.endereco?`<span>📍 ${esc(e.endereco)}</span>`:'',e.pagamento?`<span>💳 ${esc(e.pagamento)}</span>`:'',e.cupom?`<span>🎟️ ${esc(e.cupom)} − ${brl(e.desconto)}</span>`:'',e.obs?`<span>📝 ${esc(e.obs)}</span>`:''].filter(Boolean).join('')}</div>`:''}
+    <div class="enc-pe">${pri}<span style="flex:1"></span>${sec}</div></article>`}
 
 function renderEncomendas(){
   const abertas=ENC.lista.filter(e=>e.status==='ABERTA'||e.status==='COMPRADA');badge('encomendas',abertas.length?abertas.length:'');
   if(!ENC.ok){$('#encLotes').innerHTML='';$('#encLista').innerHTML='';return}
-  const L=lotes();
-  $('#encLotes').innerHTML=L.length?L.map(loteHTML).join(''):`<div class="panel"><div class="empty">Nenhuma encomenda esperando compra. Quando um cliente pedir um item <b>sob encomenda</b> na vitrine, ele aparece aqui sozinho, junto por fornecedor.</div></div>`;
-  const lst=ENC.lista.filter(e=>grupoEnc(e)===ENC.filtro);
-  const cont=g=>ENC.lista.filter(e=>grupoEnc(e)===g).length;
-  $$('[data-es]').forEach(b=>{const n=cont(b.dataset.es);b.textContent=b.textContent.replace(/ \(\d+\)$/,'')+(n?` (${n})`:'')});
-  $('#encSub').textContent='';
-  $('#encLista').innerHTML=lst.length?lst.map(encHTML).join(''):'<div class="empty">Nada aqui.</div>';
+  const cont=g=>ENC.lista.filter(e=>estagio(e)===g).length;
+  if(!ENC.escolheu){ENC.filtro=['separar','rota','comprar'].find(g=>cont(g))||'separar'}
+  $$('#esteira [data-es]').forEach(b=>{const g=b.dataset.es,n=cont(g),el=b.querySelector('[data-n]');b.setAttribute('aria-selected',g===ENC.filtro);b.classList.toggle('tem',n>0&&g!=='ENTREGUE');
+    if(+el.textContent!==n){el.textContent=n;el.classList.remove('pula');void el.offsetWidth;el.classList.add('pula')}});
+  $('#verCanc').textContent=ENC.filtro==='CANCELADA'?'‹ Voltar aos pedidos':`Ver canceladas (${cont('CANCELADA')})`;$('#verCanc').dataset.es=ENC.filtro==='CANCELADA'?'separar':'CANCELADA';$('#verCanc').classList.toggle('tem-can',ENC.filtro!=='CANCELADA'&&ENC.lista.some(e=>e.status==='CANCELADA'&&(e.cancelado_por==='CLIENTE'||/cancelado pelo cliente/i.test(e.obs||''))&&Date.now()-new Date(e.cancelado_em||e.criado_em)<864e5));
+  $('#esDica').innerHTML={comprar:'Itens <b>sob encomenda</b> que você ainda precisa buscar. O painel junta por fornecedor e mostra quando dá o preço de atacado.',separar:'Pedidos com tudo na mão. Separe e mande para entrega: o cliente acompanha pelo link.',rota:'Saíram para entrega. Quando o cliente receber, toque em <b>Foi entregue</b>.',ENTREGUE:'Entregues nos últimos 75 dias.',CANCELADA:'Pedidos cancelados. Dá para reabrir.'}[ENC.filtro]||'';
+  const L=ENC.filtro==='comprar'?lotes():[];
+  $('#encLotes').innerHTML=L.map(loteHTML).join('');$('#encLotes').hidden=!L.length;$('#encCorpo').classList.toggle('lado',L.length>0&&!L.some(l=>ENC.abre[l.f]));
+  const lst=ENC.lista.filter(e=>estagio(e)===ENC.filtro);
+  const vazio={comprar:'Nada para buscar no fornecedor agora. 🎉',separar:'Nenhum pedido para separar agora.',rota:'Nenhum pedido em entrega agora.',ENTREGUE:'Nenhum pedido entregue ainda.',CANCELADA:'Nenhum pedido cancelado.'}[ENC.filtro];
+  $('#encLista').innerHTML=lst.length?(ENC.filtro==='comprar'?'<h3 class="enc-h3">Pedidos esperando o fornecedor</h3>':'')+lst.map(encHTML).join(''):`<div class="panel"><div class="empty">${vazio}</div></div>`;
 }
 
 /* ações nos lotes */
 $('#encLotes').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const f=b.dataset.f;
   if(b.dataset.lab){ENC.abre[f]=ENC.abre[f]===b.dataset.lab?null:b.dataset.lab;renderEncomendas();return}
+  if(b.dataset.fuiabre){abreCompra(b.dataset.fuiabre);return}
   if(b.dataset.cq){const id=b.dataset.cid,m=ENC.comp[f]=ENC.comp[f]||{};m[id]=Math.max(0,(m[id]||0)+(+b.dataset.cq));if(!m[id])delete m[id];salvaComp();ENC.abre[f]='lista';renderEncomendas();return}
   if(b.dataset.copialista){const l=lotes().find(x=>x.f===b.dataset.copialista);if(!l)return;
     const t=`*Compra ${l.f} · ${new Date().toLocaleDateString('pt-BR')}*\n\n`+agrupa(l).map(o=>`${o.q}x ${o.nome} (${brlR(o.custo)})`).join('\n')+(l.comp.length?'\n\n*Para o estoque:*\n'+l.comp.map(o=>`${o.q}x ${o.c.nome} (${brlR(o.c.custo)})`).join('\n'):'')+`\n\n*Total: ${l.pc} peças · ${brlR(l.cu)}*`;copy(t);return}
@@ -1738,28 +1897,65 @@ $('#encLotes').addEventListener('click',e=>{const b=e.target.closest('button');i
     const nr={min_pecas:Math.max(0,Math.round(v('min_pecas'))),min_valor:Math.max(0,r2(v('min_valor'))),viagem:Math.max(0,r2(v('viagem'))),dias:Math.max(1,Math.round(v('dias'))||3)};
     busy(b,async()=>{const cfg={padrao:{...ENC_PADRAO,...((S.encCfg&&S.encCfg.padrao)||{})},fornecedores:{...((S.encCfg&&S.encCfg.fornecedores)||{}),[b.dataset.rgsalva]:nr}};
       must(await sb.from('config').upsert({chave:'encomendas',valor:cfg}));S.encCfg=cfg;ENC.abre[b.dataset.rgsalva]=null;renderEncomendas();toast('Regra salva')});return}
-  if(b.dataset.fui){const f2=b.dataset.fui,l=lotes().find(x=>x.f===f2);if(!l)return;const box=b.closest('.lote-extra').querySelector('[data-fuiconf]');
-    confirmBox(box,`Marcar como comprado: <b>${qPecas(l.pE)}</b> das encomendas${l.pC?` e ${qPecas(l.pC)} para o estoque`:''}?`,'Sim, comprei',()=>busy(b,async()=>{
-      const ids=l.itens.map(i=>i.id);
+  if(b.dataset.fui){const f2=b.dataset.fui,l=lotes().find(x=>x.f===f2);if(!l)return;const box=b.closest('.lote-extra');
+    const marc=new Set($$('[data-fuik]',box).filter(i=>i.checked).map(i=>i.dataset.fuik));const ids=agrupa(l).filter(o=>marc.has(o.k)).flatMap(o=>o.ids);
+    if(!ids.length&&!l.pC){toast('Marque o que você comprou');return}
+    busy(b,async()=>{
       if(ids.length)must(await sb.from('encomenda_itens').update({comprado:true}).in('id',ids));
       const agora=new Date().toISOString(),prontas=[];
       ENC.lista.forEach(e=>{if(e.status!=='ABERTA')return;let mexeu=false;itensDe(e).forEach(i=>{if(ids.includes(i.id)){i.comprado=true;mexeu=true}});if(mexeu&&!pendentes(e).length)prontas.push(e)});
       if(prontas.length){must(await sb.from('encomendas').update({status:'COMPRADA',comprada_em:agora}).in('id',prontas.map(e=>e.id)));prontas.forEach(e=>{e.status='COMPRADA';e.comprada_em=agora})}
-      const tinhaComp=l.pC>0;delete ENC.comp[f2];salvaComp();ENC.abre[f2]=null;ENC.filtro='entregar';$$('[data-es]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.es==='entregar'));renderEncomendas();
-      toast(`${prontas.length} pedido${prontas.length===1?'':'s'} pronto${prontas.length===1?'':'s'} para entregar`+(tinhaComp?'. Dê entrada das peças do estoque em Compras.':''))}))}});
+      const tinhaComp=l.pC>0;delete ENC.comp[f2];salvaComp();ENC.abre[f2]=null;
+      ENC.escolheu=true;ENC.filtro=prontas.length?'separar':'comprar';renderEncomendas();
+      toast(prontas.length?`🎉 ${prontas.length} pedido${prontas.length===1?'':'s'} foi para Separar`+(tinhaComp?'. Dê entrada das peças do estoque em Compras.':''):'Compra registrada')})}});
+
+/* ===== modo compra: na loja do fornecedor, uma lista grande para ir marcando o que já pegou ===== */
+let MC={f:null,pegos:{}};
+const mcChave=f=>'-pegos-'+chave(f);
+function abreCompra(f){MC.f=f;if($('#modoCompra').parentElement!==document.body)document.body.appendChild($('#modoCompra'));try{MC.pegos=JSON.parse(lsGet(mcChave(f))||'{}')||{}}catch(e){MC.pegos={}}
+  $('#modoCompra').hidden=false;document.body.classList.add('mc-aberto');$('#mcConf').hidden=true;renderCompra(true)}
+function fechaCompra(){$('#modoCompra').hidden=true;document.body.classList.remove('mc-aberto');renderEncomendas()}
+function linhasCompra(l){const g=agrupa(l).map(o=>({...o,tipo:'enc',foto:(CAT.itens.find(c=>String(c.id)===o.k)||{}).foto}));
+  const e=l.comp.map(o=>({k:'est:'+o.c.id,nome:o.c.nome,q:o.q,custo:o.c.custo,cat:o.c.categoria||'',tipo:'est',foto:o.c.foto,clientes:new Set(['seu estoque']),ids:[]}));return [...g,...e]}
+function renderCompra(entra){const l=lotes().find(x=>x.f===MC.f);if(!l){fechaCompra();return}const L=linhasCompra(l);
+  $('#mcTit').textContent=l.f;const cats={};L.forEach(o=>{(cats[o.cat||'Outros']=cats[o.cat||'Outros']||[]).push(o)});
+  let i=0;$('#mcLista').innerHTML=Object.entries(cats).sort((a,b)=>a[0].localeCompare(b[0],'pt-BR')).map(([c,its])=>`<h3>${esc(c)}</h3>`+its.map(o=>{const ok=!!MC.pegos[o.k];return `<button type="button" class="mc-it${ok?' ok':''}${o.tipo==='est'?' est':''}" data-mck="${esc(o.k)}" style="--i:${i++}">
+    <span class="mc-ck" aria-hidden="true">${ok?'✓':''}</span>${o.foto?`<img src="${esc(fotoCat(o.foto))}" alt="" loading="lazy">`:'<span class="mc-sem">📦</span>'}
+    <span class="mc-q num">${o.q}x</span><span class="mc-nome">${esc(o.nome)}<small>${o.tipo==='est'?'para o seu estoque':'para '+esc([...o.clientes].join(', '))} · ${brl(o.custo)} cada</small></span><b class="num mc-v">${brl(o.q*o.custo)}</b></button>`}).join('')).join('');
+  if(entra)$('#mcLista').classList.add('entra');else $('#mcLista').classList.remove('entra');contaCompra(L)}
+function contaCompra(L){const l=L||linhasCompra(lotes().find(x=>x.f===MC.f)||{itens:[],comp:[]});const tot=l.reduce((a,o)=>a+o.q,0),pg=l.filter(o=>MC.pegos[o.k]);const np=pg.reduce((a,o)=>a+o.q,0),v=pg.reduce((a,o)=>a+o.q*o.custo,0),vt=l.reduce((a,o)=>a+o.q*o.custo,0);
+  $('#mcPegos').textContent=np;$('#mcTotal').textContent=tot;$('#mcBar').style.width=(tot?np/tot*100:0)+'%';$('#mcValor').textContent=brl(vt);
+  $('#mcFalta').textContent=np<tot?`✓ na mão ${brl(v)} · faltam ${qPecas(tot-np)}`:'tudo na mão! 🎉';$('#modoCompra').classList.toggle('completo',tot>0&&np===tot);
+  $('#mcFim').textContent=np?`✓ Terminei a compra (${qPecas(np)})`:'✓ Terminei a compra';$('#mcFim').disabled=!np}
+$('#mcLista').addEventListener('click',e=>{const b=e.target.closest('[data-mck]');if(!b)return;const k=b.dataset.mck;if(MC.pegos[k])delete MC.pegos[k];else MC.pegos[k]=1;lsSet(mcChave(MC.f),JSON.stringify(MC.pegos));
+  b.classList.toggle('ok',!!MC.pegos[k]);b.querySelector('.mc-ck').textContent=MC.pegos[k]?'✓':'';if(MC.pegos[k]&&navigator.vibrate)try{navigator.vibrate(25)}catch(x){}contaCompra()});
+$('#mcFecha').onclick=fechaCompra;
+$('#mcFim').onclick=()=>{const l=lotes().find(x=>x.f===MC.f);if(!l)return;const L=linhasCompra(l),pg=L.filter(o=>MC.pegos[o.k]),falta=L.filter(o=>!MC.pegos[o.k]);
+  const c=$('#mcConf');c.hidden=false;c.innerHTML=`<div class="mc-conf-box"><h3>Fechar a compra na ${esc(l.f)}?</h3><p>Você pegou <b>${qPecas(pg.reduce((a,o)=>a+o.q,0))}</b> e vai pagar <b>${brl(pg.reduce((a,o)=>a+o.q*o.custo,0))}</b>.</p>${falta.length?`<p class="mc-aviso">⚠️ Não pegou: ${falta.map(o=>esc(o.q+'x '+o.nome)).join(', ')}. ${falta.some(o=>o.tipo==='enc')?'Esses pedidos continuam em <b>Comprar</b>.':''}</p>`:''}<div class="row-f" style="justify-content:flex-end;margin-top:12px"><button class="btn" type="button" id="mcNao">Voltar</button><button class="btn pri grande" type="button" id="mcSim">Sim, comprei</button></div></div>`;
+  $('#mcNao').onclick=()=>{c.hidden=true};
+  $('#mcSim').onclick=()=>busy($('#mcSim'),async()=>{const ids=pg.filter(o=>o.tipo==='enc').flatMap(o=>o.ids);
+    if(ids.length)must(await sb.from('encomenda_itens').update({comprado:true}).in('id',ids));
+    const agora=new Date().toISOString(),prontas=[];
+    ENC.lista.forEach(e=>{if(e.status!=='ABERTA')return;let mexeu=false;itensDe(e).forEach(i=>{if(ids.includes(i.id)){i.comprado=true;mexeu=true}});if(mexeu&&!pendentes(e).length)prontas.push(e)});
+    if(prontas.length){must(await sb.from('encomendas').update({status:'COMPRADA',comprada_em:agora}).in('id',prontas.map(e=>e.id)));prontas.forEach(e=>{e.status='COMPRADA';e.comprada_em=agora})}
+    const tinhaEst=pg.some(o=>o.tipo==='est');const m=ENC.comp[l.f]||{};pg.filter(o=>o.tipo==='est').forEach(o=>delete m[o.k.slice(4)]);if(!Object.keys(m).length)delete ENC.comp[l.f];salvaComp();
+    lsSet(mcChave(l.f),null);ENC.escolheu=true;ENC.filtro=prontas.length?'separar':'comprar';c.hidden=true;fechaCompra();
+    toast(prontas.length?`🎉 ${prontas.length} pedido${prontas.length===1?'':'s'} foi para Separar`+(tinhaEst?'. Dê entrada das peças do estoque em Compras.':''):'Compra registrada')})};
 
 /* ações nos pedidos */
 const achaEnc=id=>ENC.lista.find(x=>String(x.id)===String(id));
 const mudaEnc=async(e,campos)=>{must(await sb.from('encomendas').update(campos).eq('id',e.id));Object.assign(e,campos);renderEncomendas()};
 $('#encLista').addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;
-  if(b.dataset.ecan){const e=achaEnc(b.dataset.ecan);confirmBox($('#encConfirm'),`Cancelar a encomenda de <b>${esc(cap(e.cliente))}</b> (nº ${esc(e.codigo)})?`,'Cancelar encomenda',()=>busy(b,()=>mudaEnc(e,{status:'CANCELADA'})));$('#encConfirm').scrollIntoView({block:'center'})}
+  if(b.dataset.ecomprei){const e=achaEnc(b.dataset.ecomprei);busy(b,async()=>{const ids=pendentes(e).map(i=>i.id);if(ids.length)must(await sb.from('encomenda_itens').update({comprado:true}).in('id',ids));itensDe(e).forEach(i=>{if(ids.includes(i.id))i.comprado=true});
+    await mudaEnc(e,{status:'COMPRADA',comprada_em:new Date().toISOString()});toast('📦 Foi para Separar')})}
+  if(b.dataset.ecan){const e=achaEnc(b.dataset.ecan);confirmBox($('#encConfirm'),`Cancelar a encomenda de <b>${esc(cap(e.cliente))}</b> (nº ${esc(e.codigo)})?${itensDe(e).some(i=>i.comprado)?' <b class="neg">Você já comprou os itens dela no fornecedor.</b>':''}`,'Cancelar encomenda',()=>busy(b,()=>mudaEnc(e,{status:'CANCELADA'})));$('#encConfirm').scrollIntoView({block:'center'})}
   if(b.dataset.ereabre){const e=achaEnc(b.dataset.ereabre);busy(b,()=>mudaEnc(e,{status:pendentes(e).length?'ABERTA':(itensDe(e).some(i=>i.comprado)?'COMPRADA':'ABERTA')}))}
-  if(b.dataset.eentregue){const e=achaEnc(b.dataset.eentregue);const ag=new Date().toISOString();busy(b,async()=>{await mudaEnc(e,{status:'ENTREGUE',entregue_em:ag,...('etapa' in e?{etapa:'ENTREGUE',etapa_em:ag}:{})});toast('Encomenda entregue')})}
+  if(b.dataset.eentregue){const e=achaEnc(b.dataset.eentregue);const ag=new Date().toISOString();const card=b.closest('.enc');busy(b,async()=>{if(card&&!matchMedia('(prefers-reduced-motion: reduce)').matches){card.classList.add('sai');await new Promise(r=>setTimeout(r,450))}await mudaEnc(e,{status:'ENTREGUE',entregue_em:ag,...('etapa' in e?{etapa:'ENTREGUE',etapa_em:ag}:{})});toast('✅ Entregue! Se ainda não lançou, toque em 🧾 para registrar a venda.')})}
   if(b.dataset.eetapa){const e=achaEnc(b.dataset.eid),et=b.dataset.eetapa;busy(b,async()=>{if(e.etapa!==et)await mudaEnc(e,{etapa:et,etapa_em:new Date().toISOString()});
     const nome=cap(e.cliente).split(' ')[0],oi=`Oi${nome&&!/^Cliente/.test(nome)?' '+nome:''}!`,link=VITRINE_URL+'#pedido-'+e.codigo;
     const t=et==='SAIU'?`${oi} Seu pedido nº ${e.codigo} saiu para entrega 🚚\n\n${itensDe(e).map(i=>`${i.qtd}x ${i.nome}`).join('\n')}\n\n*Total: ${brlR(totEnc(e))}*${e.pagamento?`\nPagamento: ${e.pagamento}`:''}\n\nAcompanhe aqui: ${link}`:`${oi} Já estamos separando o seu pedido nº ${e.codigo} 📦\nAcompanhe aqui: ${link}`;
     const f=String(e.telefone||'').replace(/\D/g,'');if(f.length>=10)window.open(`https://wa.me/${f.length<=11?'55'+f:f}?text=${encodeURIComponent(t)}`,'_blank');else copy(t);
-    toast(et==='SAIU'?'Marcado: saiu para entrega':'Marcado: separando')})}
+    toast(et==='SAIU'?'🚚 Saiu para entrega: o cliente já vê no link':'📦 Separando: o cliente já vê no link')})}
   if(b.dataset.eavisa){const e=achaEnc(b.dataset.eavisa);const nome=cap(e.cliente).split(' ')[0];
     const t=`Oi${nome&&!/^Cliente/.test(nome)?' '+nome:''}! Sua encomenda nº ${e.codigo} chegou na DKM ✅\n\n${itensDe(e).map(i=>`${i.qtd}x ${i.nome}`).join('\n')}\n\n*Total: ${brlR(totEnc(e))}*\n\nQuando fica bom para você buscar?`;
     const f=String(e.telefone||'').replace(/\D/g,'');if(f.length>=10)window.open(`https://wa.me/${f.length<=11?'55'+f:f}?text=${encodeURIComponent(t)}`,'_blank');else copy(t)}
@@ -1769,7 +1965,7 @@ $('#encLista').addEventListener('click',ev=>{const b=ev.target.closest('button')
       else cart.push({id:null,p:String(i.nome).toUpperCase(),m:'',cat:categoria(i.nome),q:i.qtd,v:i.preco,cheio:i.preco,manual:true})});
     $('#cli').value=cap(e.cliente);location.hash='#pedido';try{renderCliInfo()}catch(x){}cupomAtivo=null;$('#cupom').value=e.cupom||'';$('#cupomInfo').innerHTML='';
     if(e.cupom)$('#cupomOk').click();renderCart();toast(e.cupom?'Pedido montado com o cupom '+e.cupom+'. Confira e toque em Fechar.':'Confira o pedido e toque em Fechar. Depois marque a encomenda como Entregue.')}});
-$$('[data-es]').forEach(b=>b.onclick=()=>{ENC.filtro=b.dataset.es;$$('[data-es]').forEach(x=>x.setAttribute('aria-pressed',x===b));renderEncomendas()});
+$$('#esteira [data-es],#verCanc').forEach(b=>b.onclick=()=>{ENC.filtro=b.dataset.es;ENC.escolheu=true;renderEncomendas()});
 
 /* nova encomenda lançada na mão */
 $('#encNovaBtn').onclick=()=>{$('#encNova').hidden=false;$('#enCli').focus()};
