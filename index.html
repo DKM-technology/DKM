@@ -356,6 +356,13 @@ table.lst th{font-size:11.5px;color:var(--muted);font-weight:500}table.lst .r{te
 .lote-tot{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-top:12px;font-size:13px}
 .enc{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;background:var(--surface)}
 .enc-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.enc-ct{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12.5px;color:var(--muted);margin:6px 0 2px}.enc-ct b{color:var(--ink);font-weight:600}
+.enc-et{list-style:none;display:flex;gap:0;margin:8px 0 4px;padding:0;font-size:11px;color:var(--muted)}
+.enc-et li{flex:1;text-align:center;position:relative;padding-top:16px}
+.enc-et li::before{content:"";position:absolute;top:4px;left:50%;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--surface-2);border:2px solid var(--line);z-index:1}
+.enc-et li+li::after{content:"";position:absolute;top:8px;right:50%;width:100%;height:2px;background:var(--line)}
+.enc-et li.ok{color:var(--ink)}.enc-et li.ok::before{background:var(--good);border-color:var(--good)}.enc-et li.ok+li.ok::after,.enc-et li.ok::after{background:var(--good)}
+.enc-et li.ag::before{background:var(--accent);border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 25%,transparent)}.enc-et li.ag{color:var(--ink);font-weight:600}
 .enc-it{margin:8px 0 6px;padding-left:18px;font-size:13px;line-height:1.55}
 .enc-pe{align-items:center;gap:8px}
 /* barra de abas (celular) */
@@ -531,9 +538,8 @@ table.lst th{font-size:11.5px;color:var(--muted);font-weight:500}table.lst .r{te
 
     <!-- CLIENTES -->
     <section id="v-clientes" class="view" hidden>
-      <div class="head"><div><h1>Clientes</h1><p>Quem mais compra, quem sumiu, níveis de preço e cupons de desconto.</p></div></div>
+      <div class="head"><div><h1>Clientes</h1><p>Quem mais compra, quem sumiu e níveis de preço.</p></div><a class="btn pri" href="#cupons">🎟️ Cupons</a></div>
       <div class="kpis" id="cliKpi"></div>
-      <div class="panel" id="cupomBox" hidden></div>
       <div class="grid g-main" style="align-items:start">
         <div class="panel">
           <h2>Clientes <span class="sub" id="cliSub2"></span></h2>
@@ -543,10 +549,17 @@ table.lst th{font-size:11.5px;color:var(--muted);font-weight:500}table.lst .r{te
         </div>
         <div class="grid">
           <div class="panel"><h2>Ideias de promoção <span class="sub">pelos seus números</span></h2><div id="ideias" class="grid" style="gap:10px"></div></div>
-          <div class="panel"><h2>Cupons <span class="sub" id="cupSub"></span></h2><div class="row-f" style="margin-bottom:8px"><button class="btn pri" type="button" id="novoCupom">+ Criar cupom</button></div><div id="cupLista"></div></div>
         </div>
       </div>
       <div class="panel"><h2>Tabela de preço por nível <span class="sub">o seu método de tabela: desconto sobre o preço cheio, nunca abaixo da margem mínima sobre o custo</span></h2><div id="tabPreco"></div></div>
+    </section>
+
+    <!-- CUPONS -->
+    <section id="v-cupons" class="view" hidden>
+      <div class="head"><div><h1>Cupons</h1><p>Crie o cupom aqui, mande o link para o cliente e ele ganha o desconto direto na vitrine.</p></div><button class="btn pri" type="button" id="novoCupom">+ Criar cupom</button></div>
+      <div class="panel" id="cupomBox" hidden></div>
+      <div class="panel"><h2>Seus cupons <span class="sub" id="cupSub"></span></h2><div id="cupLista"></div></div>
+      <div class="panel"><h2>Como funciona</h2><ol class="note" style="margin:0;padding-left:18px;line-height:1.7"><li>Toque em <b>+ Criar cupom</b>, escolha o desconto (% ou R$) e para quem é.</li><li>Toque em <b>Copiar link</b> e mande no WhatsApp do cliente.</li><li>O cliente abre o link e o cupom já vem aplicado na vitrine. Também pode digitar o código na sacola.</li><li>O desconto nunca passa da sua margem mínima sobre o custo.</li></ol></div>
     </section>
 
     <!-- COMPRAS (RC) -->
@@ -868,6 +881,7 @@ const VIEWS=[
  {id:'pedido',nome:'Pedido',ic:'<path d="M6 6h15l-2 9H8L6 3H3"/><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/>'},
  {id:'encomendas',nome:'Encomendas',ic:'<path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/>'},
  {id:'clientes',nome:'Clientes',ic:'<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18.5 14.2A6.5 6.5 0 0 1 21.5 20"/>'},
+ {id:'cupons',nome:'Cupons',mob:false,ic:'<path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4z"/><path d="M14 6v12" stroke-dasharray="2 2"/>'},
  {id:'compras',nome:'Compras',ic:'<path d="M3 8a2 2 0 0 1 2-2h2l2-2h6l2 2h2a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.5"/>'},
  {id:'contagem',nome:'Contagem',ic:'<path d="M9 4h6v3H9zM6 5H5v16h14V5h-1M9 12l2 2 4-4M9 17h6"/>'},
  {id:'catalogo',nome:'Catálogo',mob:false,ic:'<path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z"/><path d="M5 13v7h14v-7"/><path d="M10 20v-4h4v4"/>'},
@@ -1078,7 +1092,7 @@ function renderClientes(){
   $('#ideias').innerHTML=ideias.join('');if($('#verSumidos'))$('#verSumidos').onclick=()=>{cliFiltro='Sumidos';renderClientes();$('#cliLista').scrollIntoView({block:'start'})};
   // cupons
   const hj=hoje();const st=c=>!c.ativo?['desativado','p-mute']:(c.validade&&c.validade<hj)?['vencido','p-mute']:(c.usos_max!=null&&c.usos>=c.usos_max)?['usado','p-mute']:['ativo','p-good'];
-  $('#cupSub').textContent=S.cupons.length?S.cupons.filter(c=>st(c)[0]==='ativo').length+' ativos':'';
+  $('#cupSub').textContent=S.cupons.length?S.cupons.filter(c=>st(c)[0]==='ativo').length+' ativos':'';badge('cupons',S.cupons.filter(c=>st(c)[0]==='ativo').length||'');
   $('#cupLista').innerHTML=S.cupons.length?S.cupons.map(c=>{const [t,cl]=st(c);return `<div class="cup"><div><code>${esc(c.codigo)}</code> <span class="pill ${cl}">${t}</span><div class="note">${descCupom(c)} de desconto${c.cliente?' · só '+esc(cap(c.cliente)):' · qualquer cliente'}${c.validade?' · até '+dataBR(c.validade):''} · usado ${c.usos}${c.usos_max!=null?'/'+c.usos_max:''}×</div></div>${t==='ativo'?`<div class="row-f" style="gap:6px"><button class="btn sm" type="button" data-cuplink="${esc(c.codigo)}">Copiar link</button><button class="btn sm danger" type="button" data-desat="${esc(c.codigo)}">Desativar</button></div>`:''}</div>`}).join(''):'<div class="empty">Nenhum cupom ainda.</div>';
   $$('[data-cuplink]').forEach(b=>b.onclick=()=>copy(linkCupom(b.dataset.cuplink)));
   $$('[data-desat]').forEach(b=>b.onclick=()=>busy(b,async()=>{must(await sb.from('cupons').update({ativo:false}).eq('codigo',b.dataset.desat));const c=S.cupons.find(x=>x.codigo===b.dataset.desat);if(c)c.ativo=false;renderClientes();toast('Cupom desativado')}));
@@ -1091,7 +1105,7 @@ const MODELOS={
   vip:{nome:'Cliente Ouro 10%',tipo:'PCT',valor:10,dias:60,usos:1,msg:'Oi {nome}! Você é cliente Ouro da DKM 🥇 Obrigado pela preferência! Use o cupom *{codigo}* e ganhe {desconto} na próxima compra (vale até {validade}).\n\nPeça pelo catálogo com o desconto já aplicado: {link}'},
   reais:{nome:'R$ 10 em fone/carregador',tipo:'REAIS',valor:10,dias:30,usos:1,msg:'Oi {nome}! Tem cupom de {desconto} pra fone ou carregador na DKM: *{codigo}* (vale até {validade}).\n\nPeça pelo catálogo com o desconto já aplicado: {link}'}};
 function codigoPara(cli,tipo,valor){const base=(cli?cli.split(' ')[0]:'DKM').normalize('NFD').replace(/[^A-Za-z]/g,'').toUpperCase().slice(0,10)||'DKM';let c=base+Math.round(valor)+(tipo==='REAIS'?'OFF':'');let i=2;while(S.cupons.some(x=>x.codigo===c))c=base+Math.round(valor)+(tipo==='REAIS'?'OFF':'')+'-'+(i++);return c}
-function abrirCupom(cli,mod){const m=MODELOS[mod]||MODELOS.volta,box=$('#cupomBox');box.hidden=false;
+function abrirCupom(cli,mod){const m=MODELOS[mod]||MODELOS.volta,box=$('#cupomBox');if(location.hash!=='#cupons'){location.hash='#cupons';route()}box.hidden=false;setTimeout(()=>box.scrollIntoView({behavior:'smooth',block:'start'}),60);
   box.innerHTML=`<h2>Criar cupom <span class="sub">o cliente usa o código no próximo pedido</span></h2>
    <div class="chips" style="margin-bottom:12px">${Object.entries(MODELOS).map(([k,x])=>`<button type="button" data-mod="${k}" aria-pressed="${k===mod}">${esc(x.nome)}</button>`).join('')}</div>
    <div class="row-f">
@@ -1690,12 +1704,16 @@ function regraHTML(l){const r=l.r;
 function encHTML(e){const its=itensDe(e),g=grupoEnc(e),pend=pendentes(e).reduce((a,i)=>a+i.qtd,0);
   const pill=g==='comprar'?'<span class="pill p-warn">Falta comprar</span>':g==='entregar'?'<span class="pill p-good">Pronta para entregar</span>':g==='ENTREGUE'?'<span class="pill p-mute">Entregue</span>':'<span class="pill p-bad">Cancelada</span>';
   const linhas=its.map(i=>`<li><b class="num">${i.qtd}x</b> ${esc(i.nome)} <span class="note">${i.pronta?'pronta entrega':esc(i.fornecedor||'')+(i.comprado?' · comprado':' · a buscar')}</span></li>`).join('');
-  let bt='';
+  let bt='';const tem=('etapa' in e),et=e.etapa||'RECEBIDO';
+  const ETS=[['RECEBIDO','Recebido'],['SEPARANDO','Separando'],['SAIU','Saiu p/ entrega'],['ENTREGUE','Entregue']],k=g==='ENTREGUE'?3:Math.max(0,ETS.findIndex(x=>x[0]===et));
+  const linhaEt=tem&&g!=='CANCELADA'?`<ol class="enc-et">${ETS.map(([c,n],j)=>`<li class="${j<k?'ok':j===k?(j===3?'ok':'ag'):''}">${n}</li>`).join('')}</ol>`:'';
+  const contato=[e.telefone?`<span>📱 <b>${esc(e.telefone)}</b></span>`:'',e.endereco?`<span>📍 <b>${esc(e.endereco)}</b></span>`:'',e.pagamento?`<span>💳 <b>${esc(e.pagamento)}</b></span>`:''].filter(Boolean).join('');
+  const btEt=tem&&g==='entregar'?(et==='RECEBIDO'?`<button class="btn sm" type="button" data-eetapa="SEPARANDO" data-eid="${e.id}">📦 Separando</button>`:'')+(et!=='SAIU'?`<button class="btn sm pri" type="button" data-eetapa="SAIU" data-eid="${e.id}">🚚 Saiu para entrega</button>`:`<button class="btn sm" type="button" data-eetapa="SAIU" data-eid="${e.id}">🚚 Avisar de novo</button>`):'';
   if(g==='comprar')bt=`<button class="btn sm danger" type="button" data-ecan="${e.id}">Cancelar</button>`;
-  if(g==='entregar')bt=`<button class="btn sm" type="button" data-eavisa="${e.id}">Avisar que chegou</button><button class="btn sm" type="button" data-epedido="${e.id}">Lançar no Pedido</button><button class="btn sm pri" type="button" data-eentregue="${e.id}">Entregue</button><button class="btn sm danger" type="button" data-ecan="${e.id}">Cancelar</button>`;
+  if(g==='entregar')bt=btEt+`${e.origem==='VITRINE'&&tem?'':`<button class="btn sm" type="button" data-eavisa="${e.id}">Avisar que chegou</button>`}<button class="btn sm" type="button" data-epedido="${e.id}">Lançar no Pedido</button><button class="btn sm pri" type="button" data-eentregue="${e.id}">Entregue</button><button class="btn sm danger" type="button" data-ecan="${e.id}">Cancelar</button>`;
   if(g==='CANCELADA')bt=`<button class="btn sm" type="button" data-ereabre="${e.id}">Reabrir</button>`;
   return `<div class="enc"><div class="enc-top"><div><b>${esc(cap(e.cliente))}</b> <span class="note">nº ${esc(e.codigo)} · ${new Date(e.criado_em).toLocaleString('pt-BR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'})} · ${e.origem==='VITRINE'?'vitrine':'lançada aqui'}</span></div>${pill}</div>
-    <ul class="enc-it">${linhas}</ul>${e.cupom?`<p class="note">🎟️ Cupom <b>${esc(e.cupom)}</b>: − ${brl(e.desconto)} (de ${brl(totBruto(e))})</p>`:''}${e.obs?`<p class="note">Obs.: ${esc(e.obs)}</p>`:''}
+    ${contato?`<div class="enc-ct">${contato}</div>`:''}${linhaEt}<ul class="enc-it">${linhas}</ul>${e.cupom?`<p class="note">🎟️ Cupom <b>${esc(e.cupom)}</b>: − ${brl(e.desconto)} (de ${brl(totBruto(e))})</p>`:''}${e.obs?`<p class="note">Obs.: ${esc(e.obs)}</p>`:''}
     <div class="row-f enc-pe"><b class="num">${brl(totEnc(e))}</b>${pend&&g==='comprar'?`<span class="note">${qPecas(pend)} a buscar</span>`:''}<span style="flex:1"></span>${bt}</div></div>`}
 
 function renderEncomendas(){
@@ -1736,7 +1754,12 @@ const mudaEnc=async(e,campos)=>{must(await sb.from('encomendas').update(campos).
 $('#encLista').addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;
   if(b.dataset.ecan){const e=achaEnc(b.dataset.ecan);confirmBox($('#encConfirm'),`Cancelar a encomenda de <b>${esc(cap(e.cliente))}</b> (nº ${esc(e.codigo)})?`,'Cancelar encomenda',()=>busy(b,()=>mudaEnc(e,{status:'CANCELADA'})));$('#encConfirm').scrollIntoView({block:'center'})}
   if(b.dataset.ereabre){const e=achaEnc(b.dataset.ereabre);busy(b,()=>mudaEnc(e,{status:pendentes(e).length?'ABERTA':(itensDe(e).some(i=>i.comprado)?'COMPRADA':'ABERTA')}))}
-  if(b.dataset.eentregue){const e=achaEnc(b.dataset.eentregue);busy(b,async()=>{await mudaEnc(e,{status:'ENTREGUE',entregue_em:new Date().toISOString()});toast('Encomenda entregue')})}
+  if(b.dataset.eentregue){const e=achaEnc(b.dataset.eentregue);const ag=new Date().toISOString();busy(b,async()=>{await mudaEnc(e,{status:'ENTREGUE',entregue_em:ag,...('etapa' in e?{etapa:'ENTREGUE',etapa_em:ag}:{})});toast('Encomenda entregue')})}
+  if(b.dataset.eetapa){const e=achaEnc(b.dataset.eid),et=b.dataset.eetapa;busy(b,async()=>{if(e.etapa!==et)await mudaEnc(e,{etapa:et,etapa_em:new Date().toISOString()});
+    const nome=cap(e.cliente).split(' ')[0],oi=`Oi${nome&&!/^Cliente/.test(nome)?' '+nome:''}!`,link=VITRINE_URL+'#pedido-'+e.codigo;
+    const t=et==='SAIU'?`${oi} Seu pedido nº ${e.codigo} saiu para entrega 🚚\n\n${itensDe(e).map(i=>`${i.qtd}x ${i.nome}`).join('\n')}\n\n*Total: ${brlR(totEnc(e))}*${e.pagamento?`\nPagamento: ${e.pagamento}`:''}\n\nAcompanhe aqui: ${link}`:`${oi} Já estamos separando o seu pedido nº ${e.codigo} 📦\nAcompanhe aqui: ${link}`;
+    const f=String(e.telefone||'').replace(/\D/g,'');if(f.length>=10)window.open(`https://wa.me/${f.length<=11?'55'+f:f}?text=${encodeURIComponent(t)}`,'_blank');else copy(t);
+    toast(et==='SAIU'?'Marcado: saiu para entrega':'Marcado: separando')})}
   if(b.dataset.eavisa){const e=achaEnc(b.dataset.eavisa);const nome=cap(e.cliente).split(' ')[0];
     const t=`Oi${nome&&!/^Cliente/.test(nome)?' '+nome:''}! Sua encomenda nº ${e.codigo} chegou na DKM ✅\n\n${itensDe(e).map(i=>`${i.qtd}x ${i.nome}`).join('\n')}\n\n*Total: ${brlR(totEnc(e))}*\n\nQuando fica bom para você buscar?`;
     const f=String(e.telefone||'').replace(/\D/g,'');if(f.length>=10)window.open(`https://wa.me/${f.length<=11?'55'+f:f}?text=${encodeURIComponent(t)}`,'_blank');else copy(t)}
