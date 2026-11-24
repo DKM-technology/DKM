@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
+<script>function MENOS_MOV(){return document.documentElement.classList.contains('menos-mov')}try{if(localStorage.getItem('dkm-menos-mov')==='1')document.documentElement.classList.add('menos-mov')}catch(e){}</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#141722">
@@ -330,7 +331,7 @@ canvas.confete{position:fixed;inset:0;pointer-events:none;z-index:90}
 .dif-n{display:flex;align-items:baseline;gap:8px;font-family:var(--f-display);font-size:24px}.dif-n span{color:var(--muted)}.dif-n .seta{font-size:16px}
 .dif-r{display:grid;text-align:right}.dif.neg .dif-r b{color:var(--bad)}.dif.pos .dif-r b{color:var(--warn)}.dif-r small{font-size:12px;color:var(--muted)}
 @media (max-width:640px){.prat-grade{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.cc{padding:10px 9px 9px}.cc-mod{font-size:17px}.cc-n{font-size:36px;margin:6px 0 4px}.cc-acoes{grid-template-columns:1fr 1fr}.cc-acoes [data-ccz]{grid-column:1/-1;order:3}.cc-acoes button{height:34px}.cc.foto .cc-mod,.cc.foto .cc-cat,.cc.foto .cc-nome{padding-right:40px}.cc img{width:36px;height:36px}.dif{grid-template-columns:minmax(0,1fr) auto}.dif-r{text-align:left}.prat-top{align-items:flex-start}.prat-anel{width:70px;height:70px}.prat-tit h2{font-size:16px}}
-@media (prefers-reduced-motion:reduce){.cc-n.pop,.cc-mais,.fim-conta .fim-ic{animation:none}}
+html.menos-mov .cc-n.pop,html.menos-mov .cc-mais,html.menos-mov .fim-conta .fim-ic{animation:none}
 /* fotos sugeridas para o estoque */
 .sug-fotos{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:8px;margin-top:10px;max-height:460px;overflow:auto}
 .sf{display:grid;grid-template-columns:18px 54px minmax(0,1fr);gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:8px;cursor:pointer;background:var(--surface)}
@@ -399,7 +400,7 @@ table.lst th{font-size:11.5px;color:var(--muted);font-weight:500}table.lst .r{te
   .item-n .lt{grid-column:1/-1;padding:0}
 }
 @media (max-width:480px){.kpi .val{font-size:22px}.sr{grid-template-columns:minmax(0,1fr) auto}.sr .st{grid-column:1;grid-row:2}.head h1{font-size:24px}}
-@media (prefers-reduced-motion:reduce){.dot,.icon-btn.spin svg{animation:none}}
+html.menos-mov .dot,html.menos-mov .icon-btn.spin svg{animation:none}
 
 /* ===== encomendas: esteira de etapas ===== */
 .esteira{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:8px;position:relative}
@@ -479,7 +480,7 @@ table.lst th{font-size:11.5px;color:var(--muted);font-weight:500}table.lst .r{te
 .btn.grande.ok{background:var(--good);border-color:var(--good);color:#06261a}
 .ic-bt{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);display:grid;place-items:center;cursor:pointer;text-decoration:none;font-size:16px;color:var(--ink)}
 .ic-bt:hover{border-color:var(--accent)}.ic-bt.perigo{color:var(--bad,#e5484d)}
-@media (prefers-reduced-motion:reduce){.trilha li.agora i,.tr-linha em,.tr-caminhao,.esteira button.tem::after,.esteira button i,.enc,.anel .cheio{animation:none}}
+html.menos-mov .trilha li.agora i,html.menos-mov .tr-linha em,html.menos-mov .tr-caminhao,html.menos-mov .esteira button.tem::after,html.menos-mov .esteira button i,html.menos-mov .enc,html.menos-mov .anel .cheio{animation:none}
 
 .enc-lista{grid-template-columns:repeat(auto-fill,minmax(min(100%,460px),1fr));align-items:start}
 .enc-lista>.enc-h3,.enc-lista>.panel{grid-column:1/-1}
@@ -520,7 +521,7 @@ body.mc-aberto{overflow:hidden}
 .mc-conf-box{width:min(560px,100%);background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;animation:entraEnc .25s ease-out}
 .mc-conf-box h3{margin:0 0 8px;font-size:18px}.mc-aviso{color:var(--warn);font-size:13px}
 @media (max-width:520px){.mc-it{grid-template-columns:auto auto minmax(0,1fr) auto;gap:10px;padding:11px}.mc-it img,.mc-sem{display:none}.mc-q{font-size:22px;min-width:40px}.mc-v{font-size:13px}.mc-pagar b{font-size:22px}}
-@media (prefers-reduced-motion:reduce){.mc,.mc-lista.entra .mc-it,.mc-it.ok .mc-ck{animation:none}}
+html.menos-mov .mc,html.menos-mov .mc-lista.entra .mc-it,html.menos-mov .mc-it.ok .mc-ck{animation:none}
 
 .ic-bt.lixo:hover{border-color:#e5484d;background:color-mix(in srgb,#e5484d 15%,var(--surface-2))}
 .ic-bt.lixo:hover{animation:lixoBalanca .5s}
@@ -573,7 +574,7 @@ body.mc-aberto{overflow:hidden}
 .cli-mais{grid-column:1/-1;display:flex;justify-content:center;margin-top:6px}
 details.tab-nivel{margin-top:16px}details.tab-nivel summary{cursor:pointer;list-style:none;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
 details.tab-nivel summary::-webkit-details-marker{display:none}details.tab-nivel summary::after{content:"▾";margin-left:auto;color:var(--muted);transition:transform .2s}details.tab-nivel[open] summary::after{transform:rotate(180deg)}
-@media (prefers-reduced-motion:reduce){.cc2,.ideia2,.rec i,.cc2-mais{animation:none}}
+html.menos-mov .cc2,html.menos-mov .ideia2,html.menos-mov .rec i,html.menos-mov .cc2-mais{animation:none}
 
 .vit-chk{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1.5px dashed color-mix(in srgb,var(--accent) 55%,var(--line));border-radius:12px;cursor:pointer}
 .vit-chk input{width:18px;height:18px;margin-top:2px;accent-color:var(--accent)}.vit-chk small{display:block;color:var(--muted);font-size:12px;font-weight:400}
@@ -612,7 +613,7 @@ details.dobra summary::-webkit-details-marker{display:none}details.dobra summary
 details.dobra[open]>*:not(summary){animation:abreCli .3s ease-out}
 .pisca-alvo{animation:piscaAlvo 1.2s ease-out}
 @keyframes piscaAlvo{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 60%,transparent)}40%{box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 35%,transparent)}100%{box-shadow:0 0 0 0 transparent}}
-@media (prefers-reduced-motion:reduce){.tile,.bar i,#chart rect.b,.rec-c{animation:none!important}}
+html.menos-mov .tile,html.menos-mov .bar i,html.menos-mov #chart rect.b,html.menos-mov .rec-c{animation:none!important}
 
 /* pedido: produtos em cartões */
 .search-res{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));gap:8px;max-height:440px;padding:8px;border-radius:14px;background:var(--surface-2)}
@@ -631,7 +632,7 @@ details.dobra[open]>*:not(summary){animation:abreCli .3s ease-out}
 @keyframes pulouPc{40%{transform:scale(1.05)}}
 @keyframes mais1{from{opacity:1;transform:translate(-50%,0)}to{opacity:0;transform:translate(-50%,-34px)}}
 #tTot.pula,#cartSub.pula{display:inline-block;animation:pulaN .45s cubic-bezier(.3,1.6,.5,1)}
-@media (prefers-reduced-motion:reduce){.pc2,.pc2.pulou,.pc2.pulou::after,.pc2-q{animation:none}}
+html.menos-mov .pc2,html.menos-mov .pc2.pulou,html.menos-mov .pc2.pulou::after,html.menos-mov .pc2-q{animation:none}
 
 /* abas (catálogo, gestão) */
 .abas{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:4px;margin:4px 0 14px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line)}
@@ -652,7 +653,7 @@ details.dobra[open]>*:not(summary){animation:abreCli .3s ease-out}
 .meta-anel{display:flex;align-items:center;gap:14px;margin-top:12px}.meta-anel svg{width:96px;height:96px;transform:rotate(-90deg);flex:none}
 .meta-anel circle{fill:none;stroke-width:10}.meta-anel .fundo{stroke:var(--surface-2)}.meta-anel .cheio{stroke:var(--accent);stroke-linecap:round;animation:enche 1.2s cubic-bezier(.3,1,.4,1)}
 .meta-anel b{display:block;font-size:24px}.meta-anel span{display:block;font-size:12.5px;color:var(--muted)}
-@media (prefers-reduced-motion:reduce){.gcard,.meta-anel .cheio{animation:none}}
+html.menos-mov .gcard,html.menos-mov .meta-anel .cheio{animation:none}
 
 /* cupons em tickets */
 .cup-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr));gap:12px}
@@ -672,7 +673,7 @@ details.dobra[open]>*:not(summary){animation:abreCli .3s ease-out}
 .tk.na-vit .tk-off{background:linear-gradient(160deg,#b7791f,#f6c453)}
 .tk.est-vencido,.tk.est-desativado,.tk.est-usado{opacity:.75}.tk.est-vencido .tk-off,.tk.est-desativado .tk-off,.tk.est-usado .tk-off{background:linear-gradient(160deg,#4b5563,#9ca3af)}
 @media (max-width:480px){.tk{grid-template-columns:86px minmax(0,1fr)}.tk::before,.tk::after{left:77px}.tk-off b{font-size:22px}}
-@media (prefers-reduced-motion:reduce){.tk{animation:none}}
+html.menos-mov .tk{animation:none}
 
 details.compra{animation:entraEnc .35s cubic-bezier(.2,.9,.3,1) both;animation-delay:calc(min(var(--i,0),10) * 40ms);border-radius:12px;transition:background .2s}
 details.compra[open]{background:var(--surface-2)}
@@ -709,7 +710,7 @@ details.compra[open]{background:var(--surface-2)}
 .fin-v{font-size:15.5px;white-space:nowrap}.fin-entra .fin-v{color:var(--good)}.fin-sai .fin-v{color:#e5484d}.fin-pend .fin-v{color:var(--warn)}
 .bar.sai i{background:#e5484d}
 @media (max-width:560px){.fin-it{grid-template-columns:auto minmax(0,1fr) auto}.fin-it>button{grid-column:2/-1;justify-self:end}.mes-nav b{min-width:110px}}
-@media (prefers-reduced-motion:reduce){.fin-svg .fe,.fin-svg .fs,.fin-it{animation:none}}
+html.menos-mov .fin-svg .fe,html.menos-mov .fin-svg .fs,html.menos-mov .fin-it{animation:none}
 
 .confirm.fim-enc{display:grid;gap:10px;padding:16px;border-radius:16px;border:1.5px solid var(--accent);background:var(--surface);box-shadow:0 18px 40px rgba(0,0,0,.18);animation:entraEnc .3s ease-out}
 .fe-top{display:flex;gap:12px;align-items:center}.fe-top b{display:block;font-size:15px}.fe-top span{font-size:12.5px;color:var(--muted)}
@@ -744,7 +745,7 @@ details.compra[open]{background:var(--surface-2)}
   .tabbar a.mais-tab svg{fill:currentColor;stroke:none}
   .tabbar a.mais-tab[aria-current]{color:var(--accent)}
 }
-@media (prefers-reduced-motion:reduce){.ms-caixa,.ms-fundo{transition:none}.mais-sheet.aberto .ms-grade a{animation:none}}
+html.menos-mov .ms-caixa,html.menos-mov .ms-fundo{transition:none}html.menos-mov .mais-sheet.aberto .ms-grade a{animation:none}
 </style>
 </head>
 <body>
@@ -1112,6 +1113,9 @@ details.compra[open]{background:var(--surface-2)}
         <div class="panel gcard"><div class="g-top"><i>📲</i><div><h2>Instalar no celular</h2><p class="note" id="instTxt">No Android, abra este endereço no Chrome, toque nos três pontinhos (⋮) e escolha <b>Adicionar à tela inicial</b> ou <b>Instalar app</b>. O ícone DKM aparece junto com os outros apps.</p></div></div>
           <div class="row-f"><button class="btn pri" id="instBtn" type="button" hidden>Instalar o app agora</button></div>
         </div>
+        <div class="panel gcard"><div class="g-top"><i>✨</i><div><h2>Animações</h2><p class="note">Ligadas em qualquer computador ou celular. Se alguém se incomodar com movimento, reduza aqui (vale só para este aparelho).</p></div></div>
+          <div class="seg" role="group" aria-label="Animações"><button type="button" data-mov="0">✨ Ligadas</button><button type="button" data-mov="1">Reduzidas</button></div>
+        </div>
         <div class="panel gcard"><div class="g-top"><i>👤</i><div><h2>Conta</h2><p class="note">Quem está usando e onde ficam os dados.</p></div></div>
           <div class="grid" style="gap:8px">
             <div class="row-f" style="justify-content:space-between"><span>Entrou como</span><b id="gEmail"></b></div>
@@ -1283,7 +1287,7 @@ function badge(id,t){$$(`[data-k="${id}"]`).forEach(el=>el.textContent=t||'');co
 const vDate=v=>v.d?new Date(v.d+'T12:00'):null;
 /* ===== peças comuns do estilo novo: blocos com número animado ===== */
 function tileHTML(t){return `<button type="button" class="tile${t.cls?' '+t.cls:''}"${t.ir?` data-ir="${t.ir}"`:''}${t.k?` data-tk="${t.k}"`:''}${t.on?' aria-pressed="true"':''}><i>${t.ic}</i><span class="t-lbl">${t.lbl}</span><b class="num t-val" data-num="${t.val}" data-fmt="${t.fmt||'int'}">${t.fmt==='brl'?brl(t.val):t.fmt==='brl0'?brl0(t.val):t.fmt==='pct'?t.val+'%':t.val}</b>${t.foot?`<span class="t-foot">${t.foot}</span>`:''}${t.bar!=null?`<span class="bar"><i style="width:${Math.min(100,t.bar)}%"></i></span>`:''}</button>`}
-function animaNums(box,sempre){if(!box||matchMedia('(prefers-reduced-motion: reduce)').matches)return;if(box.dataset.animou&&!sempre)return;box.dataset.animou=1;
+function animaNums(box,sempre){if(!box||MENOS_MOV())return;if(box.dataset.animou&&!sempre)return;box.dataset.animou=1;
   box.querySelectorAll('[data-num]').forEach(el=>{const para=+el.dataset.num,fmt=el.dataset.fmt,f=fmt==='brl'?brl:fmt==='brl0'?brl0:fmt==='pct'?(v=>Math.round(v)+'%'):(v=>Math.round(v).toLocaleString('pt-BR'));if(!para)return;const t0=performance.now();
     const st=t=>{const p=Math.min(1,(t-t0)/800);el.textContent=f(para*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(st)};requestAnimationFrame(st)})}
 function ligaTiles(box){box.querySelectorAll('[data-ir]').forEach(b=>b.onclick=()=>{const v=b.dataset.ir;if(v[0]==='#'&&$(v)&&!VIEWS.some(x=>'#'+x.id===v)){const el=$(v);if(el.tagName==='DETAILS')el.open=true;el.scrollIntoView({behavior:'smooth',block:'start'});el.classList.remove('pisca-alvo');void el.offsetWidth;el.classList.add('pisca-alvo')}else location.hash=v})}
@@ -1324,7 +1328,7 @@ function renderControle(){
       return `<div class="rec-c" style="--i:${i}"><span class="av">${esc(iniciais(p))}</span><div class="rec-n"><b>${esc(cap(p))}</b><span>${it.slice(0,2).map(v=>esc(cap(v.p)+' '+nz(v.m))).join(' · ')}${it.length>2?` <em>+${it.length-2}</em>`:''}</span></div><b class="num rec-v">${brl(tot)}</b>
         <div class="rec-bts">${fone.length>=10?`<a class="ic-bt" href="https://wa.me/${fone.length<=11?'55'+fone:fone}?text=${encodeURIComponent(msg)}" target="_blank" rel="noopener" title="Cobrar no WhatsApp">💬</a>`:`<button class="ic-bt" type="button" data-copiacob="${esc(p)}" title="Copiar mensagem de cobrança">📋</button>`}<button class="btn sm ok-bt" data-pago="${esc(p)}" type="button">✓ Recebi</button></div></div>`}).join('')}</div>`:'<div class="empty">Ninguém devendo. Tudo recebido. 🎉</div>';
   $$('[data-copiacob]').forEach(b=>b.onclick=()=>{const p=b.dataset.copiacob,it=byP[p],tot=it.reduce((s,v)=>s+v.val,0);copy(`Oi ${cap(p).split(' ')[0]}, tudo bem? Passando para lembrar do valor de *${brlR(tot)}* das suas compras na DKM:\n${it.map(v=>'• '+cap(v.p)+' '+nz(v.m)+' ('+brlR(v.val)+')').join('\n')}\n\nPode pagar no Pix quando puder. Obrigado! 💜`)});
-  $$('[data-pago]').forEach(b=>b.onclick=()=>busy(b,async()=>{const p=b.dataset.pago;const card=b.closest('.rec-c');if(card&&!matchMedia('(prefers-reduced-motion: reduce)').matches){card.classList.add('pago');await new Promise(r=>setTimeout(r,650))}
+  $$('[data-pago]').forEach(b=>b.onclick=()=>busy(b,async()=>{const p=b.dataset.pago;const card=b.closest('.rec-c');if(card&&!MENOS_MOV()){card.classList.add('pago');await new Promise(r=>setTimeout(r,650))}
     must(await sb.from('vendas').update({data:hoje()}).eq('cliente',p).eq('status','A RECEBER').is('data',null));
     must(await sb.from('vendas').update({status:'PAGO'}).eq('cliente',p).eq('status','A RECEBER'));
     toast(cap(p)+' marcado como pago');await carregar()}));
@@ -1394,7 +1398,7 @@ function renderCart(){
   $$('[data-q]').forEach(b=>b.onclick=()=>{const c=cart[b.dataset.q];const e=S.est.find(x=>x.id===c.id);c.q+=+b.dataset.d;if(e&&c.q>e.qt)c.q=e.qt;if(c.q<=0)cart.splice(b.dataset.q,1);renderCart();renderBusca()});
   $$('[data-qi]').forEach(inp=>inp.onchange=()=>{const c=cart[inp.dataset.qi];const e=S.est.find(x=>x.id===c.id);let v=parseInt(inp.value)||0;if(e)v=Math.min(v,e.qt);if(v<=0)cart.splice(inp.dataset.qi,1);else c.q=v;renderCart();renderBusca()});
   $$('[data-pi]').forEach(inp=>inp.onchange=()=>{const c=cart[inp.dataset.pi];c.v=dec(inp.value);c.manual=true;renderCart()});
-  const t=totais(),n=nivelPedido();$('#tSub').textContent=brl(t.cheio);{const el=$('#tTot');if(Math.abs(t.tot-totAnt)>.004&&!matchMedia('(prefers-reduced-motion: reduce)').matches){const de=totAnt,t0=performance.now();const f=x=>{const p=Math.min(1,(x-t0)/450);el.textContent=brl(de+(t.tot-de)*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f);el.classList.remove('pula');void el.offsetWidth;el.classList.add('pula')}else el.textContent=brl(t.tot);totAnt=t.tot}$('#fechar').disabled=!cart.length;
+  const t=totais(),n=nivelPedido();$('#tSub').textContent=brl(t.cheio);{const el=$('#tTot');if(Math.abs(t.tot-totAnt)>.004&&!MENOS_MOV()){const de=totAnt,t0=performance.now();const f=x=>{const p=Math.min(1,(x-t0)/450);el.textContent=brl(de+(t.tot-de)*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f);el.classList.remove('pula');void el.offsetWidth;el.classList.add('pula')}else el.textContent=brl(t.tot);totAnt=t.tot}$('#fechar').disabled=!cart.length;
   $('#rowNivel').hidden=!(t.nivel>0.004);$('#lblNivel').textContent=n!=='VAREJO'?`Desconto ${NOME_NIVEL[n]}`:'Desconto nos preços';$('#tNivel').textContent='− '+brl(t.nivel);
   if(cupomAtivo)$('#cupomInfo').innerHTML=`<div class="row" style="align-items:center"><span><span class="pill p-good">${esc(cupomAtivo.codigo)}</span> ${descCupom(cupomAtivo)}</span><span class="num" style="color:var(--good)">− ${brl(t.cup)} <button class="btn sm" type="button" id="cupomX" aria-label="Tirar cupom">✕</button></span></div>`;
   if($('#cupomX'))$('#cupomX').onclick=()=>{cupomAtivo=null;$('#cupom').value='';$('#cupomInfo').innerHTML='';renderCart()};
@@ -1464,7 +1468,7 @@ async function renomeiaCliente(velho,novoTxt){const novo=chave(novoTxt),pat=Stri
   {const c=await sb.from('cupons').update({cliente:novo}).ilike('cliente',pat);if(c.error)console.warn(c.error)}
   if(antigo&&chave(antigo.nome)!==novo)must(await sb.from('clientes').delete().eq('nome',antigo.nome));
   else if(antigo&&antigo.nome!==novo)await sb.from('clientes').update({nome:novo}).eq('nome',antigo.nome)}
-function contaN(el,para){if(matchMedia('(prefers-reduced-motion: reduce)').matches||!para){el.textContent=para;return}const t0=performance.now();const f=t=>{const p=Math.min(1,(t-t0)/700);el.textContent=Math.round(para*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+function contaN(el,para){if(MENOS_MOV()||!para){el.textContent=para;return}const t0=performance.now();const f=t=>{const p=Math.min(1,(t-t0)/700);el.textContent=Math.round(para*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
 function renderClientes(){
   const L=Object.values(S.cli),tot=L.reduce((a,c)=>a+c.tot,0)||1,top10=L.slice().sort((a,b)=>b.tot-a.tot).slice(0,10).reduce((a,c)=>a+c.tot,0);
   const ativos=L.filter(c=>c.semComprar!=null&&c.semComprar<=90).length,sum=L.filter(sumido),uma=L.filter(c=>c.compras===1).length,dev=L.filter(c=>c.deve>0);
@@ -1547,8 +1551,8 @@ function renderClientes(){
     else if(c.validade&&c.validade<hj){const d=new Date();d.setDate(d.getDate()+30);up.validade=isoD(d)}
     if(c.usos_max!=null&&c.usos>=c.usos_max)up.usos_max=c.usos+1;
     must(await sb.from('cupons').update(up).eq('codigo',c.codigo));Object.assign(c,up);renderClientes();toast('Cupom '+c.codigo+' reativado')}));
-  $$('[data-apaga]').forEach(b=>b.onclick=()=>{const cod=b.dataset.apaga;confirmBox($('#cupConfirm'),`Apagar o cupom <b>${esc(cod)}</b> de vez? Ele some da lista e o link para de funcionar. Os pedidos que já usaram continuam com o desconto.`,'Apagar de vez',()=>busy(b,async()=>{const tk=b.closest('.tk');if(tk&&!matchMedia('(prefers-reduced-motion: reduce)').matches){tk.classList.add('some');await new Promise(r=>setTimeout(r,500))}must(await sb.from('cupons').delete().eq('codigo',cod));S.cupons=S.cupons.filter(x=>x.codigo!==cod);renderClientes();toast('Cupom apagado')}));$('#cupConfirm').scrollIntoView({block:'center',behavior:'smooth'})});
-  $$('[data-desat]').forEach(b=>b.onclick=()=>busy(b,async()=>{const tk=b.closest('.tk');if(tk&&!matchMedia('(prefers-reduced-motion: reduce)').matches){tk.classList.add('estoura');await new Promise(r=>setTimeout(r,550))}must(await sb.from('cupons').update({ativo:false}).eq('codigo',b.dataset.desat));const c=S.cupons.find(x=>x.codigo===b.dataset.desat);if(c)c.ativo=false;renderClientes();toast('Cupom desativado')}));
+  $$('[data-apaga]').forEach(b=>b.onclick=()=>{const cod=b.dataset.apaga;confirmBox($('#cupConfirm'),`Apagar o cupom <b>${esc(cod)}</b> de vez? Ele some da lista e o link para de funcionar. Os pedidos que já usaram continuam com o desconto.`,'Apagar de vez',()=>busy(b,async()=>{const tk=b.closest('.tk');if(tk&&!MENOS_MOV()){tk.classList.add('some');await new Promise(r=>setTimeout(r,500))}must(await sb.from('cupons').delete().eq('codigo',cod));S.cupons=S.cupons.filter(x=>x.codigo!==cod);renderClientes();toast('Cupom apagado')}));$('#cupConfirm').scrollIntoView({block:'center',behavior:'smooth'})});
+  $$('[data-desat]').forEach(b=>b.onclick=()=>busy(b,async()=>{const tk=b.closest('.tk');if(tk&&!MENOS_MOV()){tk.classList.add('estoura');await new Promise(r=>setTimeout(r,550))}must(await sb.from('cupons').update({ativo:false}).eq('codigo',b.dataset.desat));const c=S.cupons.find(x=>x.codigo===b.dataset.desat);if(c)c.ativo=false;renderClientes();toast('Cupom desativado')}));
   renderTabPreco();
 }
 $('#cliQ').oninput=()=>renderClientes();
@@ -1828,7 +1832,7 @@ function mudaConta(id,v,d){setC(id,v);const card=$(`[data-ccid="${id}"]`);if(!ca
 function digitaConta(card,id){const n=card.querySelector('.cc-n');n.innerHTML=`<input type="number" min="0" inputmode="numeric" value="${S.cnt[id]??''}" aria-label="Quantidade">`;const i=n.querySelector('input');i.focus();i.select();
   const ok=()=>{if(!i.isConnected)return;const t=i.value.trim();mudaConta(id,t===''?null:Math.max(0,parseInt(t)||0),0)};
   i.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();ok()}if(e.key==='Escape'){mudaConta(id,S.cnt[id]??null,0)}};i.onblur=ok}
-function confeteConta(){if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const c=document.createElement('canvas');c.className='confete';document.body.appendChild(c);
+function confeteConta(){if(MENOS_MOV())return;const c=document.createElement('canvas');c.className='confete';document.body.appendChild(c);
   const W=c.width=innerWidth,H=c.height=innerHeight,x=c.getContext('2d'),cores=['#6d5efc','#3ecf8e','#f2b45a','#8f7dff','#ff6b74'];
   const P=Array.from({length:120},()=>({x:W/2,y:H/3,vx:(Math.random()-.5)*16,vy:-Math.random()*14-3,r:Math.random()*7+3,c:cores[Math.random()*5|0],a:Math.random()*6,g:.3+Math.random()*.2}));
   const t0=performance.now();const f=t=>{x.clearRect(0,0,W,H);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.vx*=.99;p.a+=.2;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.c;x.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);x.restore()});if(t-t0<1800)requestAnimationFrame(f);else c.remove()};requestAnimationFrame(f)}
@@ -2123,6 +2127,9 @@ async function encAoVivo(){if(document.visibilityState!=='visible'||typeof usuar
 function avisoPainel(t,tipo){const a=document.createElement('button');a.type='button';a.className='aviso-vivo '+(tipo||'');a.innerHTML=esc(t)+' <span>ver ›</span>';a.onclick=()=>{location.hash='#encomendas';ENC.escolheu=true;ENC.filtro=tipo==='canc'?'CANCELADA':'comprar';renderEncomendas();a.remove()};
   let box=$('#avisosVivo');if(!box){box=document.createElement('div');box.id='avisosVivo';document.body.appendChild(box)}box.appendChild(a);setTimeout(()=>a.classList.add('vai'),9000);setTimeout(()=>a.remove(),9600)}
 setInterval(encAoVivo,8000);document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')encAoVivo()});
+/* animações: ligadas por padrão, mesmo com o Windows em "efeitos de animação" desligado */
+function marcaMov(){const r=MENOS_MOV();$$('[data-mov]').forEach(b=>b.setAttribute('aria-pressed',(b.dataset.mov==='1')===r))}
+$$('[data-mov]').forEach(b=>b.onclick=()=>{const r=b.dataset.mov==='1';document.documentElement.classList.toggle('menos-mov',r);try{localStorage.setItem('dkm-menos-mov',r?'1':'0')}catch(e){}marcaMov();toast(r?'Animações reduzidas neste aparelho':'✨ Animações ligadas')});marcaMov();
 /* ===== FINANCEIRO ===== */
 let FIN={mes:null,aba:'tudo'};
 const FORMAS=['Pix','Dinheiro','Cartão de crédito','Cartão de débito','Outro'];
@@ -2379,7 +2386,7 @@ function finalizaEnc(e,b){const box=$('#encConfirm'),fp=formaCurta(e.pagamento)|
       if(op!=='SO'){const forma=($('[data-fef][aria-pressed="true"]',box)||{}).dataset?.fef||fp;let itens=itensVenda(e),r=await sb.rpc('fechar_pedido',{p_cliente:cap(e.cliente),p_status:op,p_itens:itens,p_cupom:null});
         if(r.error&&/estoque/i.test(r.error.message||'')){itens=itens.map(i=>({...i,produto_id:null}));r=await sb.rpc('fechar_pedido',{p_cliente:cap(e.cliente),p_status:op,p_itens:itens,p_cupom:null});if(!r.error)toast('Estoque estava zerado: lancei a venda sem baixar o estoque')}
         ped=must(r);if(S.finOk&&ped&&op==='PAGO')await sb.from('vendas').update({forma,recebido_em:hoje()}).eq('pedido',ped)}
-      box.hidden=true;if(card&&!matchMedia('(prefers-reduced-motion: reduce)').matches){card.classList.add('sai');await new Promise(r=>setTimeout(r,450))}
+      box.hidden=true;if(card&&!MENOS_MOV()){card.classList.add('sai');await new Promise(r=>setTimeout(r,450))}
       const up={status:'ENTREGUE',entregue_em:ag,...('etapa' in e?{etapa:'ENTREGUE',etapa_em:ag}:{})};let rr=await sb.from('encomendas').update(ped&&S.finOk?{...up,venda_pedido:ped}:up).eq('id',e.id);if(rr.error&&ped)rr=await sb.from('encomendas').update(up).eq('id',e.id);must(rr);Object.assign(e,up,ped?{venda_pedido:ped}:{});
       toast(op==='PAGO'?`✅ Entregue e 💚 ${brl(totEnc(e))} lançado no caixa`:op==='A RECEBER'?`✅ Entregue e ⏳ ${brl(totEnc(e))} lançado a receber`:'✅ Entregue');
       if(op!=='SO')await carregar();else renderEncomendas()})});
@@ -2390,7 +2397,7 @@ const mudaEnc=async(e,campos)=>{must(await sb.from('encomendas').update(campos).
 $('#encLista').addEventListener('click',ev=>{const b=ev.target.closest('button');if(!b)return;
   if(b.dataset.eapaga){const e=achaEnc(b.dataset.eapaga);if(!e)return;const ativo=['comprar','separar','rota'].includes(estagio(e));
     confirmBox($('#encConfirm'),`🗑️ Excluir de vez o pedido de <b>${esc(cap(e.cliente))}</b> (nº ${esc(e.codigo)})? Ele some do painel e o link de acompanhar para de funcionar. <b>Não dá para desfazer.</b>${ativo?' <b class="neg">Atenção: este pedido ainda está em andamento.</b>':''}`,'Excluir de vez',()=>busy(b,async()=>{
-      const card=b.closest('.enc');if(card&&!matchMedia('(prefers-reduced-motion: reduce)').matches){card.classList.add('apaga');await new Promise(r=>setTimeout(r,500))}
+      const card=b.closest('.enc');if(card&&!MENOS_MOV()){card.classList.add('apaga');await new Promise(r=>setTimeout(r,500))}
       must(await sb.from('encomendas').delete().eq('id',e.id));ENC.lista=ENC.lista.filter(x=>x.id!==e.id);renderEncomendas();toast('🗑️ Pedido excluído')}));$('#encConfirm').scrollIntoView({block:'center',behavior:'smooth'});return}
   if(b.dataset.apagatodas){const L=ENC.lista.filter(x=>x.status==='CANCELADA');if(!L.length)return;
     confirmBox($('#encConfirm'),`🗑️ Excluir de vez as <b>${L.length}</b> canceladas? Não dá para desfazer.`,'Excluir todas',()=>busy(b,async()=>{must(await sb.from('encomendas').delete().in('id',L.map(x=>x.id)));ENC.lista=ENC.lista.filter(x=>x.status!=='CANCELADA');renderEncomendas();toast(`🗑️ ${L.length} pedidos excluídos`)}));$('#encConfirm').scrollIntoView({block:'center',behavior:'smooth'});return}
