@@ -988,6 +988,29 @@ html.troca-tema body,html.troca-tema .card,html.troca-tema .topo,html.troca-tema
 .f-cats label.fc:focus-within{outline:2px solid var(--accent);outline-offset:2px}
 @media (max-width:360px){.f-cats{grid-template-columns:1fr}}
 html.menos-mov .f-cats label.fc{animation:none}
+
+/* todas as categorias */
+.tc-fundo{position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.55)}
+.tc{position:fixed;z-index:61;left:50%;top:50%;width:min(760px,calc(100vw - 32px));max-height:min(80vh,720px);display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:0 30px 80px rgba(0,0,0,.5);transform:translate(-50%,-46%) scale(.96);opacity:0;transition:transform .25s cubic-bezier(.2,.9,.3,1),opacity .2s}
+.tc.aberto{transform:translate(-50%,-50%);opacity:1}
+.tc-top{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 8px}.tc-top h2{font-family:var(--f-display);margin:0;font-size:19px}.tc-top .alca{display:none}
+.tc .x{border:0;background:var(--surface-2);color:var(--ink);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:18px}
+.tc-busca{padding:0 18px 10px}.tc-busca input{width:100%;font:inherit;font-size:15px;padding:11px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface-2);color:var(--ink);outline:none}.tc-busca input:focus{border-color:var(--accent)}
+.tc-corpo{overflow:auto;padding:0 18px 18px}
+.tc-sep{font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:10px 0 8px;font-weight:700}
+.tc-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.tc-c{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;text-align:left;padding:11px 10px;border-radius:14px;border:1.5px solid var(--line);background:var(--surface-2);color:var(--ink);font:inherit;font-size:13px;cursor:pointer;transition:transform .15s,border-color .2s,box-shadow .2s;animation:fcEntra .35s cubic-bezier(.2,.9,.3,1) both;animation-delay:calc(min(var(--i),24) * 18ms)}
+.tc-c:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 10px 22px color-mix(in srgb,var(--accent) 22%,transparent)}
+.tc-c:hover i{transform:scale(1.2) rotate(-8deg)}
+.tc-c i{font-style:normal;font-size:22px;line-height:1;transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.tc-c span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.2;font-weight:600}
+.tc-c small{font-size:11px;font-weight:700;background:var(--surface);border-radius:99px;padding:1px 7px;color:var(--muted)}
+.tc-c.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 16%,var(--surface-2))}
+.tc-c.vai{animation:fcPop .3s cubic-bezier(.3,1.6,.5,1)}
+@media (max-width:640px){.tc{left:0;right:0;top:auto;bottom:0;width:auto;max-height:86vh;border-radius:22px 22px 0 0;transform:translateY(100%);opacity:1}.tc.aberto{transform:none}
+  .tc-top{position:relative;padding-top:20px}.tc-top .alca{display:block;position:absolute;left:50%;top:8px;width:44px;height:5px;margin-left:-22px;border-radius:9px;background:var(--line)}
+  .tc-g{grid-template-columns:repeat(2,minmax(0,1fr))}.tc-corpo{padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}}
+html.menos-mov .tc-c{animation:none}
 </style>
 </head>
 <body>
@@ -1032,6 +1055,12 @@ html.menos-mov .f-cats label.fc{animation:none}
 <a class="zap-flutua" id="zapFlutua" href="#" target="_blank" rel="noopener" aria-label="Falar com a DKM no WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .2-1.2c-.1-.1-.2-.2-.5-.3z"/></svg><span>Atendimento</span></a>
 <button class="topo-bt" id="topoBt" type="button" aria-label="Voltar ao topo" hidden>↑</button>
 <div class="fundo-filtro" id="fundoFiltro" hidden></div>
+<div class="tc-fundo" id="tcFundo" hidden></div>
+<section class="tc" id="tcBox" hidden role="dialog" aria-modal="true" aria-labelledby="tcTit">
+  <div class="tc-top"><span class="alca" aria-hidden="true"></span><h2 id="tcTit">🗂️ Todas as categorias</h2><button class="x" type="button" id="tcX" aria-label="Fechar">×</button></div>
+  <div class="tc-busca"><input id="tcQ" type="search" placeholder="Procurar categoria (ex.: perfume, power bank)" autocomplete="off" aria-label="Procurar categoria"></div>
+  <div class="tc-corpo" id="tcGrade"></div>
+</section>
 <aside class="filtro" id="filtro" hidden aria-label="Filtrar produtos">
   <div class="f-top"><h2>Filtrar</h2><button class="x" type="button" id="fFecha" aria-label="Fechar o filtro">×</button></div>
   <div class="f-corpo">
@@ -1285,12 +1314,24 @@ function montaCats(){
   const chips=['Todos',...(dest?['⭐ Destaques']:[]),...(tem?['⚡ Pronta entrega']:[]),...prin.map(g=>g.n),...ext.slice(0,Math.max(4,12-prin.length)).map(g=>g.n)];
   setTimeout(atualizaBordas,0);
   $('#cats').innerHTML=chips.map(c=>`<button type="button" data-c="${esc(c)}" aria-pressed="${c===cat}">${esc(c)}</button>`).join('')+`<button type="button" data-mais="1">☰ Mais categorias</button>`;
-  $('#cats').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.mais){abreFiltro(true);return}$('#q').value='';escolheCat(b.dataset.c)};
+  $('#cats').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.mais){abreTodas();return}$('#q').value='';escolheCat(b.dataset.c)};
   const foto=l=>{const x=l.find(y=>y.foto&&(y.pronta||y.destaque))||l.find(y=>y.foto);return x?`<img src="${esc(fotoUrl(x.foto))}" alt="" loading="lazy">`:''};
   $('#bolinhas').innerHTML=[...prin,...ext].map(g=>`<button type="button" class="bola${cat===g.n?' on':''}" data-bola="${esc(g.n)}"><span class="anel"><span>${foto(g.itens)||`<b class="ic-txt">${g.ic}</b>`}</span></span><span class="poeira" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span><em class="qt num" data-conta="${g.itens.length}">${g.itens.length}</em>${esc(g.n)}</button>`).join('')
     +`<button type="button" class="bola todas" data-bola="*"><span class="anel"><span>☰</span></span>Todas as categorias</button>`;
   setTimeout(atualizaBordas,0);observaNums($('#bolinhas'))
-  $('#bolinhas').onclick=e=>{const b=e.target.closest('[data-bola]');if(!b)return;b.classList.remove('cai');void b.offsetWidth;b.classList.add('cai');setTimeout(()=>b.classList.remove('cai'),900);if(b.dataset.bola==='*'){abreFiltro(true);return}$('#q').value='';escolheCat(b.dataset.bola)}}
+  $('#bolinhas').onclick=e=>{const b=e.target.closest('[data-bola]');if(!b)return;b.classList.remove('cai');void b.offsetWidth;b.classList.add('cai');setTimeout(()=>b.classList.remove('cai'),900);if(b.dataset.bola==='*'){abreTodas();return}$('#q').value='';escolheCat(b.dataset.bola)}}
+/* tela "Todas as categorias": todas as categorias da loja, toque e vai direto */
+function abreTodas(){const box=$('#tcBox');$('#tcQ').value='';montaTodas();box.hidden=false;$('#tcFundo').hidden=false;document.body.style.overflow='hidden';requestAnimationFrame(()=>box.classList.add('aberto'));setTimeout(()=>{if(matchMedia('(hover:hover)').matches)$('#tcQ').focus()},250)}
+function fechaTodas(){const box=$('#tcBox');box.classList.remove('aberto');$('#tcFundo').hidden=true;setTimeout(()=>{box.hidden=true},200);if($('#prod').hidden&&$('#sacola').hidden)document.body.style.overflow=''}
+function montaTodas(){const q=sem($('#tcQ').value.trim());const prin=gruposComItens().map(g=>({n:g.n,cat:g.n,qt:g.itens.length,ic:icoCatV(g.n)}));
+  const cont={};ITENS.forEach(x=>{if(grupoDe(x)<0)cont[x.categoria]=(cont[x.categoria]||0)+1});
+  const outras=Object.entries(cont).sort((a,b)=>a[0].localeCompare(b[0],'pt-BR')).map(([c,n])=>({n:c,cat:c,qt:n,ic:icoCatV(c)}));
+  const f=l=>l.filter(g=>!q||sem(g.n).includes(q));const P=f(prin),O=f(outras);
+  const tile=(g,i)=>`<button type="button" class="tc-c${cat===g.cat?' on':''}" data-tc="${esc(g.cat)}" style="--i:${i}"><i>${g.ic||icoCatV(g.n)}</i><span>${esc(g.n)}</span><small>${g.qt}</small></button>`;
+  $('#tcGrade').innerHTML=(P.length?`<div class="tc-sep">⭐ As mais vendidas</div><div class="tc-g">${P.map(tile).join('')}</div>`:'')+(O.length?`<div class="tc-sep">🗂️ Todas as outras (${O.length})</div><div class="tc-g">${O.map((g,i)=>tile(g,i+P.length)).join('')}</div>`:'')+(!P.length&&!O.length?'<p class="f-so">Nenhuma categoria com esse nome.</p>':'')}
+$('#tcQ').oninput=montaTodas;$('#tcX').onclick=fechaTodas;$('#tcFundo').onclick=fechaTodas;
+$('#tcGrade').onclick=e=>{const b=e.target.closest('[data-tc]');if(!b)return;b.classList.add('vai');setTimeout(()=>{fechaTodas();$('#q').value='';escolheCat(b.dataset.tc);const t=$('#todos');if(t)t.scrollIntoView({behavior:reduz()?'auto':'smooth',block:'start'})},reduz()?0:180)};
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#tcBox').hidden)fechaTodas()});
 function escolheCat(c){cat=c;SUB='';limite=48;F.cats.clear();$$('#cats [data-c]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.c===c));$$('[data-bola]').forEach(x=>x.classList.toggle('on',x.dataset.bola===c));filtra(true)}
 function voltaVitrine(){cat='Todos';$('#q').value='';F.min=F.max=null;F.pronta=false;F.cats.clear();F.ordem='destaque';escolheCat('Todos');scrollTo({top:0,behavior:'auto'})}
 
