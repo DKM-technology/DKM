@@ -810,6 +810,7 @@ html.menos-mov .ms-caixa,html.menos-mov .ms-fundo{transition:none}html.menos-mov
 .cf-pop i{width:16px;height:16px;border-radius:50%;background:var(--c);box-shadow:0 0 0 1.5px rgba(127,127,127,.4)}
 .cf-pop>.btn{justify-self:start}
 @media (max-width:560px){.cf-l{grid-template-columns:1fr}}
+.mao-tag{font-style:normal;font-size:11px;font-weight:700;color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent);border-radius:99px;padding:1px 7px}
 </style>
 </head>
 <body>
@@ -1135,7 +1136,7 @@ html.menos-mov .ms-caixa,html.menos-mov .ms-fundo{transition:none}html.menos-mov
           <div class="field" style="flex:1 1 220px"><label for="catQ">Buscar (nome ou código)</label><input id="catQ" class="inp" placeholder="nome, código (ex.: 123) ou código do fornecedor" autocomplete="off"></div>
           <div class="field" style="width:220px"><label for="catCat">Categoria</label><select id="catCat" class="inp"></select></div>
           <div class="field" style="width:180px"><label for="catForn">De onde vem</label><select id="catForn" class="inp"></select></div>
-          <div class="seg" role="group" aria-label="Mostrar"><button type="button" data-cv="todos" aria-pressed="true">Todos</button><button type="button" data-cv="vis" aria-pressed="false">Na vitrine</button><button type="button" data-cv="oc" aria-pressed="false">Ocultos</button><button type="button" data-cv="man" aria-pressed="false">Preço manual</button></div>
+          <div class="seg" role="group" aria-label="Mostrar"><button type="button" data-cv="todos" aria-pressed="true">Todos</button><button type="button" data-cv="vis" aria-pressed="false">Na vitrine</button><button type="button" data-cv="oc" aria-pressed="false">Ocultos</button><button type="button" data-cv="man" aria-pressed="false">Preço manual</button><button type="button" data-cv="mao" aria-pressed="false">✋ Escondidos por mim</button><button type="button" data-cv="semfoto" aria-pressed="false">📷 Sem foto</button></div>
         </div>
         <div class="row-f" id="catLote" style="margin-bottom:10px" hidden>
           <span class="note" id="catLoteTxt"></span>
@@ -2070,7 +2071,7 @@ function renderCores(){const box=$('#corFam');if(!box)return;const q=chave($('#c
 $('#corBusca').oninput=renderCores;
 $('#corFam').addEventListener('toggle',e=>{const d=e.target.closest('details[data-cfk]');if(d)CORF_AB[d.dataset.cfk]=d.open},true);
 $('#corFam').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
-  if(b.dataset.cft){const x=CAT.itens.find(y=>String(y.id)===b.dataset.cft);if(!x)return;busy(b,async()=>{await poeAtivo([x],!x.ativo);renderCores();renderVitCtl();toast(x.ativo?'✓ Marcado como tem':'✕ Marcado como não tem')});return}
+  if(b.dataset.cft){const x=CAT.itens.find(y=>String(y.id)===b.dataset.cft);if(!x)return;busy(b,async()=>{await poeMao(x,!x.ativo);renderCores();renderVitCtl();toast(x.ativo?'✓ Marcado como tem':'✕ Marcado como não tem')});return}
   if(b.dataset.cfadd){const [fk,mk]=b.dataset.cfadd.split('|');const F=famsPainel().find(F=>F.k===fk),M=F&&F.mods.find(m=>m.k===mk);if(!M)return;
     const ja=new Set(M.itens.map(o=>canonCor(o.cor)));const op=LISTA_CORES.filter(c=>!ja.has(c));
     const pop=document.createElement('div');pop.className='cf-pop';pop.innerHTML=`<span class="note">Cor nova para <b>${esc(F.nome)} ${esc(M.label)}</b>:</span><div>${op.map(c=>`<button type="button" data-cfnova="${esc(c)}"><i style="--c:${corHex(c)}"${corHex(c)==='transparent'?' class="tr"':''}></i>${esc(nomeCor(c))}</button>`).join('')}</div><button type="button" class="btn sm" data-cfx>Cancelar</button>`;
@@ -2079,11 +2080,17 @@ $('#corFam').addEventListener('click',e=>{const b=e.target.closest('button');if(
       const cor=c.dataset.cfnova,base=M.itens[0].x,nome=`${M.itens[0].fam} ${M.raw} ${nomeCor(cor)}`;
       busy(c,async()=>{const row={ref:'MAN:'+chave(nome),origem:'MANUAL',fornecedor:base.fornecedor||'',produto_id:null,nome,categoria:base.categoria,custo:base.custo,preco:base.preco,preco_manual:!!base.preco_manual,foto:'',ativo:true,destaque:false,atualizado_em:new Date().toISOString()};
         let r=await sb.from('catalogo_itens').upsert(row,{onConflict:'ref'});if(r.error){row.origem='FORNECEDOR';row.fornecedor=base.fornecedor||'DKM';r=await sb.from('catalogo_itens').upsert(row,{onConflict:'ref'})}must(r);pop.remove();CORF_AB[fk]=true;await carregarCatalogo();toast(`🎨 ${nomeCor(cor)} cadastrada para ${M.label} (sob encomenda)`)})}}});
+/* ===== escondido na mão: fica escondido mesmo quando liga a categoria ou o fornecedor ===== */
+let MAO_LS=new Set();try{MAO_LS=new Set(JSON.parse(lsGet('-ocman')||'[]'))}catch(e){}
+const temColMao=()=>CAT.itens.length>0&&'oculto_manual' in CAT.itens[0];
+const ehMao=x=>temColMao()?!!x.oculto_manual:MAO_LS.has(x.id);
+async function poeMao(x,on){if(temColMao())await salvaItem(x,{ativo:on,oculto_manual:!on});else{await salvaItem(x,{ativo:on});on?MAO_LS.delete(x.id):MAO_LS.add(x.id);lsSet('-ocman',JSON.stringify([...MAO_LS]))}}
 /* ===== O que aparece na vitrine: liga/desliga por fornecedor e por categoria ===== */
 function renderVitCtl(){if(!$('#vitForn'))return;const L=CAT.itens||[];
   const on=L.filter(x=>x.ativo).length;
   $('#vitResumo').innerHTML=L.length?`<div class="vt-big"><b class="num">${on.toLocaleString('pt-BR')}</b><span>de ${L.length.toLocaleString('pt-BR')} produtos aparecem na vitrine</span></div><span class="bar"><i style="width:${L.length?on/L.length*100:0}%"></i></span>`:'<div class="empty">O catálogo está vazio.</div>';
-  const card=(tipo,v,lista,sub,nota)=>{const n=lista.length,a=lista.filter(x=>x.ativo).length,est=!n?'off':a===n?'on':a===0?'off':'meio';
+  const card=(tipo,v,lista,sub,nota)=>{const n=lista.length,a=lista.filter(x=>x.ativo).length,mm=lista.filter(x=>!x.ativo&&ehMao(x)).length,est=!n?'off':a+mm===n&&a>0?'on':a===0?'off':'meio';
+    if(mm)nota=(nota||'')+`<div class="vt-nota">✋ ${mm} escondido${mm===1?'':'s'} por você</div>`;
     let por='';if(tipo==='forn'&&est==='meio'){const cs={};lista.filter(x=>!x.ativo).forEach(x=>cs[x.categoria]=(cs[x.categoria]||0)+1);const L2=Object.entries(cs).sort((p,q)=>q[1]-p[1]);
       por=`<div class="vt-por">${L2.slice(0,4).map(([c,k])=>`<i class="n" title="${k} escondidos">✕ ${esc(c)} <small>${k}</small></i>`).join('')}${L2.length>4?`<i class="n">+${L2.length-4}</i>`:''}</div>`}
     if(tipo==='cat'&&est==='meio'){const fs={};lista.forEach(x=>{const f=origemTxt(x);(fs[f]=fs[f]||[0,0])[0]++;if(x.ativo)fs[f][1]++});
@@ -2108,9 +2115,9 @@ $('#v-catalogo').addEventListener('click',e=>{const b=e.target.closest('[data-vt
   let L=CAT.itens.filter(x=>tipo==='forn'?origemTxt(x)===v:(x.categoria===v&&(!de||origemTxt(x)===de)));
   if(tipo==='cat'&&!de){const s2=L.filter(x=>!VIT_OFF.has(origemTxt(x)));if(s2.length)L=s2}
   if(b.dataset.vtver){abaCat('produtos');$('#catQ').value='';if(tipo==='forn'){$('#catForn').value=v;$('#catCat').value=''}else{$('#catCat').value=v;$('#catForn').value=de||''}catLim=60;renderCatalogo();$('#catLista').scrollIntoView({block:'start',behavior:'smooth'});return}
-  const liga=!L.every(x=>x.ativo),nome=tipo==='forn'?v:(de?`${v} (${de})`:v);
-  const mudar=L.filter(x=>!!x.ativo!==liga);if(!mudar.length)return;
-  busy(b,async()=>{await poeAtivo(mudar,liga);renderCatalogo();avisoVit(`${liga?'👁️':'🙈'} <b>${mudar.length}</b> produto${mudar.length===1?'':'s'} de <b>${esc(nome)}</b> ${liga?'voltaram para':'saíram da'} vitrine.`,mudar,!liga)})});
+  const liga=L.some(x=>!x.ativo&&!ehMao(x)),nome=tipo==='forn'?v:(de?`${v} (${de})`:v);
+  const mao=liga?L.filter(x=>!x.ativo&&ehMao(x)).length:0;const mudar=L.filter(x=>!!x.ativo!==liga&&!(liga&&ehMao(x)));if(!mudar.length){if(mao)toast(`Os ${mao} escondidos são seus (✋). Ligue um por um em Produtos → ✋ Escondidos por mim`);return}
+  busy(b,async()=>{await poeAtivo(mudar,liga);renderCatalogo();avisoVit(`${liga?'👁️':'🙈'} <b>${mudar.length}</b> produto${mudar.length===1?'':'s'} de <b>${esc(nome)}</b> ${liga?'voltaram para':'saíram da'} vitrine.${mao?` <span class="note">(${mao} que você escondeu na mão continuam escondidos)</span>`:''}`,mudar,!liga)})});
 async function poeAtivo(lista,on){const ids=lista.map(x=>x.id);for(let i=0;i<ids.length;i+=150)must(await sb.from('catalogo_itens').update({ativo:on,atualizado_em:new Date().toISOString()}).in('id',ids.slice(i,i+150)));lista.forEach(x=>x.ativo=on)}
 /* aviso com "Desfazer" no lugar da pergunta */
 function avisoVit(html,lista,volta){const box=$('#vitConfirm');clearTimeout(avisoVit.t);box.hidden=false;box.className='vt-aviso';
@@ -2132,13 +2139,13 @@ function renderCatalogo(){
   $('#catForn').innerHTML='<option value="">Todos</option>'+forns.map(c=>`<option${c===fa?' selected':''}>${esc(c)}</option>`).join('');
   $('#zFornLista').innerHTML=fornecedores().map(f=>`<option value="${esc(f)}">`).join('');
   const q=$('#catQ').value,cc=$('#catCat').value,ff=$('#catForn').value;
-  const lst=L.filter(x=>(!cc||x.categoria===cc)&&(!ff||origemTxt(x)===ff)&&casaBusca(x,q)&&(catVis==='todos'||(catVis==='vis'&&x.ativo)||(catVis==='oc'&&!x.ativo)||(catVis==='man'&&x.preco_manual)));
+  const lst=L.filter(x=>(!cc||x.categoria===cc)&&(!ff||origemTxt(x)===ff)&&casaBusca(x,q)&&(catVis==='todos'||(catVis==='vis'&&x.ativo)||(catVis==='oc'&&!x.ativo)||(catVis==='man'&&x.preco_manual)||(catVis==='semfoto'&&!x.foto)||(catVis==='mao'&&!x.ativo&&ehMao(x))));
   const fora=!lst.length&&q.trim()&&(cc||ff||catVis!=='todos')?L.filter(x=>casaBusca(x,q)).length:0;
   $('#catSub').textContent=L.length?`${lst.length} produto${lst.length===1?'':'s'}`:'';
   $('#catLote').hidden=!(cc||ff);$('#catLoteTxt').textContent=[cc&&`categoria ${cc}`,ff&&ff].filter(Boolean).join(' · ').replace(/^./,m=>m.toUpperCase())+':';
   $('#catLista').innerHTML=L.length?(lst.slice(0,catLim).map(x=>{const m=x.preco>0&&x.custo>0?Math.round((1-x.custo/x.preco)*100):null,sug=precoSug(x.custo);
     return `<div class="ci${x.ativo?'':' oculto'}" data-id="${x.id}"><button class="th" type="button" data-foto="${x.id}" title="Trocar a foto">${x.foto?`<img src="${esc(fotoCat(x.foto))}" alt="" loading="lazy">`:'+ foto'}</button>
-      <div class="nm"><b title="${esc(x.nome)}">${esc(x.nome)}</b><span><button type="button" class="cod" data-cod="${codDKM(x)}" title="Copiar o código">cód. ${codDKM(x)}</button>${x.ref?` <small class="ref" title="código do fornecedor">ref ${esc(x.ref)}</small>`:''} · ${esc(x.categoria)} · custo ${brl(x.custo)}${x.origem==='ESTOQUE'?' · do meu estoque':x.fornecedor?' · '+esc(x.fornecedor):''}</span></div>
+      <div class="nm"><b title="${esc(x.nome)}">${esc(x.nome)}</b><span>${!x.ativo&&ehMao(x)?'<i class="mao-tag" title="Você escondeu este na mão">✋ escondido por você</i> ':''}<button type="button" class="cod" data-cod="${codDKM(x)}" title="Copiar o código">cód. ${codDKM(x)}</button>${x.ref?` <small class="ref" title="código do fornecedor">ref ${esc(x.ref)}</small>`:''} · ${esc(x.categoria)} · custo ${brl(x.custo)}${x.origem==='ESTOQUE'?' · do meu estoque':x.fornecedor?' · '+esc(x.fornecedor):''}</span></div>
       <div class="pr"><input class="inp num" data-preco="${x.id}" value="${x.preco.toFixed(2).replace('.',',')}" inputmode="decimal" aria-label="Preço de venda">${m!=null?`<span class="pill ${m>=40?'p-good':m>=20?'p-warn':'p-bad'}" title="margem">${m}%</span>`:''}${x.preco_manual&&sug?`<button class="btn sm" type="button" data-sug="${x.id}" title="Voltar ao sugerido: ${brl(sug)}">↺</button>`:''}</div>
       <div class="ac"><button class="estrela" type="button" data-dest="${x.id}" aria-pressed="${!!x.destaque}" title="Destaque na vitrine">⭐</button><button class="tg" type="button" data-ativo="${x.id}" aria-pressed="${!!x.ativo}" title="Aparece na vitrine"></button></div></div>`}).join('')||(fora?`<div class="empty">Nenhum produto com esse filtro, mas achei <b>${fora}</b> em outros filtros (outra categoria, fornecedor ou ocultos).<br><button class="btn sm pri" type="button" id="catLimpa" style="margin-top:10px">Procurar em tudo</button></div>`:'<div class="empty">Nenhum produto encontrado. Dá para buscar pelo nome, pelo código (ex.: 123) ou pelo código do fornecedor.</div>')):'<div class="empty">O catálogo está vazio. Escreva o fornecedor e arraste o zip dele ali em cima, ou coloque o seu estoque.</div>';
   {const b=$('#catLimpa');if(b)b.onclick=()=>{$('#catCat').value='';$('#catForn').value='';catVis='todos';$$('[data-cv]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.cv==='todos'));catLim=60;renderCatalogo()}}
@@ -2150,7 +2157,7 @@ const salvaItem=async(x,campos)=>{Object.assign(x,campos);must(await sb.from('ca
 const acha=id=>CAT.itens.find(x=>String(x.id)===String(id));
 $('#catLista').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
   if(b.dataset.cod){copy(b.dataset.cod);return}
-  if(b.dataset.ativo)busy(b,async()=>{const x=acha(b.dataset.ativo);await salvaItem(x,{ativo:!x.ativo});renderCatalogo()});
+  if(b.dataset.ativo)busy(b,async()=>{const x=acha(b.dataset.ativo);await poeMao(x,!x.ativo);renderCatalogo();toast(x.ativo?'👁️ Voltou para a vitrine':'✋ Escondido por você (fica escondido mesmo se ligar a categoria ou o fornecedor)')});
   if(b.dataset.dest)busy(b,async()=>{const x=acha(b.dataset.dest);await salvaItem(x,{destaque:!x.destaque});renderCatalogo()});
   if(b.dataset.sug)busy(b,async()=>{const x=acha(b.dataset.sug);await salvaItem(x,{preco:precoSug(x.custo),preco_manual:false});renderCatalogo();toast('Preço sugerido de volta')});
   if(b.dataset.foto){fotoAlvo=acha(b.dataset.foto);$('#fFotoItem').click()}});
@@ -2168,10 +2175,10 @@ $$('[data-lote]').forEach(b=>b.onclick=()=>{const cc=$('#catCat').value,ff=$('#c
   const txt={mostrar:`Mostrar os ${L.length} produtos de ${de} na vitrine?`,ocultar:`Esconder os ${L.length} produtos de ${de} da vitrine?`,subir:`Aumentar ${pct}% o preço dos ${L.length} produtos de ${de}?`,descer:`Baixar ${pct}% o preço dos ${L.length} produtos de ${de}?`,sugerido:`Voltar os ${L.length} produtos de ${de} para o preço sugerido pela régua?`}[a];
   if((a==='subir'||a==='descer')&&!(pct>0)){toast('Digite a porcentagem');return}
   confirmBox($('#catConfirm'),esc(txt),'Confirmar',()=>busy(b,async()=>{
-    L.forEach(x=>{if(a==='mostrar')x.ativo=true;if(a==='ocultar')x.ativo=false;
+    let mantidos=0;L.forEach(x=>{if(a==='mostrar'){if(ehMao(x)&&!x.ativo){mantidos++;return}x.ativo=true}if(a==='ocultar')x.ativo=false;
       if(a==='subir'||a==='descer'){let v=x.preco*(1+(a==='subir'?pct:-pct)/100);v=CAT.cfg.final90!==false?(v<100?Math.ceil(v-0.9)+0.9:Math.ceil((v-9.9)/10)*10+9.9):Math.ceil(v*2)/2;x.preco=r2(Math.max(v,0.9));x.preco_manual=true}
       if(a==='sugerido'){x.preco=precoSug(x.custo);x.preco_manual=false}});
-    await salvaLote(L);renderCatalogo();toast('Pronto: '+L.length+' produtos atualizados')}))});
+    await salvaLote(L);renderCatalogo();toast('Pronto: '+L.length+' produtos atualizados'+(mantidos?` · ${mantidos} que você escondeu na mão continuam escondidos`:''))}))});
 /* régua */
 function renderRegua(){const c=CAT.cfg,R=(c.regua&&c.regua.length)?c.regua:CAT_PADRAO.regua,box=$('#reguaBox');if(box.contains(document.activeElement))return;
   box.innerHTML=`<table class="regua"><tbody>${R.map((f,i)=>`<tr><td class="note">${i===R.length-1?'acima disso':'custo até R$'}</td><td>${i===R.length-1?'':`<input class="inp num" data-rf="${i}" value="${String(f[0]).replace('.',',')}" inputmode="decimal">`}</td><td class="note">× </td><td><input class="inp num" data-rm="${i}" value="${String(f[1]).replace('.',',')}" inputmode="decimal"></td><td class="note" data-rex="${i}"></td></tr>`).join('')}</tbody></table>
