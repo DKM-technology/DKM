@@ -1703,9 +1703,10 @@ async function descProd(x){const k=CUP.cod+'|'+x.id+'|'+$('#nome').value.trim().
 async function precoComCupom(x,anima){if(!$('#pPrecoBox')||!CUP.cod||!CUP.r||!CUP.r.ok)return;const d=await descProd(x);if(PROD!==x)return;PROD_D=d;if(d)precoBox(anima?'cupom':'troca')}
 /* preço do produto aberto: multiplica pela quantidade (×3) e mostra o desconto do cupom */
 let PROD_D=0,PREV=null;
+const r2c=v=>Math.round(v*100)/100;
 function precoBox(modo){const x=PROD;if(!x)return;const box=$('#pPrecoBox');const r=CUP.r&&CUP.r.ok?CUP.r:null,q=PQ,cheio=x.preco*q;
   let d=0;if(r&&PROD_D){const cheio1=Math.round(x.preco*r.valor)/100;d=r.tipo==='REAIS'?Math.min(PROD_D,cheio):(Math.abs(PROD_D-cheio1)<.011?Math.round(cheio*r.valor)/100:PROD_D*q)}const fim=Math.max(0,cheio-d),mov=!reduz();
-  const xq=q>1?`<span class="p-xq"><b>×${q}</b><small>${brl(x.preco)} cada</small></span>`:'';
+  const xq=q>1?`<span class="p-xq"><b>×${q}</b><small>${brl(r2c(fim/q))} cada</small></span>`:'';
   const anima=modo==='cupom'&&mov&&d,ini=anima?cheio:(modo==='qtd'&&PREV!=null&&mov?PREV:fim);
   if(!d)box.innerHTML=`<div class="pq"><b class="num" id="pPreco">${brl(ini)}</b>${xq}</div>`;
   else box.innerHTML=`<div class="pc${anima?' anima':''}"><div class="pc-top"><s class="pc-velho num">${brl(cheio)}</s><span class="pc-badge">−${Math.round(d/cheio*100)}%</span><span class="pc-tag">🎟️ ${esc(r.codigo)}</span></div>

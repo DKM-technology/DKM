@@ -786,6 +786,8 @@ html.menos-mov .ms-caixa,html.menos-mov .ms-fundo{transition:none}html.menos-mov
 .vt-por i small{font-weight:500;opacity:.8}
 .vt-por i.s{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,var(--line))}.vt-por i.n{color:var(--muted);text-decoration:line-through}.vt-por i.m{color:var(--warn)}
 .vt-nota{font-size:11px;color:var(--muted);margin-top:2px}.vt-nota::before{content:"⏸ "}
+.vt-aviso{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:12px;border:1.5px solid var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--surface));font-size:13.5px}
+.vt-aviso.entra{animation:entraEnc .3s ease-out}
 </style>
 </head>
 <body>
@@ -2027,12 +2029,15 @@ $('#v-catalogo').addEventListener('click',e=>{const b=e.target.closest('[data-vt
   let L=CAT.itens.filter(x=>tipo==='forn'?origemTxt(x)===v:(x.categoria===v&&(!de||origemTxt(x)===de)));
   if(tipo==='cat'&&!de){const s2=L.filter(x=>!VIT_OFF.has(origemTxt(x)));if(s2.length)L=s2}
   if(b.dataset.vtver){abaCat('produtos');$('#catQ').value='';if(tipo==='forn'){$('#catForn').value=v;$('#catCat').value=''}else{$('#catCat').value=v;$('#catForn').value=de||''}catLim=60;renderCatalogo();$('#catLista').scrollIntoView({block:'start',behavior:'smooth'});return}
-  const liga=!L.every(x=>x.ativo),nome=tipo==='forn'?v:(de?`${v} (${de})`:v),qt=liga?L.filter(x=>!x.ativo).length:L.length;
-  confirmBox($('#vitConfirm'),`${liga?'Mostrar':'Esconder'} <b>${qt}</b> produto${qt===1?'':'s'} de <b>${esc(nome)}</b> ${liga?'na':'da'} vitrine?`,liga?'👁️ Mostrar':'🙈 Esconder',()=>busy(b,async()=>{
-    const mudar=L.filter(x=>!!x.ativo!==liga),ids=mudar.map(x=>x.id);
-    for(let i=0;i<ids.length;i+=150)must(await sb.from('catalogo_itens').update({ativo:liga,atualizado_em:new Date().toISOString()}).in('id',ids.slice(i,i+150)));
-    mudar.forEach(x=>x.ativo=liga);renderCatalogo();toast(`${liga?'👁️':'🙈'} ${mudar.length} produto${mudar.length===1?'':'s'} de ${nome} ${liga?'voltaram para':'saíram da'} vitrine`)}));
-  $('#vitConfirm').scrollIntoView({block:'center',behavior:'smooth'})});
+  const liga=!L.every(x=>x.ativo),nome=tipo==='forn'?v:(de?`${v} (${de})`:v);
+  const mudar=L.filter(x=>!!x.ativo!==liga);if(!mudar.length)return;
+  busy(b,async()=>{await poeAtivo(mudar,liga);renderCatalogo();avisoVit(`${liga?'👁️':'🙈'} <b>${mudar.length}</b> produto${mudar.length===1?'':'s'} de <b>${esc(nome)}</b> ${liga?'voltaram para':'saíram da'} vitrine.`,mudar,!liga)})});
+async function poeAtivo(lista,on){const ids=lista.map(x=>x.id);for(let i=0;i<ids.length;i+=150)must(await sb.from('catalogo_itens').update({ativo:on,atualizado_em:new Date().toISOString()}).in('id',ids.slice(i,i+150)));lista.forEach(x=>x.ativo=on)}
+/* aviso com "Desfazer" no lugar da pergunta */
+function avisoVit(html,lista,volta){const box=$('#vitConfirm');clearTimeout(avisoVit.t);box.hidden=false;box.className='vt-aviso';
+  box.innerHTML=`<span>${html}</span><button class="btn sm" type="button" id="vitDesf">↩ Desfazer</button>`;box.classList.remove('entra');void box.offsetWidth;box.classList.add('entra');
+  $('#vitDesf').onclick=()=>busy($('#vitDesf'),async()=>{await poeAtivo(lista,volta);renderCatalogo();box.hidden=true;toast('Desfeito')});
+  avisoVit.t=setTimeout(()=>{box.hidden=true},9000)}
 function renderCatalogo(){
   const L=CAT.itens,vis=L.filter(x=>x.ativo&&x.preco>0),comFoto=L.filter(x=>x.foto).length;
   const cs=vis.reduce((a,x)=>a+x.custo,0),ps=vis.reduce((a,x)=>a+x.preco,0);
