@@ -788,6 +788,28 @@ html.menos-mov .ms-caixa,html.menos-mov .ms-fundo{transition:none}html.menos-mov
 .vt-nota{font-size:11px;color:var(--muted);margin-top:2px}.vt-nota::before{content:"⏸ "}
 .vt-aviso{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 12px;border-radius:12px;border:1.5px solid var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--surface));font-size:13.5px}
 .vt-aviso.entra{animation:entraEnc .3s ease-out}
+
+/* aparelhos e cores */
+.cor-fams{display:grid;gap:8px}
+.cf{border:1.5px solid var(--line);border-radius:14px;background:var(--surface-2);padding:2px 12px}
+.cf[open]{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.cf summary{cursor:pointer;list-style:none;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;padding:10px 0}.cf summary::-webkit-details-marker{display:none}
+.cf summary::after{content:"▾";margin-left:auto;color:var(--muted)}.cf[open] summary::after{transform:rotate(180deg)}
+.cf-linhas{display:grid;gap:6px;padding:0 0 12px}
+.cf-l{display:grid;grid-template-columns:minmax(110px,180px) minmax(0,1fr);gap:8px;align-items:center;padding:6px 0;border-top:1px dashed var(--line)}
+.cf-m{font-weight:700;font-size:13px}
+.cf-cs{display:flex;flex-wrap:wrap;gap:6px}
+.cf-c{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--surface);color:var(--muted);border-radius:99px;padding:5px 10px 5px 6px;font:inherit;font-size:12.5px;cursor:pointer;text-decoration:line-through;opacity:.7;transition:all .15s}
+.cf-c.on{color:var(--ink);text-decoration:none;opacity:1;border-color:var(--good);background:color-mix(in srgb,var(--good) 12%,var(--surface))}
+.cf-c i{width:16px;height:16px;border-radius:50%;background:var(--c);box-shadow:0 0 0 1.5px rgba(127,127,127,.4)}
+.cf-c i.tr,.cf-pop i.tr{background:repeating-conic-gradient(#ddd 0 25%,#fff 0 50%) 50%/8px 8px}
+.cf-c small{font-size:10.5px;color:var(--muted);text-decoration:none}
+.cf-mais{border:1.5px dashed var(--line);background:none;color:var(--accent);border-radius:99px;padding:5px 10px;font:inherit;font-size:12px;font-weight:700;cursor:pointer}
+.cf-pop{display:grid;gap:8px;padding:10px;border-radius:12px;border:1.5px solid var(--accent);background:var(--surface);margin:4px 0 8px;animation:entraEnc .25s ease-out}
+.cf-pop>div{display:flex;flex-wrap:wrap;gap:6px}.cf-pop>div button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:99px;padding:5px 10px 5px 6px;font:inherit;font-size:12px;cursor:pointer}
+.cf-pop i{width:16px;height:16px;border-radius:50%;background:var(--c);box-shadow:0 0 0 1.5px rgba(127,127,127,.4)}
+.cf-pop>.btn{justify-self:start}
+@media (max-width:560px){.cf-l{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -1102,6 +1124,9 @@ html.menos-mov .ms-caixa,html.menos-mov .ms-fundo{transition:none}html.menos-mov
         <div class="vt-grid" id="vitForn"></div>
         <div class="vt-h vt-h2"><h3>🗂️ Por categoria</h3><select id="vitDe" class="inp" aria-label="Fornecedor das categorias"></select><input id="vitBusca" class="inp" placeholder="procurar categoria" autocomplete="off"></div>
         <div class="vt-grid" id="vitCat"></div>
+        <div class="vt-h vt-h2"><h3>🎨 Aparelhos e cores <span class="sub">películas e capinhas</span></h3><input id="corBusca" class="inp" placeholder="procurar (ex.: case, A14)" autocomplete="off"></div>
+        <p class="note" style="margin:0 0 8px">Toque na cor para dizer se <b>tem</b> (verde) ou <b>não tem</b> (cinza). <b>+ cor</b> cadastra uma cor nova para aquele aparelho (entra como sob encomenda, com o mesmo preço).</p>
+        <div id="corFam" class="cor-fams"></div>
         <p class="note" style="margin-top:12px">Para ligar ou desligar <b>um produto só</b>, toque em <b>ver produtos ›</b> no cartão ou vá na aba 🛍️ Produtos.</p>
       </div>
       <div class="panel aba-p" data-p="produtos">
@@ -2000,6 +2025,60 @@ function abaCat(a){ABA_CAT=a;lsSet('-abacat',a);$$('#catAbas [data-aba]').forEac
   $$('#v-catalogo [data-p]').forEach(el=>{const vis=el.dataset.p.split(' ').includes(a);el.hidden=!vis;if(vis&&el.classList.contains('panel')){el.classList.remove('entra-aba');void el.offsetWidth;el.classList.add('entra-aba')}});
   $$('#v-catalogo .aba-p').forEach(g=>{if(g.classList.contains('grid'))g.classList.toggle('uma',[...g.children].filter(c=>!c.hidden).length===1)})}
 $('#catAbas').onclick=e=>{const b=e.target.closest('[data-aba]');if(b)abaCat(b.dataset.aba)};abaCat(ABA_CAT);
+const PREF_MOD=new Set(['IPHONE','IP','ANDROID','SAMSUNG','GALAXY','MOTO','MOTOROLA','XIAOMI','REDMI','RM','POCO','PC','MI','NOTE','LG']);
+const CORES={'verde exercito':'#4b5d2a','verde militar':'#4b5d2a','azul marinho':'#1e3a8a','azul bebe':'#93c5fd','rosa bebe':'#f9c5d1','verde agua':'#7dd3c0',
+  preto:'#111',preta:'#111',branco:'#fff',branca:'#fff',vermelho:'#e11d2e',vermelha:'#e11d2e',azul:'#2563eb',verde:'#16a34a',rosa:'#f472b6',pink:'#ec4899',lilas:'#c4a7f5',roxo:'#7c3aed',roxa:'#7c3aed',
+  amarelo:'#facc15',amarela:'#facc15',laranja:'#f97316',cinza:'#9ca3af',nude:'#e8c4a8',transparente:'transparente',dourado:'#d4af37',dourada:'#d4af37',prata:'#c0c0c0',marrom:'#7c4a2d',bege:'#e7d8bf',
+  vinho:'#7f1d1d',grafite:'#3f3f46',menta:'#a7f3d0',coral:'#fb7185',rose:'#f4c2c2',creme:'#f5ecd7',salmao:'#fa8072',fucsia:'#d946ef'};
+const semAc=t=>String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'');
+const COR_FEM={preta:'preto',branca:'branco',vermelha:'vermelho',roxa:'roxo',amarela:'amarelo',dourada:'dourado'};
+const canonCor=c=>{const k=semAc(c).toLowerCase().trim();return COR_FEM[k]||k};
+const COR_NOME={lilas:'Lilás','verde exercito':'Verde exército','verde agua':'Verde água','azul bebe':'Azul bebê','rosa bebe':'Rosa bebê',salmao:'Salmão',fucsia:'Fúcsia',rose:'Rosê'};
+const nomeCor=c=>{const k=canonCor(c);return COR_NOME[k]||(k?k[0].toUpperCase()+k.slice(1):'Única')};
+function ehModelo(t){if(!/\d/.test(t)||t.length>14)return false;
+  if(/^\d+d$/i.test(t)||/^\d+(em|in)\d$/i.test(t)||/^(ff|ref|r\$|r,|no\d)/i.test(t)||/^[a-z]{2,}-\d/i.test(t)||/^\d{4,}$/.test(t)||/^\d+[.,]\d/.test(t)||/^\d+(w|mah|v|a|un|pcs|x|cm|m)$/i.test(t))return false;return true}
+function partesNome(x){const T=String(x.nome).trim().split(/\s+/);const i=T.findIndex(ehModelo);if(i<=0)return null;
+  let j=i;while(j>0&&PREF_MOD.has(semAc(T[j-1]).toUpperCase()))j--;if(j===0)return null;
+  let resto=T.slice(j),cor='';const fim2=semAc(resto.slice(-2).join(' ')).toLowerCase(),fim1=semAc(resto[resto.length-1]).toLowerCase();
+  if(resto.length>2&&CORES[fim2]){cor=resto.slice(-2).join(' ');resto=resto.slice(0,-2)}else if(resto.length>1&&CORES[fim1]){cor=resto[resto.length-1];resto=resto.slice(0,-1)}
+  return {fam:T.slice(0,j).join(' '),mod:resto.join(' '),cor}}
+const PALAVRA={PELICULA:'Película',CERAMICA:'Cerâmica',RELOGIO:'Relógio',CAMERA:'Câmera',PRIVATIVA:'Privativa'};
+const bonito=t=>t.split(/\s+/).map(w=>{const u=semAc(w).toUpperCase();if(PALAVRA[u])return PALAVRA[u];if(/^\d+D$/i.test(w))return w.toUpperCase();return w[0].toUpperCase()+w.slice(1).toLowerCase()}).join(' ');
+const MOD_W={AO:'ao',A:'a',E:'e',IPHONE:'iPhone',ANDROID:'',RM:'Redmi',PC:'Poco',MI:'Mi',NOTE:'Note',PRO:'Pro',MAX:'Max',PLUS:'Plus',PROMAX:'Pro Max',LITE:'Lite',ULTRA:'Ultra',FE:'FE',MINI:'Mini'};
+function rotMod(m,relogio){return m.split('/').map((p,k)=>{let t=p.trim().replace(/(\d)(PRO|MAX|PLUS|PROMAX)\b/gi,'$1 $2').replace(/(\d)\s*MM$/i,'$1 mm');
+    t=t.split(/\s+/).map(w=>{const u=w.toUpperCase();return u in MOD_W?MOD_W[u]:/^[a-z]+$/i.test(w)&&w.length>2?w[0]+w.slice(1).toLowerCase():w}).filter(Boolean).join(' ');
+    if(k===0&&!relogio&&/^(\d|x\b|xr|xs|se\b)/i.test(t)&&!/mm$/.test(t))t='iPhone '+t;return t}).join(' / ')}
+function normMod(t){let s=semAc(t).toLowerCase().replace(/redmi\s+note/g,'note').replace(/\b(iphone|apple|samsung|galaxy|motorola|xiaomi|android|celular|aparelho|para|do|da|de)\b/g,' ').replace(/\bredmi\b/g,'rm').replace(/\bpoco\b/g,'pc').replace(/\bmoto\b/g,'').replace(/pro\s*max/g,'promax');return s.replace(/[^a-z0-9]/g,'')}
+const altsMod=m=>m.split('/').map(p=>normMod(p)).filter(Boolean);
+/* ===== Aparelhos e cores: mesma regra da vitrine (tipo + aparelho + cor no nome) ===== */
+const ehCel=x=>/pel[ií]cula|^capas?$|capinha|case/i.test(x.categoria||'');
+function famsPainel(){const cand={};(CAT.itens||[]).forEach(x=>{if(!ehCel(x))return;const p=partesNome(x);if(!p)return;const pel=/pel[ií]cula/i.test(x.categoria);
+    const k=(pel?'p':'c')+':'+normMod(p.fam)+':'+(pel?semAc(x.categoria).toLowerCase():'');(cand[k]=cand[k]||{k,pel,nome:bonito(p.fam),fs:new Set(),L:[]}).L.push({x,...p});cand[k].fs.add(x.origem==='MANUAL'?'Meu estoque':origemTxt(x))});
+  return Object.values(cand).filter(F=>F.L.length>=2||F.L.some(o=>o.cor)).map(F=>{const mods={};F.L.forEach(o=>{const mk=normMod(o.mod)||o.mod;(mods[mk]=mods[mk]||{k:mk,raw:o.mod,label:rotMod(o.mod,/rel[oó]gio/i.test(F.nome)),itens:[]}).itens.push(o)});
+    F.forn=[...F.fs].join(' + ');F.mods=Object.values(mods).sort((a,b)=>a.label.localeCompare(b.label,'pt-BR',{numeric:true}));F.temCor=F.L.some(o=>o.cor);if(!/\s/.test(F.nome))F.nome+=' normal';return F}).sort((a,b)=>(b.temCor-a.temCor)||a.nome.localeCompare(b.nome,'pt-BR'))}
+const corHex=c=>{const h=CORES[canonCor(c)]||CORES[semAc(c).toLowerCase()]||'#888';return h==='transparente'?'transparent':h};
+const LISTA_CORES=['preto','branco','vermelho','azul','verde','rosa','lilas','roxo','amarelo','laranja','cinza','nude','transparente','dourado','prata','marrom','bege','vinho','grafite','pink','menta','azul marinho','verde exercito'];
+let CORF_AB={};
+function renderCores(){const box=$('#corFam');if(!box)return;const q=chave($('#corBusca').value).normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const est=id=>{const x=CAT.itens.find(y=>y.id===id);if(!x||x.origem!=='ESTOQUE')return null;const e=S.est.find(y=>y.id===x.produto_id);return e?e.qt:null};
+  const FS=famsPainel().filter(F=>!q||chave(F.nome+' '+F.forn+' '+F.mods.map(m=>m.label+' '+m.raw).join(' ')).normalize('NFD').replace(/[̀-ͯ]/g,'').includes(q));
+  box.innerHTML=FS.length?FS.map(F=>{const ab=CORF_AB[F.k]||q;const on=F.L.filter(o=>o.x.ativo).length;
+    return `<details class="cf"${ab?' open':''} data-cfk="${esc(F.k)}"><summary><b>${esc(F.nome)}</b><span class="note">${esc(F.forn)} · ${F.mods.length} aparelho${F.mods.length===1?'':'s'}${F.temCor?' · cores':''} · ${on} de ${F.L.length} aparecem</span></summary>
+      <div class="cf-linhas">${F.mods.map(M=>`<div class="cf-l"><span class="cf-m">${esc(M.label)}</span><div class="cf-cs">${M.itens.map(o=>{const q2=est(o.x.id);
+          return `<button type="button" class="cf-c${o.x.ativo?' on':''}" data-cft="${o.x.id}" title="${o.x.ativo?'Tem · toque para dizer que não tem':'Não tem · toque para dizer que tem'}">${o.cor?`<i style="--c:${corHex(o.cor)}"${corHex(o.cor)==='transparent'?' class="tr"':''}></i>${esc(nomeCor(o.cor))}`:(o.x.ativo?'✓ tem':'✕ não tem')}${q2!=null?`<small>${q2>0?'⚡'+q2:'0'}</small>`:''}</button>`}).join('')}
+          ${F.temCor?`<button type="button" class="cf-mais" data-cfadd="${esc(F.k)}|${esc(M.k)}">+ cor</button>`:''}</div></div>`).join('')}</div></details>`}).join(''):'<div class="empty">Nenhuma película ou capinha com aparelho no nome.</div>'}
+$('#corBusca').oninput=renderCores;
+$('#corFam').addEventListener('toggle',e=>{const d=e.target.closest('details[data-cfk]');if(d)CORF_AB[d.dataset.cfk]=d.open},true);
+$('#corFam').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.cft){const x=CAT.itens.find(y=>String(y.id)===b.dataset.cft);if(!x)return;busy(b,async()=>{await poeAtivo([x],!x.ativo);renderCores();renderVitCtl();toast(x.ativo?'✓ Marcado como tem':'✕ Marcado como não tem')});return}
+  if(b.dataset.cfadd){const [fk,mk]=b.dataset.cfadd.split('|');const F=famsPainel().find(F=>F.k===fk),M=F&&F.mods.find(m=>m.k===mk);if(!M)return;
+    const ja=new Set(M.itens.map(o=>canonCor(o.cor)));const op=LISTA_CORES.filter(c=>!ja.has(c));
+    const pop=document.createElement('div');pop.className='cf-pop';pop.innerHTML=`<span class="note">Cor nova para <b>${esc(F.nome)} ${esc(M.label)}</b>:</span><div>${op.map(c=>`<button type="button" data-cfnova="${esc(c)}"><i style="--c:${corHex(c)}"${corHex(c)==='transparent'?' class="tr"':''}></i>${esc(nomeCor(c))}</button>`).join('')}</div><button type="button" class="btn sm" data-cfx>Cancelar</button>`;
+    $$('.cf-pop').forEach(p=>p.remove());b.closest('.cf-l').after(pop);
+    pop.onclick=ev=>{const c=ev.target.closest('button');if(!c)return;if(c.dataset.cfx!=null){pop.remove();return}
+      const cor=c.dataset.cfnova,base=M.itens[0].x,nome=`${M.itens[0].fam} ${M.raw} ${nomeCor(cor)}`;
+      busy(c,async()=>{const row={ref:'MAN:'+chave(nome),origem:'MANUAL',fornecedor:base.fornecedor||'',produto_id:null,nome,categoria:base.categoria,custo:base.custo,preco:base.preco,preco_manual:!!base.preco_manual,foto:'',ativo:true,destaque:false,atualizado_em:new Date().toISOString()};
+        let r=await sb.from('catalogo_itens').upsert(row,{onConflict:'ref'});if(r.error){row.origem='FORNECEDOR';row.fornecedor=base.fornecedor||'DKM';r=await sb.from('catalogo_itens').upsert(row,{onConflict:'ref'})}must(r);pop.remove();CORF_AB[fk]=true;await carregarCatalogo();toast(`🎨 ${nomeCor(cor)} cadastrada para ${M.label} (sob encomenda)`)})}}});
 /* ===== O que aparece na vitrine: liga/desliga por fornecedor e por categoria ===== */
 function renderVitCtl(){if(!$('#vitForn'))return;const L=CAT.itens||[];
   const on=L.filter(x=>x.ativo).length;
@@ -2064,7 +2143,7 @@ function renderCatalogo(){
       <div class="ac"><button class="estrela" type="button" data-dest="${x.id}" aria-pressed="${!!x.destaque}" title="Destaque na vitrine">⭐</button><button class="tg" type="button" data-ativo="${x.id}" aria-pressed="${!!x.ativo}" title="Aparece na vitrine"></button></div></div>`}).join('')||(fora?`<div class="empty">Nenhum produto com esse filtro, mas achei <b>${fora}</b> em outros filtros (outra categoria, fornecedor ou ocultos).<br><button class="btn sm pri" type="button" id="catLimpa" style="margin-top:10px">Procurar em tudo</button></div>`:'<div class="empty">Nenhum produto encontrado. Dá para buscar pelo nome, pelo código (ex.: 123) ou pelo código do fornecedor.</div>')):'<div class="empty">O catálogo está vazio. Escreva o fornecedor e arraste o zip dele ali em cima, ou coloque o seu estoque.</div>';
   {const b=$('#catLimpa');if(b)b.onclick=()=>{$('#catCat').value='';$('#catForn').value='';catVis='todos';$$('[data-cv]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.cv==='todos'));catLim=60;renderCatalogo()}}
   $('#catMais').hidden=lst.length<=catLim;$('#catMais').textContent=`Ver mais (${lst.length-catLim})`;
-  renderRegua();renderVitCtl();
+  renderRegua();renderVitCtl();renderCores();
   const c=CAT.cfg;if(document.activeElement?.closest?.('#v-catalogo .field')==null){$('#cfZap').value=c.whatsapp||'';$('#cfTit').value=c.titulo||'';$('#cfSub').value=c.subtitulo||'';$('#cfAviso').value=c.aviso_encomenda||''}
 }
 const salvaItem=async(x,campos)=>{Object.assign(x,campos);must(await sb.from('catalogo_itens').update({...campos,atualizado_em:new Date().toISOString()}).eq('id',x.id))};

@@ -958,6 +958,12 @@ html[data-tema="escuro"] .tema-bt .t-esc,html:not([data-tema]) .tema-bt .t-esc,h
 .tema-bt.gira span{animation:giraTema .45s cubic-bezier(.3,1.5,.5,1)}
 @keyframes giraTema{from{transform:rotate(-180deg) scale(.4);opacity:0}}
 html.troca-tema body,html.troca-tema .card,html.troca-tema .topo,html.troca-tema .panel{transition:background-color .4s,color .4s,border-color .4s}
+
+.pv-dots{display:inline-flex;gap:2px;margin-left:5px}.pv-dots b{width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:0 0 0 1.5px rgba(255,255,255,.35)}
+.pv-dots b.tr{background:repeating-conic-gradient(#ddd 0 25%,#fff 0 50%) 50%/6px 6px}
+.pv-chips button[aria-pressed="true"] .pv-dots b{box-shadow:0 0 0 1.5px #fff}
+.p-var .cor.mini i{width:30px;height:30px;border-radius:50%}.p-var .cor.mini span{font-size:10.5px}
+.pv-corf small{display:block;font-size:11px;color:var(--muted);margin-top:6px}
 </style>
 </head>
 <body>
@@ -1308,6 +1314,10 @@ const CORES={'verde exercito':'#4b5d2a','verde militar':'#4b5d2a','azul marinho'
   amarelo:'#facc15',amarela:'#facc15',laranja:'#f97316',cinza:'#9ca3af',nude:'#e8c4a8',transparente:'transparente',dourado:'#d4af37',dourada:'#d4af37',prata:'#c0c0c0',marrom:'#7c4a2d',bege:'#e7d8bf',
   vinho:'#7f1d1d',grafite:'#3f3f46',menta:'#a7f3d0',coral:'#fb7185',rose:'#f4c2c2',creme:'#f5ecd7',salmao:'#fa8072',fucsia:'#d946ef'};
 const semAc=t=>String(t||'').normalize('NFD').replace(/[̀-ͯ]/g,'');
+const COR_FEM={preta:'preto',branca:'branco',vermelha:'vermelho',roxa:'roxo',amarela:'amarelo',dourada:'dourado'};
+const canonCor=c=>{const k=semAc(c).toLowerCase().trim();return COR_FEM[k]||k};
+const COR_NOME={lilas:'Lilás','verde exercito':'Verde exército','verde agua':'Verde água','azul bebe':'Azul bebê','rosa bebe':'Rosa bebê',salmao:'Salmão',fucsia:'Fúcsia',rose:'Rosê'};
+const nomeCor=c=>{const k=canonCor(c);return COR_NOME[k]||(k?k[0].toUpperCase()+k.slice(1):'Única')};
 function ehModelo(t){if(!/\d/.test(t)||t.length>14)return false;
   if(/^\d+d$/i.test(t)||/^\d+(em|in)\d$/i.test(t)||/^(ff|ref|r\$|r,|no\d)/i.test(t)||/^[a-z]{2,}-\d/i.test(t)||/^\d{4,}$/.test(t)||/^\d+[.,]\d/.test(t)||/^\d+(w|mah|v|a|un|pcs|x|cm|m)$/i.test(t))return false;return true}
 function partesNome(x){const T=String(x.nome).trim().split(/\s+/);const i=T.findIndex(ehModelo);if(i<=0)return null;
@@ -1329,16 +1339,16 @@ function montaFamilias(){FAM={};FAM_DE={};FAMOBJ={};const cand={};
     const k=(gn==='Películas'?'p':'c')+':'+normMod(p.fam)+':'+(gn==='Películas'?semAc(x.categoria).toLowerCase():'');(cand[k]=cand[k]||{k,tipo:gn==='Películas'?'pel':'capa',nome:bonito(p.fam),L:[]}).L.push({x,...p})});
   Object.values(cand).forEach(F=>{if(F.L.length<2)return;const mods={};
     F.L.forEach(o=>{const mk=normMod(o.mod)||o.mod;const M=(mods[mk]=mods[mk]||{k:mk,label:rotMod(o.mod,/rel[oó]gio/i.test(F.nome)),alts:altsMod(o.mod),itens:[],pronta:false});
-      const ck=semAc(o.cor).toLowerCase();if(M.itens.some(y=>semAc(y.cor).toLowerCase()===ck)){const d=M.itens.find(y=>semAc(y.cor).toLowerCase()===ck);if(o.x.pronta&&!d.x.pronta)Object.assign(d,o);return}
+      const ck=canonCor(o.cor);if(M.itens.some(y=>semAc(y.cor).toLowerCase()===ck)){const d=M.itens.find(y=>semAc(y.cor).toLowerCase()===ck);if(o.x.pronta&&!d.x.pronta)Object.assign(d,o);return}
       M.itens.push(o);M.pronta=M.pronta||!!o.x.pronta});
     F.mods=Object.values(mods).sort((a,b)=>(b.pronta-a.pronta)||a.label.localeCompare(b.label,'pt-BR',{numeric:true}));
     F.itens=F.mods.flatMap(m=>m.itens.map(o=>o.x));F.todos=F.L.map(o=>o.x);F.temCor=F.L.some(o=>o.cor);
-    F.cores=[...new Set(F.L.filter(o=>o.cor).map(o=>semAc(o.cor).toLowerCase()))];
+    F.cores=[...new Set(F.L.filter(o=>o.cor).map(o=>canonCor(o.cor)))];
     F.min=Math.min(...F.itens.map(x=>x.preco));F.max=Math.max(...F.itens.map(x=>x.preco));F.pronta=F.itens.some(x=>x.pronta);F.destaque=F.itens.some(x=>x.destaque);
     F.cat=F.itens[0].categoria;F.gen=[];FAM[F.k]=F;F.todos.forEach(x=>FAM_DE[x.id]=F.k)});
   /* películas "serve em qualquer aparelho" do fornecedor entram como "sob encomenda" dentro da família do mesmo tipo */
   ITENS.forEach(x=>{if(FAM_DE[x.id])return;const F=Object.values(FAM).find(F=>F.tipo==='pel'&&F.cat===x.categoria);if(F){F.gen.push(x);FAM_DE[x.id]=F.k}});
-  Object.values(FAM).forEach(F=>{if(!/\s/.test(F.nome))F.nome+=' normal';if(F.cores.length===1&&F.L.every(o=>o.cor)){F.nome+=' '+bonito(F.L[0].cor);F.umaCor=true;F.cores=[]}});
+  Object.values(FAM).forEach(F=>{if(!/\s/.test(F.nome))F.nome+=' normal';if(F.cores.length===1&&F.L.every(o=>o.cor)){F.nome+=' '+nomeCor(F.L[0].cor);F.umaCor=true;F.cores=[]}});
   Object.values(FAM).forEach(F=>{const fx=F.itens.find(x=>x.foto)||F.itens[0];
     FAMOBJ[F.k]={fam:F.k,id:'f:'+F.k,nome:F.nome,categoria:F.cat,preco:F.min,pronta:F.pronta,destaque:F.destaque,_rep:fx,_b:sem(F.nome+' '+F.cat)}})}
 const ehCodigo=()=>{const q=termos();return q.length&&q.length<=2&&/^\d+$/.test(q.join(' ').replace(/^(c[oó]d(igo)?\.?|#)\s*/,''))};
@@ -1356,34 +1366,39 @@ function acertaVar(auto){const F=FAM[VAR.k],t=normMod(VAR.txt);if(!t)return;
   const ex=F.mods.filter(m=>m.alts.some(a=>a===t||a.replace(/(4g|5g)$/,'')===t));
   if(auto&&ex.length===1&&VAR.m!==ex[0].k)escolheMod(ex[0].k,true)}
 function escolheMod(mk,auto){const F=FAM[VAR.k],M=F.mods.find(m=>m.k===mk);if(!M)return;VAR.m=mk;VAR.gen=false;
-  if(M.itens.length===1){VAR.sel=M.itens[0].x.id;PROD=M.itens[0].x}else{VAR.sel=null;PROD=(M.itens.find(o=>o.x.pronta)||M.itens[0]).x}
+  const pc=VAR.corF&&M.itens.find(o=>canonCor(o.cor)===VAR.corF);
+  if(pc){VAR.sel=pc.x.id;PROD=pc.x}else if(M.itens.length===1){VAR.sel=M.itens[0].x.id;PROD=M.itens[0].x}else{VAR.sel=null;PROD=(M.itens.find(o=>o.x.pronta)||M.itens[0]).x}
   PQ=SAC[PROD.id]||1;montaProd()}
 function renderVar(){const box=$('#pVar');if(!VAR||!FAM[VAR.k]){box.hidden=true;box.innerHTML='';box.dataset.k='';$('#prod').classList.remove('com-var');return}
   const F=FAM[VAR.k];box.hidden=false;$('#prod').classList.add('com-var');
   if(box.dataset.k!==VAR.k){box.dataset.k=VAR.k;
     box.innerHTML=`<label class="pv-l" for="pVarQ">📱 ${/rel[oó]gio/i.test(F.nome)?'Qual o tamanho do seu relógio?':'Qual é o seu aparelho?'}</label>
       <div class="pv-busca"><input id="pVarQ" autocomplete="off" placeholder="${/rel[oó]gio/i.test(F.nome)?'Ex.: 41mm, 45mm':'Digite: A15, iPhone 13, Note 12…'}"><button type="button" id="pVarX" aria-label="Limpar" hidden>×</button></div>
-      <div class="pv-chips" id="pvChips"></div><div class="pv-cores" id="pvCores" hidden></div><div class="pv-nao" id="pvNao" hidden></div>`;
+      <div class="pv-cores pv-corf" id="pvCorF" hidden></div><div class="pv-chips" id="pvChips"></div><div class="pv-cores" id="pvCores" hidden></div><div class="pv-nao" id="pvNao" hidden></div>`;
     const i=$('#pVarQ');i.value=VAR.txt;i.oninput=()=>{VAR.txt=i.value;$('#pVarX').hidden=!i.value;renderVarLista();acertaVar(true)};
     $('#pVarX').onclick=()=>{i.value='';VAR.txt='';$('#pVarX').hidden=true;renderVarLista();i.focus()};$('#pVarX').hidden=!VAR.txt;
     box.onclick=e=>{const b=e.target.closest('button');if(!b)return;
       if(b.dataset.genab!=null){VAR.genAb=true;renderVarLista();return}
+      if(b.dataset.vcf){VAR.corF=VAR.corF===b.dataset.vcf?null:b.dataset.vcf;renderVarLista();return}
       if(b.dataset.vm){escolheMod(b.dataset.vm);return}
       if(b.dataset.vc){const M=F.mods.find(m=>m.k===VAR.m),o=M&&M.itens.find(o=>String(o.x.id)===b.dataset.vc);if(o){VAR.sel=o.x.id;PROD=o.x;PQ=SAC[PROD.id]||1;montaProd()}return}
       if(b.dataset.vg){const x=ITENS.find(y=>String(y.id)===b.dataset.vg);if(x){VAR.m=null;VAR.sel=x.id;VAR.gen=true;PROD=x;PQ=SAC[x.id]||1;montaProd()}}}}
   renderVarLista();
   /* enquanto não escolhe, mostra o nome do grupo e "a partir de" */
-  if(VAR.sel&&!VAR.gen){const M=F.mods.find(m=>m.k===VAR.m),o=M&&M.itens.find(o=>String(o.x.id)===String(VAR.sel));if(M)$('#pNome').textContent=`${F.nome} · ${M.label}${o&&o.cor&&!F.umaCor?' · '+bonito(o.cor):''}`}
+  if(VAR.sel&&!VAR.gen){const M=F.mods.find(m=>m.k===VAR.m),o=M&&M.itens.find(o=>String(o.x.id)===String(VAR.sel));if(M)$('#pNome').textContent=`${F.nome} · ${M.label}${o&&o.cor&&!F.umaCor?' · '+nomeCor(o.cor):''}`}
   if(VAR.sel&&VAR.gen)$('#pNome').textContent=bonito(PROD.nome.replace(/\s+ff[a-z0-9]+$/i,''));
   if(!VAR.sel){$('#pNome').textContent=F.nome;$('#pCat').innerHTML=`${F.mods.length} ${/rel[oó]gio/i.test(F.nome)?'tamanhos':'aparelhos'}${F.min!==F.max?` · a partir de ${brl(F.min)}`:''}`}
   const b=$('#pAdd');b.classList.toggle('falta',!VAR.sel);$('#pJa').classList.toggle('falta',!VAR.sel);
   if(!VAR.sel)b.innerHTML=VAR.m&&F.temCor?'Escolha a cor':/rel[oó]gio/i.test(F.nome)?'Escolha o tamanho':'Escolha o aparelho'}
 function renderVarLista(){const F=FAM[VAR.k],t=normMod(VAR.txt);
-  const vis=t?F.mods.filter(m=>m.alts.some(a=>a.includes(t)||(a.length>=2&&t.includes(a)))):F.mods;
-  $('#pvChips').innerHTML=vis.map(m=>`<button type="button" data-vm="${esc(m.k)}" aria-pressed="${VAR.m===m.k}">${m.pronta?'<i>⚡</i>':''}${esc(m.label)}</button>`).join('');
+  const cc=c=>{const h=CORES[semAc(c).toLowerCase()]||'#888';return h==='transparente'?'transparent':h},temCores=!F.umaCor&&F.cores.length>0;
+  let vis=t?F.mods.filter(m=>m.alts.some(a=>a.includes(t)||(a.length>=2&&t.includes(a)))):F.mods;
+  if(temCores&&VAR.corF)vis=vis.filter(m=>m.itens.some(o=>canonCor(o.cor)===VAR.corF));
+  const cf=$('#pvCorF');if(cf){if(temCores){cf.hidden=false;cf.innerHTML=`<span class="pv-l2">Cores:</span><div>${F.cores.map(c=>`<button type="button" class="cor mini${VAR.corF===c?' on':''}${CORES[c]==='transparente'?' tr':''}" data-vcf="${esc(c)}" style="--c:${cc(c)}" title="${esc(nomeCor(c))}"><i></i><span>${esc(nomeCor(c))}</span></button>`).join('')}</div>${VAR.corF?'<small>Mostrando só os aparelhos com essa cor · toque de novo para ver todos</small>':''}`}else{cf.hidden=true;cf.innerHTML=''}}
+  $('#pvChips').innerHTML=vis.map(m=>`<button type="button" data-vm="${esc(m.k)}" aria-pressed="${VAR.m===m.k}">${m.pronta?'<i>⚡</i>':''}${esc(m.label)}${temCores&&m.itens.some(o=>o.cor)?`<span class="pv-dots">${m.itens.map(o=>`<b style="--c:${cc(o.cor)}"${CORES[canonCor(o.cor)]==='transparente'?' class="tr"':''} title="${esc(nomeCor(o.cor))}"></b>`).join('')}</span>`:''}</button>`).join('')||(VAR.corF?'<small class="pv-dica">Nenhum aparelho com essa cor.</small>':'');
   const M=VAR.m&&F.mods.find(m=>m.k===VAR.m),cb=$('#pvCores');
-  if(M&&!F.umaCor&&M.itens.some(o=>o.cor)){cb.hidden=false;cb.innerHTML=`<span class="pv-l2">Cor${M.itens.length>1?' · escolha uma':''}:</span><div>${M.itens.map(o=>{const c=semAc(o.cor).toLowerCase(),hx=CORES[c]||'#888';
-      return `<button type="button" class="cor${String(VAR.sel)===String(o.x.id)?' on':''}${hx==='transparente'?' tr':''}" data-vc="${o.x.id}" style="--c:${hx==='transparente'?'transparent':hx}" title="${esc(o.cor)}"><i></i><span>${esc(bonito(o.cor||'Única'))}</span>${o.x.pronta?'<em>⚡</em>':''}</button>`}).join('')}</div>`}else{cb.hidden=true;cb.innerHTML=''}
+  if(M&&!F.umaCor&&M.itens.some(o=>o.cor)){cb.hidden=false;cb.innerHTML=`<span class="pv-l2">Cor${M.itens.length>1?' · escolha uma':''}:</span><div>${M.itens.map(o=>{const c=canonCor(o.cor),hx=CORES[c]||'#888';
+      return `<button type="button" class="cor${String(VAR.sel)===String(o.x.id)?' on':''}${hx==='transparente'?' tr':''}" data-vc="${o.x.id}" style="--c:${hx==='transparente'?'transparent':hx}" title="${esc(o.cor)}"><i></i><span>${esc(nomeCor(o.cor))}</span>${o.x.pronta?'<em>⚡</em>':''}</button>`}).join('')}</div>`}else{cb.hidden=true;cb.innerHTML=''}
   const nb=$('#pvNao');const semNada=t&&!vis.length;
   if(semNada||F.gen.length){nb.hidden=false;const num=String(CFG.whatsapp||'5562991153874').replace(/\D/g,'');
     const aberto=semNada||VAR.genAb||VAR.gen;
