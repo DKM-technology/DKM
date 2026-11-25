@@ -1058,6 +1058,23 @@ html.menos-mov .tc-c{animation:none}
 .ok-op{display:grid;gap:6px;justify-items:center;margin:6px 0 10px;padding:10px;border-radius:14px;background:var(--surface-2)}.ok-op span{font-size:13px;font-weight:700}
 .ok-op div{display:flex;gap:6px}.ok-op button{border:0;background:none;font-size:28px;cursor:pointer;transition:transform .2s cubic-bezier(.3,1.6,.5,1)}.ok-op button:hover{transform:translateY(-4px) scale(1.15)}
 html.menos-mov .op-mini i,html.menos-mov .op-chips button{animation:none}
+
+/* botão 💬 opinião no topo + convite */
+.opi-bt span{font-size:18px;line-height:1;transition:transform .25s}
+.opi-bt:hover span{transform:rotate(-12deg) scale(1.12)}
+.opi-pt{position:absolute;top:6px;right:6px;width:8px;height:8px;border-radius:50%;background:#a855f7;box-shadow:0 0 0 2px var(--surface-2)}
+.opi-bt.chama span{animation:opiChama .6s ease-in-out 3}
+@keyframes opiChama{25%{transform:rotate(-16deg) scale(1.2)}75%{transform:rotate(14deg) scale(1.2)}}
+.op-cutuca{position:fixed;z-index:70;width:280px;max-width:calc(100vw - 24px);background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:16px;padding:14px 14px 12px;box-shadow:0 18px 44px rgba(0,0,0,.45);display:grid;gap:4px;opacity:0;transform:translateY(-8px) scale(.96);transform-origin:var(--seta,50%) 0;transition:opacity .3s,transform .35s cubic-bezier(.3,1.4,.5,1)}
+.op-cutuca.vem{opacity:1;transform:none}
+.op-cutuca::before{content:"";position:absolute;top:-7px;left:calc(var(--seta,50%) - 7px);width:14px;height:14px;background:inherit;border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}
+.op-cutuca b{font-size:15px;padding-right:22px}.op-cutuca span{font-size:13px;color:var(--muted)}
+.oc-x{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:13px}
+.oc-f{display:flex;justify-content:space-between;margin-top:8px}
+.oc-f button{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2);font-size:22px;cursor:pointer;transition:transform .18s;animation:ocPula .45s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(.25s + var(--i) * 60ms)}
+.oc-f button:hover{transform:translateY(-3px) scale(1.12)}
+@keyframes ocPula{from{opacity:0;transform:translateY(8px) scale(.6)}}
+html.menos-mov .op-cutuca,html.menos-mov .oc-f button{transition:none;animation:none}
 </style>
 </head>
 <body>
@@ -1069,6 +1086,7 @@ html.menos-mov .op-mini i,html.menos-mov .op-chips button{animation:none}
       <div class="marca" id="marca">DKM<small id="sub">Catálogo</small></div>
       <div class="busca"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="q" type="search" placeholder="Busque o produto ou o modelo do celular (ex.: A15)" aria-label="Buscar produto" autocomplete="off"></div>
       <span class="status" id="status" role="status"><i class="st-ic" aria-hidden="true"><b class="lua">🌙</b><em class="z z1">z</em><em class="z z2">z</em></i><span class="st-txt"><span id="stTxt">Atendimento</span></span></span>
+      <button class="carrinho opi-bt" id="btOpi" type="button" aria-label="Dar minha opinião" title="Sugestão, crítica ou elogio"><span aria-hidden="true">💬</span><i class="opi-pt" aria-hidden="true"></i></button>
       <button class="carrinho tema-bt" id="btTema" type="button" aria-label="Trocar o tema" title="Tema"><span class="t-esc" aria-hidden="true">🌙</span><span class="t-cla" aria-hidden="true">☀️</span><span class="t-aut" aria-hidden="true">🖥️</span></button>
       <button class="carrinho pedidos" id="btPedidos" type="button" aria-label="Meus pedidos" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg><b id="nPedidos" class="zero"></b></button>
       <button class="carrinho" id="btCarrinho" type="button" aria-label="Abrir a sacola"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg><b id="nCarrinho" class="zero">0</b></button>
@@ -1430,6 +1448,19 @@ $('#opEnvia').onclick=async()=>{if(!OP.nota){$('#opMsg').textContent='Escolha um
   const nm=d.p_nome.split(' ')[0];$('#opFimT').textContent=nm?`Valeu demais, ${nm}!`:'Valeu demais!';
   $('#opFimP').textContent=OP.nota<=3?'Obrigado pela sinceridade. A gente vai olhar com carinho e melhorar.':d.p_contato?'A gente lê tudo e, se precisar, te chama no WhatsApp.':'A gente lê tudo. Sua opinião já está com a DKM.';
   $('#opForm').hidden=true;const f=$('#opFim');f.hidden=false;f.classList.remove('entra');void f.offsetWidth;f.classList.add('entra');$('#opCardT').textContent='Obrigado pela sua opinião! 💜 Quer mandar outra?'};
+/* opinião a qualquer hora: botão 💬 no topo + um convite discreto depois de um tempo navegando */
+$('#btOpi').onclick=()=>{fechaCutuca();abreOpiniao()};
+function fechaCutuca(){const c=$('#opCutuca');if(!c)return;c.classList.remove('vem');setTimeout(()=>c.remove(),300)}
+function cutucaOpiniao(){try{if(localStorage.getItem('dkm-opiniao-em')||+localStorage.getItem('dkm-op-cutuca')>Date.now()-7*864e5)return;localStorage.setItem('dkm-op-cutuca',String(Date.now()))}catch(e){return}
+  if(!$('#opBox').hidden||!$('#sacola').hidden||!$('#prod').hidden||document.hidden){setTimeout(cutucaOpiniao,20000);return}
+  const bt=$('#btOpi');if(!bt.getBoundingClientRect().width)return;const c=document.createElement('div');c.id='opCutuca';c.className='op-cutuca';c.setAttribute('role','dialog');c.setAttribute('aria-label','Convite para dar opinião');
+  const poe=()=>{if(!c.isConnected){removeEventListener('scroll',poe);removeEventListener('resize',poe);return}const r=bt.getBoundingClientRect(),w=Math.min(280,innerWidth-24),x=r.left+r.width/2,l=Math.max(12,Math.min(innerWidth-w-12,x-w+40));
+    c.style.top=(r.bottom+12)+'px';c.style.left=l+'px';c.style.setProperty('--seta',(x-l)+'px');c.style.visibility=r.bottom<0||r.top>innerHeight?'hidden':''};
+  c.innerHTML=`<button type="button" class="oc-x" aria-label="Fechar">✕</button><b>Tá achando o que procura? 👀</b><span>Conta pra gente como está a loja, leva 20 segundos.</span><div class="oc-f">${[[5,'😍'],[4,'🙂'],[3,'😐'],[2,'😕'],[1,'😡']].map(([n,f],i)=>`<button type="button" data-ocn="${n}" style="--i:${i}" aria-label="Nota ${n}">${f}</button>`).join('')}</div>`;
+  document.body.appendChild(c);poe();addEventListener('scroll',poe,{passive:true});addEventListener('resize',poe);requestAnimationFrame(()=>c.classList.add('vem'));bt.classList.add('chama');setTimeout(()=>bt.classList.remove('chama'),2400);
+  c.querySelector('.oc-x').onclick=fechaCutuca;c.querySelectorAll('[data-ocn]').forEach(b=>b.onclick=()=>{fechaCutuca();abreOpiniao(+b.dataset.ocn)});
+  const t=setTimeout(fechaCutuca,12000);c.onpointerenter=()=>clearTimeout(t)}
+setTimeout(cutucaOpiniao,50000);
 try{if(localStorage.getItem('dkm-opiniao-em'))$('#opCardT').textContent='Obrigado pela sua opinião! 💜 Quer mandar outra?'}catch(e){}
 /* tela "Todas as categorias": todas as categorias da loja, toque e vai direto */
 function abreTodas(){const box=$('#tcBox');$('#tcQ').value='';montaTodas();box.hidden=false;$('#tcFundo').hidden=false;document.body.style.overflow='hidden';requestAnimationFrame(()=>box.classList.add('aberto'));setTimeout(()=>{if(matchMedia('(hover:hover)').matches)$('#tcQ').focus()},250)}

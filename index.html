@@ -1485,8 +1485,11 @@ function totais(){
   const piso=cart.reduce((a,c)=>a+c.q*pisoItem(c),0);let lim=false;
   if(!(cupomAtivo&&cupomAtivo.sem_piso)&&t<piso-0.001&&sub>=piso){lim=true;const falta=piso-t;t=piso;if(cup){cup=Math.max(0,cup-falta)}}
   return{cheio:r2(cheio),sub:r2(sub),nivel:r2(cheio-sub),d,cup:r2(cup),tot:r2(t),lim,eco:r2(cheio-t)}}
+/* cupom que veio de um pedido da vitrine já foi contado lá: não barra como "já usado" e não conta de novo */
+let CUP_ENC=null;
+async function fecharRPC(a,velho){let r=await sb.rpc('fechar_pedido',a);if(r.error&&/p_sem_contar|schema cache|function|could not find/i.test(r.error.message||''))r=await sb.rpc('fechar_pedido',velho);return r}
 function validaCupom(cod,cli){const c=S.cupons.find(x=>String(x.codigo).toUpperCase()===cod);if(!c)return'Cupom não encontrado.';if(!c.ativo)return'Esse cupom foi desativado.';
-  if(c.validade&&c.validade<hoje())return'Esse cupom venceu em '+dataBR(c.validade)+'.';if(c.expira_em&&new Date(c.expira_em)<Date.now())return'Esse cupom expirou '+quandoTxt(new Date(c.expira_em))+'.';if(c.usos_max!=null&&c.usos>=c.usos_max)return'Esse cupom já foi usado.';
+  if(c.validade&&c.validade<hoje())return'Esse cupom venceu em '+dataBR(c.validade)+'.';if(c.expira_em&&new Date(c.expira_em)<Date.now())return'Esse cupom expirou '+quandoTxt(new Date(c.expira_em))+'.';if(c.usos_max!=null&&c.usos>=c.usos_max&&String(cod).toUpperCase()!==CUP_ENC)return'Esse cupom já foi usado.';
   if(c.cliente&&chave(c.cliente)!==cli&&chave(c.cliente).split(' ')[0]!==String(cli||'').split(' ')[0])return'Esse cupom é só para '+cap(c.cliente)+'.';return c}
 const linkCupom=c=>VITRINE_URL+'?cupom='+encodeURIComponent(String(c||'').trim().toUpperCase());
 const descCupom=c=>c.tipo==='PCT'?(+c.valor).toLocaleString('pt-BR')+'%':brl(c.valor);
@@ -1527,7 +1530,8 @@ $('#fechar').onclick=()=>{const cli=$('#cli').value.trim();if(!cli){$('#fecharMs
   busy($('#fechar'),async()=>{
     const itens=cart.map(c=>({produto_id:c.id,produto:c.p,modelo:c.m,categoria:c.cat,qtd:c.q,valor:r2(c.q*c.v*f),preco_cheio:r2(c.q*(c.cheio??c.v))}));
     if(itens.length){const dif=r2(t.tot-itens.reduce((a,x)=>a+x.valor,0));itens[itens.length-1].valor=r2(itens[itens.length-1].valor+dif)}
-    must(await sb.rpc('fechar_pedido',{p_cliente:cli,p_status:pag,p_itens:itens,p_cupom:cupomAtivo?cupomAtivo.codigo:null}));
+    const pc=cupomAtivo?cupomAtivo.codigo:null,jaConta=!!(pc&&CUP_ENC&&String(pc).toUpperCase()===CUP_ENC);
+    must(await fecharRPC({p_cliente:cli,p_status:pag,p_itens:itens,p_cupom:pc,p_sem_contar:jaConta},{p_cliente:cli,p_status:pag,p_itens:itens,p_cupom:pc}));CUP_ENC=null;
     const lin=cart.map(c=>`${c.q}x ${cap(c.p)}${nz(c.m)?' '+c.m:''}  ${brlR(c.q*(c.cheio??c.v))}`).join('\n');
     const desc=[t.nivel>0.004?`Desconto ${n!=='VAREJO'?'cliente '+NOME_NIVEL[n]:''}: -${brlR(t.nivel)}`:'',t.d?`Desconto ${t.d}%: -${brlR(t.sub-t.sub*(1-t.d/100))}`:'',t.cup?`Cupom ${cupomAtivo.codigo}: -${brlR(t.cup)}`:''].filter(Boolean).join('\n');
     $('#recibo').textContent=`*DKM · Pedido de ${cap(cli)}*\n${new Date().toLocaleDateString('pt-BR')}\n\n${lin}\n${desc?'\n'+desc:''}\n*Total: ${brlR(t.tot)}*${t.eco>0.004?`\nVocê economizou ${brlR(t.eco)} 🎉`:''}\n${pag==='PAGO'?'Pago ✔':'Fica a receber'}`;
@@ -2633,8 +2637,8 @@ function finalizaEnc(e,b){const box=$('#encConfirm'),fp=formaCurta(e.pagamento)|
   $$('[data-fef]',box).forEach(x=>x.onclick=()=>$$('[data-fef]',box).forEach(y=>y.setAttribute('aria-pressed',y===x)));
   $$('[data-fe]',box).forEach(x=>x.onclick=()=>{const op=x.dataset.fe;if(op==='X'){box.hidden=true;return}
     busy(x,async()=>{const ag=new Date().toISOString(),card=$$('.enc').find(c=>c.querySelector(`[data-eentregue="${e.id}"]`));let ped=null;
-      if(op!=='SO'){const forma=($('[data-fef][aria-pressed="true"]',box)||{}).dataset?.fef||fp;let itens=itensVenda(e),r=await sb.rpc('fechar_pedido',{p_cliente:cap(e.cliente),p_status:op,p_itens:itens,p_cupom:null});
-        if(r.error&&/estoque/i.test(r.error.message||'')){itens=itens.map(i=>({...i,produto_id:null}));r=await sb.rpc('fechar_pedido',{p_cliente:cap(e.cliente),p_status:op,p_itens:itens,p_cupom:null});if(!r.error)toast('Estoque estava zerado: lancei a venda sem baixar o estoque')}
+      if(op!=='SO'){const forma=($('[data-fef][aria-pressed="true"]',box)||{}).dataset?.fef||fp;let itens=itensVenda(e);const fv=it=>fecharRPC({p_cliente:cap(e.cliente),p_status:op,p_itens:it,p_cupom:e.cupom||null,p_sem_contar:true},{p_cliente:cap(e.cliente),p_status:op,p_itens:it,p_cupom:null});let r=await fv(itens);
+        if(r.error&&/estoque/i.test(r.error.message||'')){itens=itens.map(i=>({...i,produto_id:null}));r=await fv(itens);if(!r.error)toast('Estoque estava zerado: lancei a venda sem baixar o estoque')}
         ped=must(r);if(S.finOk&&ped&&op==='PAGO')await sb.from('vendas').update({forma,recebido_em:hoje()}).eq('pedido',ped)}
       box.hidden=true;if(card&&!MENOS_MOV()){card.classList.add('sai');await new Promise(r=>setTimeout(r,450))}
       const up={status:'ENTREGUE',entregue_em:ag,...('etapa' in e?{etapa:'ENTREGUE',etapa_em:ag}:{})};let rr=await sb.from('encomendas').update(ped&&S.finOk?{...up,venda_pedido:ped}:up).eq('id',e.id);if(rr.error&&ped)rr=await sb.from('encomendas').update(up).eq('id',e.id);must(rr);Object.assign(e,up,ped?{venda_pedido:ped}:{});
@@ -2668,7 +2672,7 @@ $('#encLista').addEventListener('click',ev=>{const b=ev.target.closest('button')
     itensDe(e).forEach(i=>{const c=i.catalogo_id&&CAT.itens.find(x=>x.id===i.catalogo_id);const est=i.pronta&&c&&c.produto_id&&S.est.find(x=>x.id===c.produto_id);
       if(est)cart.push({id:est.id,p:est.p,m:est.m,cat:est.cat,q:i.qtd,cheio:i.preco,c:est.c,v:i.preco,manual:true});
       else cart.push({id:null,p:String(i.nome).toUpperCase(),m:'',cat:categoria(i.nome),q:i.qtd,v:i.preco,cheio:i.preco,manual:true})});
-    $('#cli').value=cap(e.cliente);location.hash='#pedido';try{renderCliInfo()}catch(x){}cupomAtivo=null;$('#cupom').value=e.cupom||'';$('#cupomInfo').innerHTML='';
+    $('#cli').value=cap(e.cliente);location.hash='#pedido';try{renderCliInfo()}catch(x){}cupomAtivo=null;CUP_ENC=e.cupom?String(e.cupom).toUpperCase():null;$('#cupom').value=e.cupom||'';$('#cupomInfo').innerHTML='';
     if(e.cupom)$('#cupomOk').click();renderCart();toast(e.cupom?'Pedido montado com o cupom '+e.cupom+'. Confira e toque em Fechar.':'Confira o pedido e toque em Fechar. Depois marque a encomenda como Entregue.')}});
 $$('#esteira [data-es],#verCanc').forEach(b=>b.onclick=()=>{ENC.filtro=b.dataset.es;ENC.escolheu=true;renderEncomendas()});
 
