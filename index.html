@@ -1460,7 +1460,7 @@ function totais(){
   const d=Math.min(100,Math.max(0,dec($('#desc').value)));let t=sub*(1-d/100),cup=0;
   if(cupomAtivo){cup=cupomAtivo.tipo==='PCT'?t*(+cupomAtivo.valor)/100:Math.min(t,+cupomAtivo.valor);t-=cup}
   const piso=cart.reduce((a,c)=>a+c.q*pisoItem(c),0);let lim=false;
-  if(t<piso-0.001&&sub>=piso){lim=true;const falta=piso-t;t=piso;if(cup){cup=Math.max(0,cup-falta)}}
+  if(!(cupomAtivo&&cupomAtivo.sem_piso)&&t<piso-0.001&&sub>=piso){lim=true;const falta=piso-t;t=piso;if(cup){cup=Math.max(0,cup-falta)}}
   return{cheio:r2(cheio),sub:r2(sub),nivel:r2(cheio-sub),d,cup:r2(cup),tot:r2(t),lim,eco:r2(cheio-t)}}
 function validaCupom(cod,cli){const c=S.cupons.find(x=>String(x.codigo).toUpperCase()===cod);if(!c)return'Cupom não encontrado.';if(!c.ativo)return'Esse cupom foi desativado.';
   if(c.validade&&c.validade<hoje())return'Esse cupom venceu em '+dataBR(c.validade)+'.';if(c.expira_em&&new Date(c.expira_em)<Date.now())return'Esse cupom expirou '+quandoTxt(new Date(c.expira_em))+'.';if(c.usos_max!=null&&c.usos>=c.usos_max)return'Esse cupom já foi usado.';
@@ -1665,6 +1665,7 @@ function abrirCupom(cli,mod){const m=MODELOS[mod]||MODELOS.volta,box=$('#cupomBo
     <div class="field" style="width:130px"><label for="kUsos">Pode usar</label><select id="kUsos" class="inp"><option value="1"${m.usos===1?' selected':''}>1 vez</option><option value="">quantas vezes quiser</option></select></div>
     <div class="field" style="width:160px"><label for="kCod">Código</label><input id="kCod" class="inp" style="text-transform:uppercase" autocomplete="off"></div>
    </div>
+   <label class="chk vit-chk sp-chk" style="margin-top:12px"><input type="checkbox" id="kSemPiso"> <span><b>🎁 Ignorar margem mínima</b><small>o desconto pode ir até de graça (brinde, sorteio). Sem marcar, ele para na sua margem mínima.</small></span></label>
    <label class="chk vit-chk" style="margin-top:12px"><input type="checkbox" id="kVit"> <span><b>📢 Promoção relâmpago na vitrine</b><small>aparece sozinho para todo mundo que abrir o catálogo, sem precisar de link. Desligou, some.</small></span></label>
    <div class="field" style="margin-top:10px"><label>Prazo: depois disso o cupom para sozinho</label><div class="chips prazo" id="kPrazo" role="group" aria-label="Prazo do cupom">${PRAZOS.map(([mn,t])=>`<button type="button" data-pz="${mn}" aria-pressed="${mn===(m.dias*1440)}">${t}</button>`).join('')}</div><p class="note" id="kPzTxt" style="margin-top:6px"></p></div>
    <div class="row-f" style="margin-top:10px"><div class="field" style="flex:1 1 300px"><label for="kMsg">Mensagem para o WhatsApp</label><textarea id="kMsg" class="inp"></textarea></div>
@@ -1686,11 +1687,13 @@ function abrirCupom(cli,mod){const m=MODELOS[mod]||MODELOS.volta,box=$('#cupomBo
   $('#kCria').onclick=()=>busy($('#kCria'),async()=>{const cod=$('#kCod').value.trim().toUpperCase().replace(/\s+/g,''),v=dec($('#kVal').value),fim=pz?new Date(Date.now()+pz*60000):null,cl=chave($('#kCli').value);
     if(!cod||v<=0){toast('Preencha o código e o desconto');return}if(S.cupons.some(x=>x.codigo===cod)){toast('Já existe um cupom com esse código');return}
     if(tipo==='PCT'&&v>50&&$('#kCria').dataset.ok!==String(v)){const cb=$('#kAlto')||(()=>{const d=document.createElement('div');d.id='kAlto';d.className='confirm';$('#kCria').closest('.row-f').before(d);return d})();
-      confirmBox(cb,`Criar um cupom de <b>${String(v).replace('.',',')}%</b>? ${v>=100?'Do jeito que o sistema está, ele <b>não deixa o produto de graça</b>: o desconto para na sua margem mínima.':'É um desconto bem alto.'}`,'Sim, criar',()=>{$('#kCria').dataset.ok=String(v);$('#kCria').click()});cb.scrollIntoView({block:'center',behavior:'smooth'});return}
+      const sp=$('#kSemPiso').checked;confirmBox(cb,`Criar um cupom de <b>${String(v).replace('.',',')}%</b>? ${sp?(v>=100?'Com <b>🎁 Ignorar margem mínima</b>, o produto sai <b>de graça</b>.':'Com <b>🎁 Ignorar margem mínima</b>, o desconto vale inteiro.'):'Sem marcar <b>🎁 Ignorar margem mínima</b>, o desconto para na sua margem mínima'+(v>=100?' (não sai de graça).':'.')}`,'Sim, criar',()=>{$('#kCria').dataset.ok=String(v);$('#kCria').click()});cb.scrollIntoView({block:'center',behavior:'smooth'});return}
     delete $('#kCria').dataset.ok;
     const vit=$('#kVit').checked;
-    const row={codigo:cod,tipo,valor:v,cliente:vit?null:(cl||null),validade:fim?isoD(fim):null,expira_em:fim?fim.toISOString():null,usos_max:vit?null:($('#kUsos').value?1:null),usos:0,ativo:true,descricao:modelo.nome,...(vit?{vitrine:true}:{})};
+    const semPiso=$('#kSemPiso').checked;
+    const row={...(semPiso?{sem_piso:true}:{}),codigo:cod,tipo,valor:v,cliente:vit?null:(cl||null),validade:fim?isoD(fim):null,expira_em:fim?fim.toISOString():null,usos_max:vit?null:($('#kUsos').value?1:null),usos:0,ativo:true,descricao:modelo.nome,...(vit?{vitrine:true}:{})};
     let ins=await sb.from('cupons').insert(row);
+    if(ins.error&&/sem_piso/i.test(ins.error.message||'')){delete row.sem_piso;ins=await sb.from('cupons').insert(row);if(!ins.error)toast('Cupom criado, mas rode o 14-cupom-sem-margem.sql no Supabase para o "ignorar margem mínima" valer.')}
     if(ins.error&&/vitrine/i.test(ins.error.message||'')){delete row.vitrine;ins=await sb.from('cupons').insert(row);if(!ins.error)toast('Rode o 11-promo-vitrine.sql no Supabase para a promoção aparecer sozinha na vitrine.')}
     if(ins.error&&/expira_em/i.test(ins.error.message||'')){delete row.expira_em;ins=await sb.from('cupons').insert(row);if(!ins.error&&pz&&pz<1440)toast('Rode o 9-cupom-prazo.sql no Supabase para o prazo em horas valer. Por enquanto ele vale até o fim do dia.')}
     must(ins);S.cupons.unshift({...row,criado_em:new Date().toISOString()});
