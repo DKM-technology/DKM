@@ -785,6 +785,7 @@ html.menos-mov .ms-caixa,html.menos-mov .ms-fundo{transition:none}html.menos-mov
 .vt-por i{font-style:normal;font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:99px;background:var(--surface);border:1px solid var(--line)}
 .vt-por i small{font-weight:500;opacity:.8}
 .vt-por i.s{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,var(--line))}.vt-por i.n{color:var(--muted);text-decoration:line-through}.vt-por i.m{color:var(--warn)}
+.vt-nota{font-size:11px;color:var(--muted);margin-top:2px}.vt-nota::before{content:"⏸ "}
 </style>
 </head>
 <body>
@@ -2001,22 +2002,30 @@ $('#catAbas').onclick=e=>{const b=e.target.closest('[data-aba]');if(b)abaCat(b.d
 function renderVitCtl(){if(!$('#vitForn'))return;const L=CAT.itens||[];
   const on=L.filter(x=>x.ativo).length;
   $('#vitResumo').innerHTML=L.length?`<div class="vt-big"><b class="num">${on.toLocaleString('pt-BR')}</b><span>de ${L.length.toLocaleString('pt-BR')} produtos aparecem na vitrine</span></div><span class="bar"><i style="width:${L.length?on/L.length*100:0}%"></i></span>`:'<div class="empty">O catálogo está vazio.</div>';
-  const card=(tipo,v,lista,sub)=>{const n=lista.length,a=lista.filter(x=>x.ativo).length,est=a===n?'on':a===0?'off':'meio';
-    let por='';if(tipo==='cat'&&est==='meio'){const fs={};lista.forEach(x=>{const f=origemTxt(x);(fs[f]=fs[f]||[0,0])[0]++;if(x.ativo)fs[f][1]++});
+  const card=(tipo,v,lista,sub,nota)=>{const n=lista.length,a=lista.filter(x=>x.ativo).length,est=!n?'off':a===n?'on':a===0?'off':'meio';
+    let por='';if(tipo==='forn'&&est==='meio'){const cs={};lista.filter(x=>!x.ativo).forEach(x=>cs[x.categoria]=(cs[x.categoria]||0)+1);const L2=Object.entries(cs).sort((p,q)=>q[1]-p[1]);
+      por=`<div class="vt-por">${L2.slice(0,4).map(([c,k])=>`<i class="n" title="${k} escondidos">✕ ${esc(c)} <small>${k}</small></i>`).join('')}${L2.length>4?`<i class="n">+${L2.length-4}</i>`:''}</div>`}
+    if(tipo==='cat'&&est==='meio'){const fs={};lista.forEach(x=>{const f=origemTxt(x);(fs[f]=fs[f]||[0,0])[0]++;if(x.ativo)fs[f][1]++});
       por=`<div class="vt-por">${Object.entries(fs).sort((p,q)=>q[1][0]-p[1][0]).map(([f,[t,o]])=>`<i class="${o===t?'s':o===0?'n':'m'}" title="${o} de ${t} aparecem">${o===t?'✓':o===0?'✕':'◐'} ${esc(f)} <small>${o===t?t:o===0?t:o+'/'+t}</small></i>`).join('')}</div>`}
-    return `<div class="vt-c vt-${est}"><div class="vt-n"><b>${esc(v)}</b><span>${a===n?`todos os ${n} aparecem`:a===0?`${n} escondidos`:`${a} de ${n} aparecem · ${n-a} escondidos`}${sub?' · '+esc(sub):''}</span><span class="bar"><i style="width:${n?a/n*100:0}%"></i></span>${por}</div>
+    return `<div class="vt-c vt-${est}"><div class="vt-n"><b>${esc(v)}</b><span>${!n?'nenhum produto de fornecedor ligado':a===n?`todos os ${n} aparecem`:a===0?`${n} escondidos`:`${a} de ${n} aparecem · ${n-a} escondidos`}${sub?' · '+esc(sub):''}</span><span class="bar"><i style="width:${n?a/n*100:0}%"></i></span>${por}${nota||''}</div>
       <button class="tg" type="button" data-vt="${tipo}" data-v="${esc(v)}" aria-pressed="${est==='on'?'true':est==='off'?'false':'mixed'}" title="${est==='on'?'Esconder todos':'Mostrar todos'}"></button>
       <button class="link-bt vt-ver" type="button" data-vtver="${tipo}" data-v="${esc(v)}">ver produtos ›</button></div>`};
   const forns=[...new Set(L.map(origemTxt))].sort((a,b)=>L.filter(x=>origemTxt(x)===b).length-L.filter(x=>origemTxt(x)===a).length);
   $('#vitForn').innerHTML=forns.map(f=>card('forn',f,L.filter(x=>origemTxt(x)===f))).join('');
   const de=$('#vitDe'),dv=de.value;de.innerHTML='<option value="">de todos os fornecedores</option>'+forns.map(f=>`<option${f===dv?' selected':''}>${esc(f)}</option>`).join('');
+  const fOff=new Set(forns.filter(f=>L.filter(x=>origemTxt(x)===f).every(x=>!x.ativo)));VIT_OFF=fOff;
   const base=L.filter(x=>!de.value||origemTxt(x)===de.value),q=chave($('#vitBusca').value);
   const cats=[...new Set(base.map(x=>x.categoria))].filter(c=>!q||chave(c).includes(q)).sort((a,b)=>base.filter(x=>x.categoria===b).length-base.filter(x=>x.categoria===a).length);
-  $('#vitCat').innerHTML=cats.map(c=>card('cat',c,base.filter(x=>x.categoria===c),de.value?'só '+de.value:'')).join('')||'<div class="empty">Nenhuma categoria.</div>'}
+  $('#vitCat').innerHTML=cats.map(c=>{const todos=base.filter(x=>x.categoria===c),vale=de.value?todos:todos.filter(x=>!fOff.has(origemTxt(x)));
+      const fora={};if(!de.value)todos.filter(x=>fOff.has(origemTxt(x))).forEach(x=>{const f=origemTxt(x);fora[f]=(fora[f]||0)+1});
+      const nota=Object.keys(fora).length?`<div class="vt-nota">${Object.entries(fora).map(([f,k])=>`${esc(f)} desligada (${k})`).join(' · ')}</div>`:'';
+      return card('cat',c,vale,de.value?'só '+de.value:'',nota)}).join('')||'<div class="empty">Nenhuma categoria.</div>'}
+let VIT_OFF=new Set();
 $('#vitDe').onchange=renderVitCtl;$('#vitBusca').oninput=renderVitCtl;
 $('#v-catalogo').addEventListener('click',e=>{const b=e.target.closest('[data-vt],[data-vtver]');if(!b||!b.closest('[data-p="vitrine"]'))return;
   const tipo=b.dataset.vt||b.dataset.vtver,v=b.dataset.v,de=$('#vitDe').value;
-  const L=CAT.itens.filter(x=>tipo==='forn'?origemTxt(x)===v:(x.categoria===v&&(!de||origemTxt(x)===de)));
+  let L=CAT.itens.filter(x=>tipo==='forn'?origemTxt(x)===v:(x.categoria===v&&(!de||origemTxt(x)===de)));
+  if(tipo==='cat'&&!de){const s2=L.filter(x=>!VIT_OFF.has(origemTxt(x)));if(s2.length)L=s2}
   if(b.dataset.vtver){abaCat('produtos');$('#catQ').value='';if(tipo==='forn'){$('#catForn').value=v;$('#catCat').value=''}else{$('#catCat').value=v;$('#catForn').value=de||''}catLim=60;renderCatalogo();$('#catLista').scrollIntoView({block:'start',behavior:'smooth'});return}
   const liga=!L.every(x=>x.ativo),nome=tipo==='forn'?v:(de?`${v} (${de})`:v),qt=liga?L.filter(x=>!x.ativo).length:L.length;
   confirmBox($('#vitConfirm'),`${liga?'Mostrar':'Esconder'} <b>${qt}</b> produto${qt===1?'':'s'} de <b>${esc(nome)}</b> ${liga?'na':'da'} vitrine?`,liga?'👁️ Mostrar':'🙈 Esconder',()=>busy(b,async()=>{
