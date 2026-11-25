@@ -1685,7 +1685,9 @@ function abrirCupom(cli,mod){const m=MODELOS[mod]||MODELOS.volta,box=$('#cupomBo
   $('#kCancela').onclick=()=>{box.hidden=true};
   $('#kCria').onclick=()=>busy($('#kCria'),async()=>{const cod=$('#kCod').value.trim().toUpperCase().replace(/\s+/g,''),v=dec($('#kVal').value),fim=pz?new Date(Date.now()+pz*60000):null,cl=chave($('#kCli').value);
     if(!cod||v<=0){toast('Preencha o código e o desconto');return}if(S.cupons.some(x=>x.codigo===cod)){toast('Já existe um cupom com esse código');return}
-    if(tipo==='PCT'&&v>50){toast('Desconto acima de 50%? Confira o valor');return}
+    if(tipo==='PCT'&&v>50&&$('#kCria').dataset.ok!==String(v)){const cb=$('#kAlto')||(()=>{const d=document.createElement('div');d.id='kAlto';d.className='confirm';$('#kCria').closest('.row-f').before(d);return d})();
+      confirmBox(cb,`Criar um cupom de <b>${String(v).replace('.',',')}%</b>? ${v>=100?'Do jeito que o sistema está, ele <b>não deixa o produto de graça</b>: o desconto para na sua margem mínima.':'É um desconto bem alto.'}`,'Sim, criar',()=>{$('#kCria').dataset.ok=String(v);$('#kCria').click()});cb.scrollIntoView({block:'center',behavior:'smooth'});return}
+    delete $('#kCria').dataset.ok;
     const vit=$('#kVit').checked;
     const row={codigo:cod,tipo,valor:v,cliente:vit?null:(cl||null),validade:fim?isoD(fim):null,expira_em:fim?fim.toISOString():null,usos_max:vit?null:($('#kUsos').value?1:null),usos:0,ativo:true,descricao:modelo.nome,...(vit?{vitrine:true}:{})};
     let ins=await sb.from('cupons').insert(row);
