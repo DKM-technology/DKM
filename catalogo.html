@@ -964,6 +964,30 @@ html.troca-tema body,html.troca-tema .card,html.troca-tema .topo,html.troca-tema
 .pv-chips button[aria-pressed="true"] .pv-dots b{box-shadow:0 0 0 1.5px #fff}
 .p-var .cor.mini i{width:30px;height:30px;border-radius:50%}.p-var .cor.mini span{font-size:10.5px}
 .pv-corf small{display:block;font-size:11px;color:var(--muted);margin-top:6px}
+.f-so{font-size:13px;color:var(--muted);margin:4px 0;line-height:1.5}
+
+/* filtro com ícones */
+.f-sec h3{display:flex;align-items:center;gap:6px}
+.f-chips button{transition:transform .15s,background .2s,border-color .2s}.f-chips button:hover{transform:translateY(-2px);border-color:var(--accent)}
+.f-chips button:active{transform:scale(.95)}
+.f-cats{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.f-cats .sep{grid-column:1/-1}
+.f-cats label.fc{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;padding:9px 10px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface-2);font-size:13px;transition:transform .15s,border-color .2s,background .2s,box-shadow .2s;animation:fcEntra .35s cubic-bezier(.2,.9,.3,1) both;animation-delay:calc(min(var(--i),14) * 25ms)}
+.f-cats label.fc:hover{transform:translateY(-2px);border-color:var(--accent)}
+.f-cats label.fc input{position:absolute;opacity:0;pointer-events:none}
+.fc-ic{font-style:normal;font-size:20px;line-height:1;transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.fc-n{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;line-height:1.2;font-size:12.5px}
+.f-cats label.fc small{margin:0;font-size:11px;font-weight:700;background:var(--surface);border-radius:99px;padding:1px 7px}
+.fc-ok{position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;font-size:11px;display:grid;place-items:center;transform:scale(0);transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.f-cats label.fc.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 18%,var(--surface-2));box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 30%,transparent)}
+.f-cats label.fc.on .fc-ok{transform:scale(1)}
+.f-cats label.fc.on .fc-ic{transform:scale(1.2) rotate(-8deg)}
+.f-cats label.fc.pop{animation:fcPop .35s cubic-bezier(.3,1.6,.5,1)}
+@keyframes fcEntra{from{opacity:0;transform:translateY(8px)}}
+@keyframes fcPop{40%{transform:scale(1.06)}}
+.f-cats label.fc:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+@media (max-width:360px){.f-cats{grid-template-columns:1fr}}
+html.menos-mov .f-cats label.fc{animation:none}
 </style>
 </head>
 <body>
@@ -1011,10 +1035,10 @@ html.troca-tema body,html.troca-tema .card,html.troca-tema .topo,html.troca-tema
 <aside class="filtro" id="filtro" hidden aria-label="Filtrar produtos">
   <div class="f-top"><h2>Filtrar</h2><button class="x" type="button" id="fFecha" aria-label="Fechar o filtro">×</button></div>
   <div class="f-corpo">
-    <div class="f-sec"><h3>Ordenar por</h3><div class="f-chips" id="fOrdem"></div></div>
-    <div class="f-sec"><h3>Preço</h3><div class="f-chips" id="fFaixas"></div><div class="f-preco"><input id="fMin" inputmode="decimal" placeholder="Mínimo R$" aria-label="Preço mínimo"><span class="nota" style="margin:0">até</span><input id="fMax" inputmode="decimal" placeholder="Máximo R$" aria-label="Preço máximo"></div></div>
+    <div class="f-sec"><h3>↕️ Ordenar por</h3><div class="f-chips" id="fOrdem"></div></div>
+    <div class="f-sec"><h3>🏷️ Preço</h3><div class="f-chips" id="fFaixas"></div><div class="f-preco"><input id="fMin" inputmode="decimal" placeholder="Mínimo R$" aria-label="Preço mínimo"><span class="nota" style="margin:0">até</span><input id="fMax" inputmode="decimal" placeholder="Máximo R$" aria-label="Preço máximo"></div></div>
     <div class="f-sec"><label class="f-sw">⚡ Só pronta entrega (sai hoje)<input type="checkbox" id="fPronta"></label></div>
-    <div class="f-sec" id="fCatsSec"><h3>Categorias</h3><div class="f-cats" id="fCats"></div></div>
+    <div class="f-sec" id="fCatsSec"><h3>🗂️ Categorias</h3><div class="f-cats" id="fCats"></div></div>
   </div>
   <div class="f-pe"><button class="btn" type="button" id="fLimpa">Limpar</button><button class="btn pri" type="button" id="fVer">Ver produtos</button></div>
 </aside>
@@ -1193,7 +1217,7 @@ const G_MIC=GRUPOS.findIndex(g=>g.n==='Microfones'),G_FONE=GRUPOS.findIndex(g=>g
 const grupoDe=x=>{if(x._g===undefined){x._g=GRUPOS.findIndex(g=>g.re.test(x.categoria));if(x._g===G_FONE&&/microfone|megafone|karaok|lapela/i.test(x.nome)&&!/fone de ouvido|headset|bluetooth.*fone|fone.*bluetooth/i.test(x.nome))x._g=G_MIC}return x._g};
 let MAIS={};               /* id -> quantas peças saíram nos últimos 90 dias (pedidos de verdade) */
 const F={ordem:'destaque',min:null,max:null,pronta:false,cats:new Set()};
-const ORDENS=[['destaque','Destaques primeiro'],['mais','Mais pedidos'],['menor','Menor preço'],['maior','Maior preço'],['novos','Novidades'],['az','Nome (A–Z)'],['za','Nome (Z–A)']];
+const ORDENS=[['destaque','⭐ Destaques primeiro'],['mais','🔥 Mais pedidos'],['menor','⬇️ Menor preço'],['maior','⬆️ Maior preço'],['novos','🆕 Novidades'],['az','🔤 Nome (A–Z)'],['za','🔤 Nome (Z–A)']];
 const reduz=()=>MENOS_MOV();
 
 /* letreiro e "aberto agora" */
@@ -1267,7 +1291,7 @@ function montaCats(){
     +`<button type="button" class="bola todas" data-bola="*"><span class="anel"><span>☰</span></span>Todas as categorias</button>`;
   setTimeout(atualizaBordas,0);observaNums($('#bolinhas'))
   $('#bolinhas').onclick=e=>{const b=e.target.closest('[data-bola]');if(!b)return;b.classList.remove('cai');void b.offsetWidth;b.classList.add('cai');setTimeout(()=>b.classList.remove('cai'),900);if(b.dataset.bola==='*'){abreFiltro(true);return}$('#q').value='';escolheCat(b.dataset.bola)}}
-function escolheCat(c){cat=c;SUB='';limite=48;$$('#cats [data-c]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.c===c));$$('[data-bola]').forEach(x=>x.classList.toggle('on',x.dataset.bola===c));filtra(true)}
+function escolheCat(c){cat=c;SUB='';limite=48;F.cats.clear();$$('#cats [data-c]').forEach(x=>x.setAttribute('aria-pressed',x.dataset.c===c));$$('[data-bola]').forEach(x=>x.classList.toggle('on',x.dataset.bola===c));filtra(true)}
 function voltaVitrine(){cat='Todos';$('#q').value='';F.min=F.max=null;F.pronta=false;F.cats.clear();F.ordem='destaque';escolheCat('Todos');scrollTo({top:0,behavior:'auto'})}
 
 /* bordas: setas e degradê aparecem quando dá para arrastar */
@@ -1448,10 +1472,18 @@ $('#ordMenu').onkeydown=e=>{const it=[...$('#ordMenu').children],i=it.indexOf(do
 document.addEventListener('click',e=>{if(!e.target.closest('#ordenar'))fechaOrdem()});
 
 /* gaveta de filtro */
-const FAIXAS=[[null,20,'Até R$ 20'],[20,50,'R$ 20 a 50'],[50,100,'R$ 50 a 100'],[100,null,'Acima de R$ 100']];
+const FAIXAS=[[null,20,'🪙 Até R$ 20'],[20,50,'💵 R$ 20 a 50'],[50,100,'💰 R$ 50 a 100'],[100,null,'💎 Acima de R$ 100']];
 function abreFiltro(irCats){const f=$('#filtro');f.hidden=false;$('#fundoFiltro').hidden=false;document.body.style.overflow='hidden';montaFiltro();
   if(irCats)setTimeout(()=>$('#fCatsSec').scrollIntoView({block:'start'}),60)}
 function fechaFiltro(){$('#filtro').hidden=true;$('#fundoFiltro').hidden=true;document.body.style.overflow=''}
+/* ícone de cada categoria no filtro */
+const ICO_CAT=[[/pel[ií]cula.*(privac|privat)/i,'🕶️'],[/pel[ií]cula.*cer[aâ]mic/i,'🧱'],[/pel[ií]cula.*c[aâ]mera/i,'📷'],[/pel[ií]cula.*rel[oó]gio/i,'⌚'],[/pel[ií]cula.*3d/i,'🔷'],[/pel[ií]cula/i,'🛡️'],
+  [/pulseira/i,'⌚'],[/rel[oó]gio/i,'⌚'],[/capa|case|capinha/i,'📱'],[/carregador veic|automot|veicular/i,'🚗'],[/power ?bank|bateria|pilha/i,'🔋'],[/carregador|fonte/i,'🔌'],[/cabo/i,'🔗'],[/adaptador|conversor/i,'🔀'],
+  [/fone/i,'🎧'],[/caixa de som|r[aá]dio/i,'🔊'],[/microfone/i,'🎤'],[/suporte/i,'📐'],[/copo|garrafa|marmita/i,'🥤'],[/beleza|maquiagem/i,'💄'],[/perfum/i,'🌸'],[/utilidade|casa/i,'🏠'],[/cozinha/i,'🍳'],
+  [/led|l[aâ]mpada|ring light|lumin/i,'💡'],[/lanterna/i,'🔦'],[/ferrament/i,'🔧'],[/c[aâ]mera/i,'📷'],[/chaveiro/i,'🔑'],[/brinquedo|jogo/i,'🧸'],[/ventilador/i,'🌀'],[/umidificador/i,'💧'],[/massage/i,'💆'],
+  [/mochila|bolsa/i,'🎒'],[/faca/i,'🔪'],[/mouse/i,'🖱️'],[/teclado/i,'⌨️'],[/controle/i,'🎮'],[/m[aá]quina|barbeador/i,'✂️'],[/balan[cç]a/i,'⚖️'],[/fitness/i,'🏋️'],[/[oó]culos/i,'👓'],[/projetor/i,'📽️'],
+  [/celular|tablet/i,'📲'],[/natal/i,'🎄'],[/papelaria|calculadora/i,'✏️'],[/guarda.?chuva/i,'☂️'],[/chinelo/i,'🩴'],[/tomada|extens/i,'🔌'],[/antena|roteador/i,'📡'],[/cart[aã]o|pen ?drive|mem[oó]ria/i,'💾'],[/impressora|inform/i,'🖨️'],[/bomba/i,'🎈'],[/eletr[oô]n|eletrodom/i,'⚡'],[/embalagem/i,'📦']];
+function icoCatV(c){const x=ICO_CAT.find(([re])=>re.test(c));return x?x[1]:'🛍️'}
 function montaFiltro(){
   $('#fOrdem').innerHTML=ORDENS.filter(o=>o[0]!=='mais'||Object.keys(MAIS).length).map(([k,t])=>`<button type="button" data-fo="${k}" aria-pressed="${F.ordem===k}">${t}</button>`).join('');
   $('#fFaixas').innerHTML=FAIXAS.map(([a,b,t],i)=>`<button type="button" data-ff="${i}" aria-pressed="${F.min===a&&F.max===b}">${t}</button>`).join('');
@@ -1459,9 +1491,11 @@ function montaFiltro(){
   const q=termos(),cont={};ITENS.forEach(x=>{if(passa(x,q,true))cont[x.categoria]=(cont[x.categoria]||0)+1});
   const todas=[...new Set(ITENS.map(x=>x.categoria))];const prin=todas.filter(c=>GRUPOS.some(g=>g.re.test(c))).sort((a,b)=>GRUPOS.findIndex(g=>g.re.test(a))-GRUPOS.findIndex(g=>g.re.test(b))||a.localeCompare(b,'pt-BR'));
   const resto=todas.filter(c=>!prin.includes(c)).sort((a,b)=>a.localeCompare(b,'pt-BR'));
-  const lb=c=>`<label><input type="checkbox" data-fc="${esc(c)}"${F.cats.has(c)?' checked':''}> ${esc(c)} <small>${cont[c]||0}</small></label>`;
-  $('#fCats').innerHTML=`<div class="sep">As mais vendidas</div>${prin.map(lb).join('')}${resto.length?`<div class="sep">Outras</div>${resto.map(lb).join('')}`:''}`;
+  const lb=(c,i)=>`<label class="fc${F.cats.has(c)?' on':''}" style="--i:${i}"><input type="checkbox" data-fc="${esc(c)}"${F.cats.has(c)?' checked':''}><i class="fc-ic">${icoCatV(c)}</i><span class="fc-n">${esc(c)}</span><small>${cont[c]||0}</small><b class="fc-ok" aria-hidden="true">✓</b></label>`;
+  const so=l=>l.filter(c=>cont[c]||F.cats.has(c));const P2=so(prin),R2=so(resto);
+  $('#fCats').innerHTML=(P2.length+R2.length)<=1&&!F.cats.size?`<p class="f-so">${cat!=='Todos'?`Você já está em <b>${esc(cat.replace(/^[⭐⚡] /,''))}</b>.`:''} Use a faixa de preço e "só pronta entrega" acima.</p>`:`${P2.length?`<div class="sep">As mais vendidas</div>${P2.map(lb).join('')}`:''}${R2.length?`<div class="sep">Outras</div>${R2.map(lb).join('')}`:''}`;
   contaFiltro()}
+document.addEventListener('change',e=>{const i=e.target.closest('#fCats input[data-fc]');if(!i)return;const l=i.closest('label');l.classList.toggle('on',i.checked);l.classList.remove('pop');void l.offsetWidth;l.classList.add('pop')});
 function contaFiltro(){$('#fVer').textContent=`Ver ${lista.length} produto${lista.length===1?'':'s'}`}
 function ligaFiltro(){
   $('#btFiltro').onclick=()=>abreFiltro(false);$('#fFecha').onclick=fechaFiltro;$('#fundoFiltro').onclick=fechaFiltro;$('#fVer').onclick=()=>{fechaFiltro();filtra(true)};
@@ -1484,9 +1518,11 @@ const entra=window.IntersectionObserver?new IntersectionObserver(es=>es.forEach(
 function observa(box){observaNums(box);if(!entra||reduz())return;box.querySelectorAll('.card:not(.entra)').forEach(c=>entra.observe(c))}
 function render(){
   const g=$('#grade');let vazio='Nenhum produto encontrado. Tente outra palavra, outra categoria ou limpe os filtros.';
-  if(!lista.length&&cat!=='Todos'){const q=termos(),em=ITENS.filter(x=>q.every(w=>x._b.includes(w))).length;if(q.length&&em)vazio=`Nada em ${esc(cat.replace(/^[⭐⚡] /,''))} com “${esc($('#q').value.trim())}”. <button class="ver" type="button" data-todas="1">Ver os ${em} em todas as categorias ›</button>`}
+  if(!lista.length&&(F.cats.size||F.min!=null||F.max!=null||F.pronta))vazio=`Nenhum produto com esses filtros. <button class="ver" type="button" data-limpaf="1">Limpar filtros ›</button>`;
+  else if(!lista.length&&cat!=='Todos'){const q=termos(),em=ITENS.filter(x=>q.every(w=>x._b.includes(w))).length;if(q.length&&em)vazio=`Nada em ${esc(cat.replace(/^[⭐⚡] /,''))} com “${esc($('#q').value.trim())}”. <button class="ver" type="button" data-todas="1">Ver os ${em} em todas as categorias ›</button>`}
   g.innerHTML=lista.length?lista.slice(0,limite).map(cartao).join(''):`<div class="vazio" style="grid-column:1/-1">${vazio}</div>`;
   const bt=g.querySelector('[data-todas]');if(bt)bt.onclick=()=>escolheCat('Todos');
+  const lf=g.querySelector('[data-limpaf]');if(lf)lf.onclick=()=>{F.cats.clear();F.min=F.max=null;F.pronta=false;filtra(true)};
   $('#mais').hidden=lista.length<=limite;observa(g)}
 function renderPrateleiras(){
   const principal=ITENS.filter(x=>grupoDe(x)>=0);
