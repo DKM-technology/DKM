@@ -252,7 +252,7 @@ textarea.inp{resize:vertical;min-height:92px;line-height:1.4}
 .fotos-g{display:flex;gap:8px;flex-wrap:wrap}
 .fotos-g img{width:120px;height:120px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
 /* telas de entrada */
-.fundo{position:fixed;inset:0;z-index:-1;background:linear-gradient(var(--veu),var(--veu)),url(fundo.jpg) center/cover no-repeat var(--marca-bg);pointer-events:none}
+div.fundo{position:fixed;inset:0;z-index:-1;transform:translateZ(0);-webkit-backface-visibility:hidden;backface-visibility:hidden;will-change:transform;contain:strict;background:linear-gradient(var(--veu),var(--veu)),url(fundo.jpg) center/cover no-repeat var(--marca-bg);pointer-events:none}
 /* Telas de entrada (como o RED 360): arte em tela cheia, cartão escuro à direita; no celular a arte fica em cima */
 .entrada{--bg:#0d0d1f;--surface:#16162a;--surface-2:#1e1e36;--ink:#ececf6;--muted:#a4a7c6;--line:#2f2f4d;
   --accent:#6d5efc;--accent-ink:#ffffff;--accent-soft:#2a2660;--bad:#ff7a82;
@@ -645,11 +645,11 @@ html.menos-mov .pc2,html.menos-mov .pc2.pulou,html.menos-mov .pc2.pulou::after,h
 .tile .t-foot{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
 /* gestão em cartões */
-.ges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:12px;align-items:start}
+.ges-grid{columns:3 320px;column-gap:12px}.ges-grid>.gcard{break-inside:avoid;display:inline-block;width:100%;margin:0 0 12px;vertical-align:top}
 .gcard{animation:entraEnc .4s cubic-bezier(.2,.9,.3,1) both}.gcard:nth-child(2){animation-delay:.05s}.gcard:nth-child(3){animation-delay:.1s}.gcard:nth-child(4){animation-delay:.15s}.gcard:nth-child(5){animation-delay:.2s}
 .g-top{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}.g-top>i{font-style:normal;font-size:28px;line-height:1;width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--surface-2);flex:none}
 .g-top h2{margin:0 0 2px}.g-top .note{margin:0}
-#gPlan{grid-row:span 2}
+
 .meta-anel{display:flex;align-items:center;gap:14px;margin-top:12px}.meta-anel svg{width:96px;height:96px;transform:rotate(-90deg);flex:none}
 .meta-anel circle{fill:none;stroke-width:10}.meta-anel .fundo{stroke:var(--surface-2)}.meta-anel .cheio{stroke:var(--accent);stroke-linecap:round;animation:enche 1.2s cubic-bezier(.3,1,.4,1)}
 .meta-anel b{display:block;font-size:24px}.meta-anel span{display:block;font-size:12.5px;color:var(--muted)}
@@ -811,6 +811,27 @@ html.menos-mov .ms-caixa,html.menos-mov .ms-fundo{transition:none}html.menos-mov
 .cf-pop>.btn{justify-self:start}
 @media (max-width:560px){.cf-l{grid-template-columns:1fr}}
 .mao-tag{font-style:normal;font-size:11px;font-weight:700;color:var(--warn);background:color-mix(in srgb,var(--warn) 14%,transparent);border-radius:99px;padding:1px 7px}
+.confirm .cb-txt{flex:1 1 260px;line-height:1.45}.confirm .cb-bts{display:flex;gap:8px;flex:none}
+
+/* opiniões */
+.op-painel summary{cursor:pointer;list-style:none;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline}.op-painel summary::-webkit-details-marker{display:none}
+.op-painel summary::after{content:"▾";margin-left:auto;color:var(--muted)}.op-painel[open] summary::after{transform:rotate(180deg)}
+.op-painel[open] summary{margin-bottom:12px}
+.op-nova{font-style:normal;font-size:11px;font-weight:800;color:#fff;background:#a855f7;border-radius:99px;padding:1px 8px;animation:pulsaNova 1.6s ease-in-out infinite}
+@keyframes pulsaNova{50%{box-shadow:0 0 0 5px rgba(168,85,247,.25)}}
+.op-top2{display:grid;grid-template-columns:minmax(200px,280px) minmax(0,1fr);gap:16px}
+@media (max-width:640px){.op-top2{grid-template-columns:1fr}}
+.op-dist{display:grid;gap:5px}.op-dist div{display:grid;grid-template-columns:22px minmax(0,1fr) 28px;gap:8px;align-items:center}.op-dist div>i{font-style:normal;font-size:16px}.op-dist .bar{height:8px}.op-dist b{font-size:12px;text-align:right}
+.op-h{display:block;font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700;margin-bottom:6px}
+.op-tt{display:flex;flex-wrap:wrap;gap:5px}.op-tt span{font-size:12px;border-radius:99px;padding:3px 9px;border:1px solid var(--line);background:var(--surface-2)}
+.op-tt span.b{border-color:color-mix(in srgb,var(--good) 50%,var(--line));color:var(--good)}.op-tt span.r{border-color:color-mix(in srgb,#ef4444 50%,var(--line));color:#ef4444}.op-tt span.f{border-color:color-mix(in srgb,var(--accent) 50%,var(--line))}
+.op-lista{display:grid;gap:8px}
+.op-it{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;padding:12px;border-radius:14px;border:1.5px solid var(--line);border-left:5px solid var(--c);background:var(--surface-2);animation:entraEnc .3s ease-out both;animation-delay:calc(var(--i) * 30ms)}
+.op-it.nova{background:color-mix(in srgb,var(--c) 8%,var(--surface-2))}
+.op-f{font-style:normal;font-size:30px;line-height:1}
+.op-l1{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.op-tx{margin:6px 0 0;font-size:14px;line-height:1.45}.op-pf{margin:4px 0 0;font-size:13px}
+.op-c .op-tt{margin-top:6px}
 </style>
 </head>
 <body>
@@ -954,6 +975,7 @@ html.menos-mov .ms-caixa,html.menos-mov .ms-fundo{transition:none}html.menos-mov
       <div class="head"><div><h1>Clientes</h1><p>Quem mais compra, quem sumiu e níveis de preço.</p></div><a class="btn pri" href="#cupons">🎟️ Cupons</a></div>
       <div class="segs" id="cliKpi" role="tablist" aria-label="Grupos de clientes"></div>
       <div class="ideias-row" id="ideias"></div>
+      <details class="panel op-painel" id="opPainel"><summary><b>💬 O que os clientes acham</b><span class="sub" id="opResumo"></span></summary><div id="opBoxP"></div></details>
       <div class="cli-barra"><div class="cli-busca"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg><input id="cliQ" placeholder="Buscar cliente pelo nome" autocomplete="off" aria-label="Buscar cliente"></div><span class="note" id="cliSub2"></span></div>
       <div class="chips" id="cliFiltros" hidden></div>
       <div id="cliLista" class="cli-grid"></div>
@@ -1310,6 +1332,7 @@ async function carregar(){
     [p,v,c,g,cp,cl,cu].forEach(r=>{if(r.error)throw r.error});
     S.est=p.data.map(x=>({id:x.id,qt:x.qtd,p:x.produto,m:x.modelo||'',t:x.cor||'',c:+x.custo,v:+x.venda,cat:x.categoria||categoria(x.produto)}));
     S.ven=v.data.map(x=>({id:x.id,q:x.qtd,p:x.produto,m:x.modelo||'',val:+x.valor,who:x.cliente,st:x.status,d:x.data,cat:x.categoria||categoria(x.produto),forma:x.forma||'',ped:x.pedido||null,cu:x.custo_unit!=null?+x.custo_unit:null,pid:x.produto_id||null,rec:x.recebido_em||null,em:x.criado_em||null}));
+    try{const o=await sb.from('opinioes').select('*').order('criado_em',{ascending:false}).limit(300);if(o.error)throw o.error;S.opi=o.data;S.opiOk=true}catch(x){S.opi=[];S.opiOk=false}
     try{const dp=await sb.from('despesas').select('*').order('data',{ascending:false}).limit(500);if(dp.error)throw dp.error;S.desp=dp.data.map(x=>({...x,valor:+x.valor}));S.finOk=true}catch(x){S.desp=[];S.finOk=false}
     S.cnt={};c.data.forEach(x=>S.cnt[x.produto_id]=x.contado);
     S.cntDt=c.data.reduce((a,x)=>!a||x.atualizado_em<a?x.atualizado_em:a,null);
@@ -1555,6 +1578,32 @@ async function renomeiaCliente(velho,novoTxt){const novo=chave(novoTxt),pat=Stri
   if(antigo&&chave(antigo.nome)!==novo)must(await sb.from('clientes').delete().eq('nome',antigo.nome));
   else if(antigo&&antigo.nome!==novo)await sb.from('clientes').update({nome:novo}).eq('nome',antigo.nome)}
 function contaN(el,para){if(MENOS_MOV()||!para){el.textContent=para;return}const t0=performance.now();const f=t=>{const p=Math.min(1,(t-t0)/700);el.textContent=Math.round(para*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+/* ===== opiniões dos clientes (vêm da vitrine) ===== */
+let OPF='todas';
+const FACE=['','😡','😕','😐','🙂','😍'],FACE_N=['','Péssimo','Ruim','Ok','Bom','Amei'],FACE_COR=['','#ef4444','#f97316','#eab308','#22c55e','#a855f7'];
+function renderOpinioes(){const box=$('#opBoxP');if(!box)return;const L=S.opi||[];const nl=L.filter(o=>!o.lida).length;badge('clientes',nl||'');
+  if(!S.opiOk){$('#opResumo').textContent='rode o 15-opinioes.sql no Supabase para receber as opiniões da vitrine';box.innerHTML='';return}
+  if(nl&&!renderOpinioes.abriu){$('#opPainel').open=true;renderOpinioes.abriu=true}
+  const med=L.length?L.reduce((a,o)=>a+o.nota,0)/L.length:0;
+  $('#opResumo').innerHTML=L.length?`${FACE[Math.round(med)]||''} média <b>${med.toFixed(1).replace('.',',')}</b> · ${L.length} opiniões${nl?` · <b class="op-nova">${nl} nova${nl===1?'':'s'}</b>`:''}`:'nenhuma opinião ainda';
+  if(!L.length){box.innerHTML='<div class="empty">Quando um cliente mandar uma opinião pela vitrine (botão 💬 no fim da página ou depois do pedido), ela aparece aqui.</div>';return}
+  const temas={};L.forEach(o=>(o.temas||[]).forEach(t=>{(temas[t]=temas[t]||{n:0,bom:0}).n++;if(o.nota>=4)temas[t].bom++}));const TT=Object.entries(temas).sort((a,b)=>b[1].n-a[1].n).slice(0,8);
+  const falta=L.filter(o=>o.produto_falta).slice(0,8);const dist=[5,4,3,2,1].map(n=>[n,L.filter(o=>o.nota===n).length]);
+  const F={todas:()=>true,novas:o=>!o.lida,bons:o=>o.nota>=4,ruins:o=>o.nota<=3};const V=L.filter(F[OPF]||F.todas);
+  box.innerHTML=`<div class="op-top2"><div class="op-dist">${dist.map(([n,q])=>`<div><i>${FACE[n]}</i><span class="bar"><i style="width:${L.length?q/L.length*100:0}%;background:${FACE_COR[n]}"></i></span><b>${q}</b></div>`).join('')}</div>
+      <div><span class="op-h">Mais citados</span><div class="op-tt">${TT.map(([t,o])=>`<span class="${o.bom>=o.n/2?'b':'r'}">${esc(t)} <b>${o.n}</b></span>`).join('')||'<span class="note">—</span>'}</div>
+      ${falta.length?`<span class="op-h" style="margin-top:8px">🔎 Pediram e não acharam</span><div class="op-tt">${falta.map(o=>`<span class="f">${esc(o.produto_falta)}</span>`).join('')}</div>`:''}</div></div>
+    <div class="seg" role="group" style="margin:12px 0 8px;flex-wrap:wrap">${[['todas','Todas'],['novas',`Novas (${nl})`],['bons','😍🙂 Elogios'],['ruins','😐😕😡 Críticas']].map(([k,t])=>`<button type="button" data-opf="${k}" aria-pressed="${OPF===k}">${t}</button>`).join('')}</div>
+    <div class="op-lista">${V.map((o,i)=>{const d=new Date(o.criado_em),fone=String(o.contato||'').replace(/\D/g,'');const nm=o.nome?cap(o.nome).split(' ')[0]:'';
+      const msg=`Oi${nm?' '+nm:''}! Aqui é da DKM 💜 Vi sua opinião pelo catálogo${o.nota<=3?' e queria entender melhor o que aconteceu para melhorar':', muito obrigado'}. `;
+      return `<div class="op-it${o.lida?'':' nova'}" style="--c:${FACE_COR[o.nota]};--i:${Math.min(i,12)}"><i class="op-f" title="${FACE_N[o.nota]}">${FACE[o.nota]}</i><div class="op-c">
+        <div class="op-l1"><b>${o.nome?esc(cap(o.nome)):'Cliente anônimo'}</b><span class="note">${d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})} ${d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}${o.pedido?' · pedido nº '+esc(o.pedido):''}</span>${o.lida?'':'<span class="op-nova">nova</span>'}</div>
+        ${(o.temas||[]).length?`<div class="op-tt">${o.temas.map(t=>`<span class="${o.nota>=4?'b':'r'}">${esc(t)}</span>`).join('')}</div>`:''}
+        ${o.texto?`<p class="op-tx">“${esc(o.texto)}”</p>`:''}${o.produto_falta?`<p class="op-pf">🔎 Faltou: <b>${esc(o.produto_falta)}</b></p>`:''}
+        <div class="row-f" style="gap:6px;margin-top:6px">${fone.length>=10?`<a class="btn sm" target="_blank" rel="noopener" href="https://wa.me/${fone.length<=11?'55'+fone:fone}?text=${encodeURIComponent(msg)}">💬 Responder</a>`:''}${o.lida?'':`<button class="btn sm" type="button" data-oplida="${o.id}">✓ Marcar como lida</button>`}<button class="ic-bt" type="button" data-opapaga="${o.id}" title="Apagar">🗑️</button></div></div></div>`}).join('')||'<div class="empty">Nada neste filtro.</div>'}</div>`;
+  $$('[data-opf]',box).forEach(b=>b.onclick=()=>{OPF=b.dataset.opf;renderOpinioes()});
+  $$('[data-oplida]',box).forEach(b=>b.onclick=()=>busy(b,async()=>{const o=L.find(x=>String(x.id)===b.dataset.oplida);must(await sb.from('opinioes').update({lida:true}).eq('id',o.id));o.lida=true;renderOpinioes()}));
+  $$('[data-opapaga]',box).forEach(b=>b.onclick=()=>{const o=L.find(x=>String(x.id)===b.dataset.opapaga);confirmBox(b.closest('.op-c').querySelector('.row-f'),'Apagar esta opinião?','Apagar',()=>busy(null,async()=>{must(await sb.from('opinioes').delete().eq('id',o.id));S.opi=S.opi.filter(x=>x!==o);renderOpinioes();toast('Opinião apagada')}))})}
 function renderClientes(){
   const L=Object.values(S.cli),tot=L.reduce((a,c)=>a+c.tot,0)||1,top10=L.slice().sort((a,b)=>b.tot-a.tot).slice(0,10).reduce((a,c)=>a+c.tot,0);
   const ativos=L.filter(c=>c.semComprar!=null&&c.semComprar<=90).length,sum=L.filter(sumido),uma=L.filter(c=>c.compras===1).length,dev=L.filter(c=>c.deve>0);
@@ -1621,7 +1670,7 @@ function renderClientes(){
   animaNums($('#cupSegs'));$$('#cupSegs [data-tk]').forEach(b=>b.onclick=()=>{cupFiltro=b.dataset.tk;renderClientes()});
   const LC=S.cupons.filter(CF[cupFiltro]);
   $('#cupLista').innerHTML=LC.length?LC.map((c,i)=>{const [t,cl]=st(c);const off=c.tipo==='PCT'?`${String(+c.valor).replace('.',',')}%`:brl0(+c.valor);
-    const prazo=c.expira_em?(t==='ativo'?`<b class="pz-falta">⏳ ${faltaCup(c.expira_em)}</b>`:'até '+quandoTxt(new Date(c.expira_em))):c.validade?'até '+dataBR(c.validade):'sem prazo';
+    const prazo=c.expira_em?(t==='ativo'?`<b class="pz-falta" data-exp="${esc(c.expira_em)}">⏳ ${faltaCup(c.expira_em)}</b>`:'até '+quandoTxt(new Date(c.expira_em))):c.validade?'até '+dataBR(c.validade):'sem prazo';
     const bts=t==='ativo'?`${c.cliente?'':`<button class="btn sm${c.vitrine?' vit-on':''}" type="button" data-vit="${esc(c.codigo)}">${c.vitrine?'📢 Tirar da vitrine':'📢 Pôr na vitrine'}</button>`}<button class="btn sm" type="button" data-cuplink="${esc(c.codigo)}">🔗 Copiar link</button><button class="btn sm danger" type="button" data-desat="${esc(c.codigo)}">Desativar</button>`
       :`<button class="btn sm pri" type="button" data-reat="${esc(c.codigo)}">${t==='vencido'?(c.expira_em?'Reativar por mais '+pzNome(Math.round(Math.max(36e5,new Date(c.expira_em)-new Date(c.criado_em||agora-72e5))/6e4)):'Reativar por +30 dias'):t==='usado'?'Liberar mais 1 uso':'Reativar'}</button><button class="btn sm danger" type="button" data-apaga="${esc(c.codigo)}">🗑️ Apagar</button>`;
     return `<div class="tk est-${t}${c.vitrine&&t==='ativo'?' na-vit':''}" style="--i:${i}"><div class="tk-off"><b class="num">${off}</b><span>OFF</span></div>
@@ -1652,7 +1701,7 @@ const pzNome=mn=>mn<1440?(mn%60?mn+' min':(mn/60)+(mn===60?' hora':' horas')):(m
 function quandoTxt(d){const h=new Date(),am=new Date(h.getFullYear(),h.getMonth(),h.getDate()+1),hh=d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
   if(d.toDateString()===h.toDateString())return'hoje às '+hh;if(d.toDateString()===am.toDateString())return'amanhã às '+hh;return d.toLocaleDateString('pt-BR')+(d.getHours()||d.getMinutes()?' às '+hh:'')}
 function faltaCup(iso){const ms=new Date(iso)-Date.now();if(ms<=0)return'expirou';const m=Math.ceil(ms/6e4);if(m<60)return'acaba em '+m+' min';const h=Math.floor(m/60);if(h<48)return'acaba em '+h+'h'+(m%60?' '+String(m%60).padStart(2,'0')+'min':'');return'até '+quandoTxt(new Date(iso))}
-setInterval(()=>{if(location.hash==='#cupons'&&S.cupons.some(c=>c.expira_em))renderClientes()},30000);
+setInterval(()=>{if(location.hash!=='#cupons')return;let venceu=false;$$('.pz-falta[data-exp]').forEach(el=>{const d=new Date(el.dataset.exp);if(d<=Date.now())venceu=true;else{const t='⏳ '+faltaCup(el.dataset.exp);if(el.textContent!==t)el.textContent=t}});if(venceu)renderClientes()},30000);
 function codigoPara(cli,tipo,valor){const base=(cli?cli.split(' ')[0]:'DKM').normalize('NFD').replace(/[^A-Za-z]/g,'').toUpperCase().slice(0,10)||'DKM';let c=base+Math.round(valor)+(tipo==='REAIS'?'OFF':'');let i=2;while(S.cupons.some(x=>x.codigo===c))c=base+Math.round(valor)+(tipo==='REAIS'?'OFF':'')+'-'+(i++);return c}
 function abrirCupom(cli,mod){const m=MODELOS[mod]||MODELOS.volta,box=$('#cupomBox');if(location.hash!=='#cupons'){location.hash='#cupons';route()}box.hidden=false;setTimeout(()=>box.scrollIntoView({behavior:'smooth',block:'start'}),60);
   box.innerHTML=`<h2>Criar cupom <span class="sub">o cliente usa o código no próximo pedido</span></h2>
@@ -1943,7 +1992,7 @@ function renderDifs(){const box=$('#cntDifs');if(!box)return;const st=cntStats()
 $$('[data-cf]').forEach(b=>b.onclick=()=>{cntF=b.dataset.cf;$$('[data-cf]').forEach(x=>x.setAttribute('aria-pressed',x===b));renderContagem()});
 $('#cntIgual').onclick=()=>busy($('#cntIgual'),async()=>{const novos=(renderContagem.vis||[]).filter(e=>S.cnt[e.id]==null);if(!novos.length){toast('Todos os visíveis já foram contados');return}
   must(await sb.from('contagem_itens').upsert(novos.map(e=>({produto_id:e.id,contado:e.qt}))));novos.forEach(e=>S.cnt[e.id]=e.qt);if(!S.cntDt)S.cntDt=new Date().toISOString();renderContagem();toast(novos.length+' produtos marcados como iguais')});
-function confirmBox(el,html,yesTxt,onYes){el.innerHTML=html+` <button class="btn sm pri" type="button" data-y>${yesTxt}</button><button class="btn sm" type="button" data-n>Cancelar</button>`;el.hidden=false;
+function confirmBox(el,html,yesTxt,onYes){el.innerHTML=`<span class="cb-txt">${html}</span><span class="cb-bts"><button class="btn sm pri" type="button" data-y>${yesTxt}</button><button class="btn sm" type="button" data-n>Cancelar</button></span>`;el.hidden=false;
   el.querySelector('[data-y]').onclick=e=>{el.hidden=true;onYes()};el.querySelector('[data-n]').onclick=()=>el.hidden=true}
 $('#cntLimpa').onclick=()=>confirmBox($('#cntConfirm'),'Apagar tudo o que foi contado até agora?','Apagar',()=>busy(null,async()=>{must(await sb.from('contagem_itens').delete().gte('produto_id',0));S.cnt={};S.cntDt=null;contaLista=null;renderContagem();toast('Contagem limpa')}));
 $('#cntAplica').onclick=()=>{const st=cntStats();if(!st.feitos){toast('Conte pelo menos um produto antes');return}
@@ -2300,18 +2349,21 @@ const fatorEnc=e=>{const b=totBruto(e);return b>0?totEnc(e)/b:1};
 const estagio=e=>{const g=grupoEnc(e);return g==='entregar'?(e.etapa==='SAIU'?'rota':'separar'):g};
 const grupoEnc=e=>e.status==='ABERTA'?(pendentes(e).length?'comprar':'entregar'):e.status==='COMPRADA'?'entregar':e.status;
 
-async function carregarEncomendas(){
+async function carregarEncomendas(silencioso){
   try{const desde=new Date(Date.now()-75*864e5).toISOString();
     const r=await sb.from('encomendas').select('*, encomenda_itens(*)').or(`status.in.(ABERTA,COMPRADA),criado_em.gte.${desde}`).order('criado_em',{ascending:false});
     if(r.error)throw r.error;
-    ENC.lista=r.data.map(e=>({...e,encomenda_itens:itensDe(e).map(i=>({...i,preco:+i.preco,custo:+i.custo}))}));ENC.ok=true;$('#encErro').hidden=true}
+    const nova=r.data.map(e=>({...e,encomenda_itens:itensDe(e).map(i=>({...i,preco:+i.preco,custo:+i.custo}))}));
+    const assinaEnc=L=>JSON.stringify(L.map(e=>[e.id,e.status,e.etapa,e.cupom,e.desconto,e.venda_pedido,e.cancelado_por,(e.encomenda_itens||[]).map(i=>[i.id,i.qtd,i.comprado,i.preco])]));
+    if(silencioso&&ENC.ok&&assinaEnc(nova)===assinaEnc(ENC.lista))return 'igual';
+    ENC.lista=nova;ENC.ok=true;$('#encErro').hidden=true}
   catch(e){ENC.ok=false;const m=msgErro(e);$('#encErro').textContent=/não foi criado|does not exist|Could not find|schema cache/i.test(m+String(e&&e.message))?'As encomendas ainda não foram criadas no banco. Rode o arquivo 05_encomendas.sql no SQL Editor do Supabase e toque em atualizar (↻).':m;$('#encErro').hidden=false}
   renderEncomendas()}
 
 /* ===== ao vivo: pedidos novos da vitrine aparecem sozinhos (a cada 20 s) ===== */
 async function encAoVivo(){if(document.visibilityState!=='visible'||typeof usuario==='undefined'||!usuario||!ENC.ok)return;
   if(!$('#modoCompra').hidden||!$('#encConfirm').hidden)return;
-  const antes=new Map(ENC.lista.map(e=>[e.codigo,e.status]));await carregarEncomendas();
+  const antes=new Map(ENC.lista.map(e=>[e.codigo,e.status]));if(await carregarEncomendas(true)==='igual')return;
   const novos=ENC.lista.filter(e=>!antes.has(e.codigo)&&e.origem==='VITRINE'),canc=ENC.lista.filter(e=>antes.has(e.codigo)&&antes.get(e.codigo)!=='CANCELADA'&&e.status==='CANCELADA');
   novos.forEach(e=>avisoPainel(`🛎️ Pedido novo de ${cap(e.cliente).split(' ')[0]} · ${brl(totEnc(e))}`,'novo'));canc.forEach(e=>avisoPainel(`❌ ${cap(e.cliente).split(' ')[0]} cancelou o pedido nº ${e.codigo}`,'canc'));
   if(novos.length){try{const c=new (window.AudioContext||window.webkitAudioContext)(),o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.setValueAtTime(880,c.currentTime);o.frequency.setValueAtTime(1320,c.currentTime+.12);g.gain.setValueAtTime(.08,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+.5);o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+.5)}catch(x){}
@@ -2638,7 +2690,7 @@ $('#enSalva').onclick=()=>{const cli=$('#enCli').value.trim();if(!cli){$('#enMsg
     must(await sb.from('encomenda_itens').insert(ENC.nova.map(o=>{const est=o.c.produto_id&&S.est.find(x=>x.id===o.c.produto_id);return{encomenda_id:id,catalogo_id:o.c.id,nome:o.c.nome,categoria:o.c.categoria,fornecedor:o.c.fornecedor||'',pronta:!!(est&&est.qt>0),qtd:o.q,preco:o.c.preco,custo:o.c.custo}})));
     ENC.nova=[];$('#enCli').value='';$('#enFone').value='';$('#enMsg').textContent='';$('#encNova').hidden=true;renderNova();toast('Encomenda nº '+cod+' salva');await carregarEncomendas()})};
 
-function renderAll(){renderControle();renderFinanceiro();renderPedidoStatic();renderBusca();repreco();renderCliInfo();renderCart();renderClientes();renderRepo();renderCompras();renderContagem();if(ENC.ok)renderEncomendas();if(contaModo==='contar')renderConta();renderSide()}
+function renderAll(){renderOpinioes();renderControle();renderFinanceiro();renderPedidoStatic();renderBusca();repreco();renderCliInfo();renderCart();renderClientes();renderRepo();renderCompras();renderContagem();if(ENC.ok)renderEncomendas();if(contaModo==='contar')renderConta();renderSide()}
 iniciar();
 </script>
 </body>

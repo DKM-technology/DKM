@@ -1011,6 +1011,53 @@ html.menos-mov .f-cats label.fc{animation:none}
   .tc-top{position:relative;padding-top:20px}.tc-top .alca{display:block;position:absolute;left:50%;top:8px;width:44px;height:5px;margin-left:-22px;border-radius:9px;background:var(--line)}
   .tc-g{grid-template-columns:repeat(2,minmax(0,1fr))}.tc-corpo{padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}}
 html.menos-mov .tc-c{animation:none}
+/* celular: barra de cima sólida (o desfoque por cima de conteúdo animado faz alguns Android piscarem) */
+@media (max-width:760px){.topo{-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--bg);transform:translateZ(0)}.fundo-filtro,.fundo-prod,.fundo-sacola{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}}
+
+/* ===== opinião do cliente ===== */
+.op-card{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;margin:18px 0 8px;padding:16px 18px;border-radius:18px;border:1.5px solid color-mix(in srgb,var(--accent) 45%,var(--line));background:linear-gradient(120deg,color-mix(in srgb,var(--accent) 16%,var(--surface)),var(--surface) 70%)}
+.op-card .sc-bt{width:auto;margin:0;padding:12px 18px;white-space:nowrap}
+.op-ct b{display:block;font-size:15px}.op-ct span{font-size:12.5px;color:var(--muted)}
+.op-mini{display:flex}.op-mini i{font-style:normal;font-size:22px;margin-left:-6px;animation:onda2 2.4s ease-in-out infinite;animation-delay:calc(var(--k,0) * .15s)}
+.op-mini i:nth-child(1){--k:0}.op-mini i:nth-child(2){--k:1}.op-mini i:nth-child(3){--k:2}.op-mini i:nth-child(4){--k:3}.op-mini i:nth-child(5){--k:4}
+@keyframes onda2{0%,60%,100%{transform:none}20%{transform:translateY(-6px) rotate(-8deg)}}
+@media (max-width:640px){.op-card{grid-template-columns:auto minmax(0,1fr)}.op-card .sc-bt{grid-column:1/-1;width:100%}}
+.op{--op-cor:var(--accent)}
+.op .op-top{border-bottom:3px solid transparent;transition:border-color .3s}.op.tem-nota .op-top{border-color:var(--op-cor)}
+.op-corpo{padding-top:8px}
+.op-q{font-weight:800;font-size:16px;margin:6px 0 10px}
+.op-faces{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-bottom:6px}
+.op-faces button{display:grid;justify-items:center;gap:4px;border:2px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:16px;padding:10px 2px 8px;font:inherit;font-size:11.5px;font-weight:700;cursor:pointer;transition:transform .2s cubic-bezier(.3,1.6,.5,1),opacity .2s,filter .2s,border-color .2s,background .2s}
+.op-faces button i{font-style:normal;font-size:34px;line-height:1;transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.op-faces button:hover{transform:translateY(-4px)}.op-faces button:hover i{transform:rotate(-10deg) scale(1.1)}
+.op.tem-nota .op-faces button:not(.on){opacity:.45;filter:grayscale(.7)}
+.op-faces button.on{border-color:var(--op-cor);background:color-mix(in srgb,var(--op-cor) 16%,var(--surface-2));box-shadow:0 8px 22px color-mix(in srgb,var(--op-cor) 35%,transparent)}
+.op-faces button.on i{transform:scale(1.25)}
+.op-faces button.pula{animation:pulaFace .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pulaFace{30%{transform:translateY(-10px) scale(1.08)}60%{transform:translateY(2px)}}
+.op-resto{display:grid;gap:8px}.op-resto.entra{animation:sobeTxt .45s cubic-bezier(.2,.9,.3,1)}
+.op-chips{display:flex;flex-wrap:wrap;gap:6px}
+.op-chips button{border:1.5px solid var(--line);background:var(--surface-2);color:var(--ink);border-radius:99px;padding:8px 12px;font:inherit;font-size:13px;cursor:pointer;transition:all .15s;animation:fcEntra .3s ease-out both;animation-delay:calc(var(--i) * 30ms)}
+.op-chips button:hover{border-color:var(--op-cor)}
+.op-chips button[aria-pressed="true"]{background:var(--op-cor);border-color:var(--op-cor);color:#fff;font-weight:700}
+.op-chips button.pop{animation:fcPop .3s cubic-bezier(.3,1.6,.5,1)}
+.op-l{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:13.5px;margin-top:6px}.op-l small{font-weight:500;color:var(--muted);font-size:11.5px}
+.op textarea,.op input{width:100%;font:inherit;font-size:15px;padding:11px 13px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface-2);color:var(--ink);outline:none;resize:vertical}
+.op textarea:focus,.op input:focus{border-color:var(--op-cor)}
+.op-cont summary{cursor:pointer;font-size:13px;font-weight:600;padding:6px 0;list-style:none}.op-cont summary::-webkit-details-marker{display:none}.op-cont summary small{color:var(--muted);font-weight:500}
+.op-duo{display:grid;grid-template-columns:1fr 1fr;gap:8px}@media (max-width:420px){.op-duo{grid-template-columns:1fr}}
+#opEnvia{margin-top:6px;background:var(--op-cor)}
+.op-msg{margin:0;color:#ff7b8a;font-size:13px;min-height:1em}
+.op-fim{display:grid;justify-items:center;text-align:center;gap:6px;padding:20px 0 10px}.op-fim.entra{animation:sobeTxt .45s ease-out}
+.op-fim h3{font-family:var(--f-display);margin:6px 0 0;font-size:22px}.op-fim p{margin:0 0 10px;color:var(--muted)}
+.op-cora{position:relative;font-size:64px;line-height:1;animation:bateCora 1s cubic-bezier(.3,1.6,.5,1)}
+.op-cora i{position:absolute;left:50%;top:50%;width:8px;height:8px;border-radius:50%;background:var(--op-cor);opacity:0;animation:faiscaCora .9s ease-out .15s forwards}
+.op-cora i:nth-child(1){--a:0deg}.op-cora i:nth-child(2){--a:60deg}.op-cora i:nth-child(3){--a:120deg}.op-cora i:nth-child(4){--a:180deg}.op-cora i:nth-child(5){--a:240deg}.op-cora i:nth-child(6){--a:300deg}
+@keyframes bateCora{0%{transform:scale(0)}50%{transform:scale(1.3)}70%{transform:scale(.9)}100%{transform:none}}
+@keyframes faiscaCora{0%{opacity:1;transform:rotate(var(--a)) translateY(0)}100%{opacity:0;transform:rotate(var(--a)) translateY(-60px)}}
+.ok-op{display:grid;gap:6px;justify-items:center;margin:6px 0 10px;padding:10px;border-radius:14px;background:var(--surface-2)}.ok-op span{font-size:13px;font-weight:700}
+.ok-op div{display:flex;gap:6px}.ok-op button{border:0;background:none;font-size:28px;cursor:pointer;transition:transform .2s cubic-bezier(.3,1.6,.5,1)}.ok-op button:hover{transform:translateY(-4px) scale(1.15)}
+html.menos-mov .op-mini i,html.menos-mov .op-chips button{animation:none}
 </style>
 </head>
 <body>
@@ -1048,6 +1095,7 @@ html.menos-mov .tc-c{animation:none}
     <h2>Comprar na DKM é simples</h2>
     <ol class="como"><li><b>Escolha</b><span>Toque no + dos produtos que você quer. Use a busca com o modelo do seu celular.</span></li><li><b>Envie pelo WhatsApp</b><span>O pedido já vai pronto, com número, itens e total. Sem cadastro.</span></li><li><b>Combine e receba</b><span>Você escolhe como pagar e a gente entrega onde você estiver.</span></li></ol>
     <div class="selos"><div><span class="i">💳</span><b>Todas as formas de pagamento</b><span>Pix, cartão de crédito, débito e dinheiro</span></div><div><span class="i">🚚</span><b>Entregamos em todo lugar</b><span>Combine a entrega pelo WhatsApp</span></div><div><span class="i">🕗</span><b>Horário de atendimento</b><span>Seg a sex 8h às 17h · sáb, dom e feriados 9h às 13h</span></div><div><span class="i">⚡</span><b>Pronta entrega</b><span>Os produtos marcados saem no mesmo dia</span></div></div>
+    <div class="op-card" id="opCard"><div class="op-mini" aria-hidden="true"><i>😍</i><i>🙂</i><i>😐</i><i>😕</i><i>😡</i></div><div class="op-ct"><b id="opCardT">Sua opinião deixa a DKM melhor</b><span>Sugestão, crítica ou elogio. Leva 20 segundinhos.</span></div><button class="sc-bt" type="button" id="opAbre">💬 Dar minha opinião</button></div>
     <p class="rodape">DKM · Tecnologia, inovação, sem limites · Loja 100% online</p>
   </section>
 </main>
@@ -1055,6 +1103,30 @@ html.menos-mov .tc-c{animation:none}
 <a class="zap-flutua" id="zapFlutua" href="#" target="_blank" rel="noopener" aria-label="Falar com a DKM no WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .2-1.2c-.1-.1-.2-.2-.5-.3z"/></svg><span>Atendimento</span></a>
 <button class="topo-bt" id="topoBt" type="button" aria-label="Voltar ao topo" hidden>↑</button>
 <div class="fundo-filtro" id="fundoFiltro" hidden></div>
+<div class="tc-fundo" id="opFundo" hidden></div>
+<section class="tc op" id="opBox" hidden role="dialog" aria-modal="true" aria-labelledby="opTit">
+  <div class="tc-top op-top"><span class="alca" aria-hidden="true"></span><h2 id="opTit">💬 Conta pra gente</h2><button class="x" type="button" id="opX" aria-label="Fechar">×</button></div>
+  <div class="tc-corpo op-corpo">
+    <div id="opForm">
+      <p class="op-q">Como está sendo comprar na DKM?</p>
+      <div class="op-faces" role="radiogroup" aria-label="Sua nota">
+        <button type="button" data-nota="1" role="radio" aria-checked="false"><i>😡</i><span>Péssimo</span></button><button type="button" data-nota="2" role="radio" aria-checked="false"><i>😕</i><span>Ruim</span></button><button type="button" data-nota="3" role="radio" aria-checked="false"><i>😐</i><span>Ok</span></button><button type="button" data-nota="4" role="radio" aria-checked="false"><i>🙂</i><span>Bom</span></button><button type="button" data-nota="5" role="radio" aria-checked="false"><i>😍</i><span>Amei</span></button>
+      </div>
+      <div class="op-resto" id="opResto" hidden>
+        <p class="op-q" id="opQ2">O que você mais gostou?</p>
+        <div class="op-chips" id="opChips"></div>
+        <label class="op-l" for="opTxt">✍️ Quer contar mais? <small id="opConta">0/500</small></label>
+        <textarea id="opTxt" maxlength="500" rows="3"></textarea>
+        <label class="op-l" for="opProd">🔎 Faltou algum produto? <small>a gente tenta trazer</small></label>
+        <input id="opProd" maxlength="120" placeholder="Ex.: película para Moto G84, capinha do A06…" autocomplete="off">
+        <details class="op-cont" id="opCont"><summary>📲 Quer resposta? Deixe nome e WhatsApp <small>(opcional)</small></summary><div class="op-duo"><input id="opNome" maxlength="60" placeholder="Seu nome" autocomplete="name"><input id="opFone" maxlength="20" inputmode="tel" placeholder="WhatsApp" autocomplete="tel"></div></details>
+        <button class="sc-bt" type="button" id="opEnvia">Enviar minha opinião 💜</button>
+        <p class="op-msg" id="opMsg"></p>
+      </div>
+    </div>
+    <div class="op-fim" id="opFim" hidden><div class="op-cora" aria-hidden="true">💜<i></i><i></i><i></i><i></i><i></i><i></i></div><h3 id="opFimT">Valeu demais!</h3><p id="opFimP">A gente lê tudo. Sua opinião já está com a DKM.</p><button class="sc-bt sec" type="button" id="opOk">Voltar para a loja</button></div>
+  </div>
+</section>
 <div class="tc-fundo" id="tcFundo" hidden></div>
 <section class="tc" id="tcBox" hidden role="dialog" aria-modal="true" aria-labelledby="tcTit">
   <div class="tc-top"><span class="alca" aria-hidden="true"></span><h2 id="tcTit">🗂️ Todas as categorias</h2><button class="x" type="button" id="tcX" aria-label="Fechar">×</button></div>
@@ -1127,6 +1199,7 @@ html.menos-mov .tc-c{animation:none}
     <div class="ok-ic" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="24"/><path d="M14 27l8 8 16-17"/></svg></div>
     <h3>Pedido enviado!</h3>
     <p id="okTxt"></p>
+    <div class="ok-op"><span>Como foi comprar aqui?</span><div><button type="button" data-opq="1" aria-label="Péssimo">😡</button><button type="button" data-opq="2" aria-label="Ruim">😕</button><button type="button" data-opq="3" aria-label="Ok">😐</button><button type="button" data-opq="4" aria-label="Bom">🙂</button><button type="button" data-opq="5" aria-label="Amei">😍</button></div></div>
     <button class="sc-bt" type="button" id="okAcomp">🚚 Acompanhar meu pedido</button>
     <button class="sc-bt sec" type="button" id="okMais">Continuar comprando</button>
   </div>
@@ -1320,6 +1393,44 @@ function montaCats(){
     +`<button type="button" class="bola todas" data-bola="*"><span class="anel"><span>☰</span></span>Todas as categorias</button>`;
   setTimeout(atualizaBordas,0);observaNums($('#bolinhas'))
   $('#bolinhas').onclick=e=>{const b=e.target.closest('[data-bola]');if(!b)return;b.classList.remove('cai');void b.offsetWidth;b.classList.add('cai');setTimeout(()=>b.classList.remove('cai'),900);if(b.dataset.bola==='*'){abreTodas();return}$('#q').value='';escolheCat(b.dataset.bola)}}
+/* ===== opinião do cliente: carinhas, temas, sugestão e produto que faltou ===== */
+const OP_BOM=['💸 Preço','🛍️ Variedade','📷 Fotos','⚡ Pronta entrega','🚚 Entrega rápida','🤝 Atendimento','📱 Fácil de comprar','🎟️ Cupons'];
+const OP_RUIM=['💸 Preço alto','🔎 Não achei o produto','📷 Fotos ruins','🚚 Entrega','🤝 Atendimento','📱 Difícil de usar','🐢 Site lento','❓ Faltou informação'];
+const OP_COR=['','#ef4444','#f97316','#eab308','#22c55e','#a855f7'];
+const OP_PH={bom:['Ex.: amei as películas, chegou rapidinho!','Ex.: o atendimento foi top, vou indicar pros amigos','Ex.: gostei de achar tudo pelo modelo do celular'],ruim:['Ex.: não achei a capinha do meu celular','Ex.: demorou pra responder no WhatsApp','Ex.: queria mais fotos dos produtos']};
+let OP={nota:0,temas:new Set(),pedido:''};
+function abreOpiniao(nota,pedido){OP={nota:0,temas:new Set(),pedido:pedido||''};const b=$('#opBox');
+  $('#opForm').hidden=false;$('#opFim').hidden=true;$('#opResto').hidden=true;$('#opMsg').textContent='';$('#opTxt').value='';$('#opProd').value='';$('#opConta').textContent='0/500';
+  $('#opNome').value=$('#opNome').value||$('#nome').value||'';$('#opFone').value=$('#opFone').value||$('#fone').value||'';
+  $$('.op-faces [data-nota]').forEach(x=>{x.setAttribute('aria-checked','false');x.classList.remove('on')});b.style.removeProperty('--op-cor');b.classList.remove('tem-nota');
+  b.hidden=false;$('#opFundo').hidden=false;document.body.style.overflow='hidden';requestAnimationFrame(()=>b.classList.add('aberto'));if(nota)setTimeout(()=>notaOp(nota),reduz()?0:250)}
+function fechaOpiniao(){const b=$('#opBox');b.classList.remove('aberto');$('#opFundo').hidden=true;setTimeout(()=>{b.hidden=true},200);if($('#prod').hidden&&$('#sacola').hidden)document.body.style.overflow=''}
+function notaOp(n){const mudouLado=(OP.nota>=4)!==(n>=4)||!OP.nota;OP.nota=n;const b=$('#opBox');b.style.setProperty('--op-cor',OP_COR[n]);b.classList.add('tem-nota');
+  $$('.op-faces [data-nota]').forEach(x=>{const on=+x.dataset.nota===n;x.setAttribute('aria-checked',on);x.classList.toggle('on',on);if(on){x.classList.remove('pula');void x.offsetWidth;x.classList.add('pula')}});
+  if(mudouLado)OP.temas.clear();const bom=n>=4;$('#opQ2').textContent=bom?(n===5?'Que bom! O que você mais gostou? 😍':'O que você mais gostou?'):n===3?'O que faria ficar melhor?':'Poxa 😕 O que podemos melhorar?';
+  $('#opChips').innerHTML=(bom?OP_BOM:OP_RUIM).map((t,i)=>`<button type="button" data-optema="${esc(t)}" aria-pressed="${OP.temas.has(t)}" style="--i:${i}">${esc(t)}</button>`).join('');
+  const ph=OP_PH[bom?'bom':'ruim'];$('#opTxt').placeholder=ph[Math.floor(Math.random()*ph.length)];
+  const r=$('#opResto');if(r.hidden){r.hidden=false;r.classList.remove('entra');void r.offsetWidth;r.classList.add('entra')}
+  if(n===5&&!reduz())festa()}
+$('#opAbre').onclick=()=>abreOpiniao(0,'');$('#opX').onclick=fechaOpiniao;$('#opFundo').onclick=fechaOpiniao;$('#opOk').onclick=fechaOpiniao;
+addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#opBox').hidden)fechaOpiniao()});
+$('#opBox').addEventListener('click',e=>{const f=e.target.closest('[data-nota]');if(f){notaOp(+f.dataset.nota);return}
+  const c=e.target.closest('#opChips [data-optema]');if(c){const t=c.dataset.optema;OP.temas.has(t)?OP.temas.delete(t):OP.temas.add(t);c.setAttribute('aria-pressed',OP.temas.has(t));c.classList.remove('pop');void c.offsetWidth;c.classList.add('pop')}});
+$('#opTxt').oninput=()=>{$('#opConta').textContent=$('#opTxt').value.length+'/500'};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-opq]');if(!b)return;const cod=(MEUS[0]&&MEUS[0].cod)||'';fechaSacola();setTimeout(()=>abreOpiniao(+b.dataset.opq,cod),reduz()?0:250)});
+$('#opEnvia').onclick=async()=>{if(!OP.nota){$('#opMsg').textContent='Escolha uma carinha.';return}const bt=$('#opEnvia');bt.disabled=true;bt.textContent='Enviando…';$('#opMsg').textContent='';
+  const d={p_nota:OP.nota,p_temas:[...OP.temas],p_texto:$('#opTxt').value.trim(),p_produto:$('#opProd').value.trim(),p_nome:$('#opNome').value.trim(),p_contato:$('#opFone').value.trim(),p_pedido:OP.pedido||''};
+  let ok=false,semBanco=false;try{const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/enviar_opiniao`,{method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify(d)});
+    if(r.status===404)semBanco=true;else{const j=await r.json();ok=!!(j&&j.ok);if(!ok)$('#opMsg').textContent=(j&&j.msg)||'Não deu para enviar agora. Tente de novo.'}}catch(e){$('#opMsg').textContent='Sem internet. Tente de novo.'}
+  if(semBanco){const num=String(CFG.whatsapp||'5562991153874').replace(/\D/g,'');const nomeN=['','Péssimo','Ruim','Ok','Bom','Amei'][OP.nota];
+    const t=`💬 *Minha opinião sobre a DKM*\nNota: ${['','😡','😕','😐','🙂','😍'][OP.nota]} ${nomeN}${d.p_temas.length?'\n'+d.p_temas.join(' · '):''}${d.p_texto?'\n\n'+d.p_texto:''}${d.p_produto?'\n\n🔎 Faltou: '+d.p_produto:''}${OP.pedido?'\n(pedido nº '+OP.pedido+')':''}`;
+    window.open(`https://wa.me/${num}?text=${encodeURIComponent(t)}`,'_blank');ok=true}
+  bt.disabled=false;bt.textContent='Enviar minha opinião 💜';if(!ok)return;
+  try{localStorage.setItem('dkm-opiniao-em',String(Date.now()))}catch(e){}
+  const nm=d.p_nome.split(' ')[0];$('#opFimT').textContent=nm?`Valeu demais, ${nm}!`:'Valeu demais!';
+  $('#opFimP').textContent=OP.nota<=3?'Obrigado pela sinceridade. A gente vai olhar com carinho e melhorar.':d.p_contato?'A gente lê tudo e, se precisar, te chama no WhatsApp.':'A gente lê tudo. Sua opinião já está com a DKM.';
+  $('#opForm').hidden=true;const f=$('#opFim');f.hidden=false;f.classList.remove('entra');void f.offsetWidth;f.classList.add('entra');$('#opCardT').textContent='Obrigado pela sua opinião! 💜 Quer mandar outra?'};
+try{if(localStorage.getItem('dkm-opiniao-em'))$('#opCardT').textContent='Obrigado pela sua opinião! 💜 Quer mandar outra?'}catch(e){}
 /* tela "Todas as categorias": todas as categorias da loja, toque e vai direto */
 function abreTodas(){const box=$('#tcBox');$('#tcQ').value='';montaTodas();box.hidden=false;$('#tcFundo').hidden=false;document.body.style.overflow='hidden';requestAnimationFrame(()=>box.classList.add('aberto'));setTimeout(()=>{if(matchMedia('(hover:hover)').matches)$('#tcQ').focus()},250)}
 function fechaTodas(){const box=$('#tcBox');box.classList.remove('aberto');$('#tcFundo').hidden=true;setTimeout(()=>{box.hidden=true},200);if($('#prod').hidden&&$('#sacola').hidden)document.body.style.overflow=''}
