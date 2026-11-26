@@ -1086,6 +1086,15 @@ html.menos-mov .opi-bt .opi-ic,html.menos-mov .opi-bt::after,html.menos-mov .opi
 .oc-f button:hover{transform:translateY(-3px) scale(1.12)}
 @keyframes ocPula{from{opacity:0;transform:translateY(8px) scale(.6)}}
 html.menos-mov .op-cutuca,html.menos-mov .oc-f button{transition:none;animation:none}
+
+/* boas-vindas de quem veio pelo link do parceiro */
+.ref-boas{position:fixed;z-index:80;left:50%;top:calc(14px + env(safe-area-inset-top,0px));width:min(420px,calc(100vw - 24px));display:flex;align-items:center;gap:12px;padding:12px 12px 12px 14px;border-radius:18px;color:#fff;background:linear-gradient(135deg,#7c3aed,#c026d3 55%,#e11d48);box-shadow:0 18px 44px rgba(124,58,237,.45);transform:translate(-50%,-140%);opacity:0;transition:transform .55s cubic-bezier(.3,1.4,.5,1),opacity .3s}
+.ref-boas.vem{transform:translate(-50%,0);opacity:1}
+.rb-av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:900;font-size:18px;background:rgba(255,255,255,.22);border:2px solid rgba(255,255,255,.6);flex:none;animation:rbPulsa 1.6s ease-in-out 3}
+@keyframes rbPulsa{50%{box-shadow:0 0 0 8px rgba(255,255,255,.15)}}
+.rb-tx{display:grid;gap:2px;min-width:0;flex:1}.rb-tx b{font-size:15px}.rb-tx small{font-size:12.5px;opacity:.92;line-height:1.35}
+.ref-boas>button{border:0;background:rgba(255,255,255,.18);color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;flex:none}
+html.menos-mov .ref-boas{transition:opacity .2s}html.menos-mov .rb-av{animation:none}
 </style>
 </head>
 <body>
@@ -1798,7 +1807,8 @@ $('#zap').addEventListener('click',e=>{const its=itensSacola();if(!its.length){e
   const base={p_codigo:cod,p_cliente:$('#nome').value.trim(),p_obs:[$('#obs').value.trim(),its.filter(({x})=>SACM[x.id]).map(({x})=>x.nome.slice(0,40)+': modelo '+SACM[x.id]).join('; ')].filter(Boolean).join(' | ').slice(0,300),p_itens:its.map(({x,q})=>({id:x.id,q})),...(descAtual()?{p_cupom:CUP.r.codigo}:{})};
   const extra={p_telefone:$('#fone').value.trim(),p_endereco:$('#combinar').checked?'Combinar pelo WhatsApp':$('#endereco').value.trim(),p_pagamento:PAGA+(PAGA==='Dinheiro'&&$('#troco').value.trim()?' (troco p/ R$ '+$('#troco').value.trim()+')':'')};
   const manda=b=>fetch(`${SUPABASE_URL}/rest/v1/rpc/registrar_encomenda`,{method:'POST',keepalive:true,headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify(b)});
-  try{manda({...base,...extra}).then(r=>{if(!r.ok)return manda(base)}).catch(()=>{})}catch(e){} /* se o banco ainda não tem os campos novos, grava do jeito antigo */
+  const marcaRef=()=>{if(REF&&REF.c)return fetch(`${SUPABASE_URL}/rest/v1/rpc/marcar_indicacao`,{method:'POST',keepalive:true,headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_codigo:cod,p_ref:REF.c})}).catch(()=>{})};
+  try{manda({...base,...extra}).then(r=>{if(!r.ok)return manda(base)}).then(marcaRef).catch(()=>{})}catch(e){} /* se o banco ainda não tem os campos novos, grava do jeito antigo */
   guardaPedido(cod,fim0());PED.env=Date.now();salvaPed();
   setTimeout(()=>{$('#okTxt').innerHTML=`Pedido nº <b>${esc(cod)}</b>. Confira a mensagem no WhatsApp e toque em enviar. Você acompanha tudo por aqui: <b>separando → saiu para entrega → entregue</b>.`;
     vaiPasso(4);SAC={};salva();SACM={};salvaM();PED={};salvaPed();renderSacola();render();renderPrateleiras()},400)});
@@ -1933,6 +1943,17 @@ function ligaProd(){
 function abreDoLink(){const m=/^#produto-(\d+)$/.exec(location.hash);if(m)abreProd(m[1])}
 
 /* ===== Cupom: o painel cria, a vitrine confere no banco e dá o desconto ===== */
+/* ===== indicação de parceiro/influenciador: ?ref=CODIGO vale 30 dias neste aparelho ===== */
+let REF=null,REF_NOVO=false;
+try{const u=new URL(location.href),q=u.searchParams.get('ref');if(q){REF={c:q.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,20),em:Date.now()};REF_NOVO=true;localStorage.setItem('dkm-ref',JSON.stringify(REF));u.searchParams.delete('ref');history.replaceState(null,'',u.pathname+u.search+u.hash)}
+  else{const g=JSON.parse(localStorage.getItem('dkm-ref')||'null');if(g&&g.c&&Date.now()-g.em<30*864e5)REF=g;else localStorage.removeItem('dkm-ref')}}catch(e){}
+async function boasVindasParc(){if(!REF||!REF_NOVO)return;let r;try{const x=await fetch(`${SUPABASE_URL}/rest/v1/rpc/parceiro_publico`,{method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_ref:REF.c})});if(!x.ok)return;r=await x.json()}catch(e){return}
+  if(!r||!r.ok){REF=null;try{localStorage.removeItem('dkm-ref')}catch(e){}return}
+  const usa=r.cupom&&(!CUP.cod||!(CUP.r&&CUP.r.ok));if(usa){CUP.cod=String(r.cupom).toUpperCase();CUP.r=null;try{localStorage.setItem('dkm-cupom',CUP.cod)}catch(e){}validaCupom(true)}
+  const b=document.createElement('div');b.className='ref-boas';b.setAttribute('role','status');
+  b.innerHTML=`<span class="rb-av" aria-hidden="true">${esc((r.nome||'?')[0])}</span><span class="rb-tx"><b>Indicação de ${esc(r.nome)} 💜</b><small>${usa?`Cupom <b>${esc(r.cupom)}</b> com ${(+r.desconto).toLocaleString('pt-BR')}% de desconto já está na sua sacola`:'Que bom ter você aqui! Boas compras'}</small></span><button type="button" aria-label="Fechar">✕</button>`;
+  document.body.appendChild(b);requestAnimationFrame(()=>requestAnimationFrame(()=>b.classList.add('vem')));if(usa&&!reduz())setTimeout(()=>{try{festa()}catch(e){}},500);
+  const sai=()=>{b.classList.remove('vem');setTimeout(()=>b.remove(),450)};b.querySelector('button').onclick=sai;setTimeout(sai,8000)}
 let CUP={cod:'',r:null,chave:null,pend:null,erroAnim:false};
 try{CUP.cod=localStorage.getItem('dkm-cupom')||''}catch(e){}
 try{const q=new URLSearchParams(location.search).get('cupom');if(q){CUP.cod=q.trim().toUpperCase().replace(/[^A-Z0-9-]/g,'').slice(0,30);localStorage.setItem('dkm-cupom',CUP.cod);history.replaceState(null,'',location.pathname+location.hash)}}catch(e){}
@@ -2088,7 +2109,7 @@ async function modoDono(){
 }
 botaoPedidos();vaiPasso(1);PASSO_MAX=1;
 montaLetreiro();statusLoja();setInterval(statusLoja,60000);ligaBanner();ligaFiltro();ligaProd();ligaBordas();
-renderCupom();if(CUP.cod)validaCupom(true);
+renderCupom();if(CUP.cod)validaCupom(true);setTimeout(boasVindasParc,900);
 carregar().then(modoDono);
 </script>
 </body>

@@ -832,6 +832,50 @@ html.menos-mov .ms-caixa,html.menos-mov .ms-fundo{transition:none}html.menos-mov
 .op-l1{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
 .op-tx{margin:6px 0 0;font-size:14px;line-height:1.45}.op-pf{margin:4px 0 0;font-size:13px}
 .op-c .op-tt{margin-top:6px}
+
+/* histórico do cliente */
+.cc2-hist{display:grid;gap:8px;margin-top:4px}
+.hc-h{font-size:12px;text-transform:uppercase;letter-spacing:.05em;font-weight:800;color:var(--muted)}.hc-h small{text-transform:none;letter-spacing:0;font-weight:600}
+.hc-g{border:1px solid var(--line);border-radius:12px;background:var(--surface-2);padding:9px 11px;animation:entraEnc .3s ease-out both;animation-delay:calc(var(--i,0) * 40ms)}
+.hc-enc{border-color:color-mix(in srgb,var(--warn) 45%,var(--line))}
+.hc-t{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.hc-t>.num{margin-left:auto}
+.hc-g ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:3px}
+.hc-g li{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--ink-2,var(--ink))}.hc-g li span:first-child{min-width:0;overflow-wrap:anywhere}.hc-g li .num{white-space:nowrap;color:var(--muted)}
+
+/* parceiros / influenciadores */
+.parc-painel{margin-bottom:12px;position:relative;overflow:hidden}
+.parc-painel::before{content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg,#8b5cf6,#d946ef,#f43f5e,#f59e0b)}
+.parc-painel .g-top>i{background:linear-gradient(135deg,#8b5cf6,#d946ef);}
+.pc-kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.pc-kpi>div{border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:var(--surface-2);display:grid;grid-template-columns:auto 1fr;column-gap:8px;align-items:center}
+.pc-kpi i{font-style:normal;font-size:20px;grid-row:span 2}.pc-kpi b{font-size:18px}.pc-kpi span{font-size:12px;color:var(--muted)}
+.pc-kpi .pc-kpi-pagar{border-color:color-mix(in srgb,#d946ef 45%,var(--line));background:color-mix(in srgb,#d946ef 8%,var(--surface-2))}
+@media (max-width:760px){.pc-kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pc-grade{display:grid;align-items:start;grid-template-columns:repeat(auto-fill,minmax(min(100%,360px),1fr));gap:10px}
+.pc{border:1.5px solid var(--line);border-radius:18px;padding:14px;background:var(--surface);display:grid;gap:10px;animation:entraEnc .35s ease-out both;animation-delay:calc(var(--i) * 50ms);align-content:start}
+.pc.off{opacity:.6}.pc.novo{border-color:#d946ef;box-shadow:0 0 0 4px color-mix(in srgb,#d946ef 18%,transparent)}
+.pc-top{display:flex;gap:10px;align-items:center}
+.pc-av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;background:linear-gradient(135deg,#8b5cf6,#d946ef 60%,#f43f5e);flex:none;box-shadow:0 4px 14px rgba(217,70,239,.35)}
+.pc-n{display:grid;min-width:0;flex:1}.pc-n b{font-size:15.5px}.pc-n span{font-size:12px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pc-chips{display:flex;flex-wrap:wrap;gap:5px}.pc-chips span{font-size:12px;border:1px solid var(--line);border-radius:99px;padding:3px 9px;background:var(--surface-2)}.pc-chips .mute{color:var(--muted)}
+.pc-st{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.pc-st>div{display:grid;gap:1px;padding:8px;border-radius:12px;background:var(--surface-2);min-width:0}.pc-st b{font-size:14.5px;white-space:nowrap}.pc-st span{font-size:11.5px;color:var(--muted);line-height:1.2}.pc-st small{font-size:10.5px;color:var(--muted)}
+.pc-st .pc-saldo.tem{background:linear-gradient(135deg,color-mix(in srgb,#8b5cf6 18%,var(--surface-2)),color-mix(in srgb,#f43f5e 14%,var(--surface-2)))}.pc-st .pc-saldo.tem b{color:#d946ef}
+@media (max-width:420px){.pc-st{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pc-pin{font-size:13px;padding:8px 10px;border-radius:10px;background:color-mix(in srgb,var(--warn) 12%,var(--surface-2));border:1px dashed color-mix(in srgb,var(--warn) 55%,var(--line))}.pc-pin b{font-size:16px;letter-spacing:.18em}
+.pc-bts{display:flex;flex-wrap:wrap;gap:6px}
+.pc-x{border-top:1px dashed var(--line);padding-top:10px;display:grid;gap:8px}
+.pc-peds{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.pc-peds li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 9px;border-radius:10px;background:var(--surface-2)}
+.pc-pv{font-size:16px}.pc-pn{display:grid;min-width:0}.pc-pn b{font-size:13px}.pc-pn small{font-size:11.5px;color:var(--muted)}.pc-pc{display:grid;justify-items:end;gap:2px}
+.pc-vazio{text-align:center;padding:22px 12px;border:1.5px dashed var(--line);border-radius:16px;display:grid;gap:6px;justify-items:center}.pc-vazio p{margin:0;color:var(--muted);max-width:420px}
+.pc-form{border:1.5px solid color-mix(in srgb,#d946ef 45%,var(--line));border-radius:18px;padding:14px;margin-bottom:12px;display:grid;gap:12px;background:color-mix(in srgb,#d946ef 4%,var(--surface));animation:entraEnc .3s ease-out}
+.pc-fh{display:flex;justify-content:space-between;align-items:center}.pc-fh b{font-size:16px}
+.pc-fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));gap:10px}.pc-fg .field{margin:0}
+.pc-fs{display:grid;gap:6px}.pc-fl{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.pc-prev{word-break:break-all}
+.pc-sim{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;padding:10px 12px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line)}
+.enc-parc{color:#d946ef;font-weight:700}
 </style>
 </head>
 <body>
@@ -1194,6 +1238,7 @@ html.menos-mov .ms-caixa,html.menos-mov .ms-fundo{transition:none}html.menos-mov
     <section id="v-gestao" class="view" hidden>
       <div class="head"><div><h1>Gestão</h1><p>Planilha, meta, conta e instalação do app.</p></div></div>
       <div class="tiles" id="gesTiles"></div>
+      <div class="panel parc-painel" id="parcPainel"></div>
       <div class="ges-grid">
         <div class="panel gcard" id="gPlan"><div class="g-top"><i>📊</i><div><h2>Importar planilha FINANCAS_DKM</h2><p class="note">Abas <b>Estoque</b> e <b>Tabela de venda</b>.</p></div></div>
           <label class="solta" id="soltaXlsx" for="fXlsx">
@@ -1332,6 +1377,7 @@ async function carregar(){
     [p,v,c,g,cp,cl,cu].forEach(r=>{if(r.error)throw r.error});
     S.est=p.data.map(x=>({id:x.id,qt:x.qtd,p:x.produto,m:x.modelo||'',t:x.cor||'',c:+x.custo,v:+x.venda,cat:x.categoria||categoria(x.produto)}));
     S.ven=v.data.map(x=>({id:x.id,q:x.qtd,p:x.produto,m:x.modelo||'',val:+x.valor,who:x.cliente,st:x.status,d:x.data,cat:x.categoria||categoria(x.produto),forma:x.forma||'',ped:x.pedido||null,cu:x.custo_unit!=null?+x.custo_unit:null,pid:x.produto_id||null,rec:x.recebido_em||null,em:x.criado_em||null}));
+    try{const pc=await sb.from('parceiros').select('id,criado_em,nome,codigo,instagram,telefone,pix,cupom,desconto,comissao_tipo,comissao_valor,ativo,obs').order('id');if(pc.error)throw pc.error;S.parc=pc.data.map(p=>({...p,desconto:+p.desconto,comissao_valor:+p.comissao_valor}));S.parcRes={};const pr=await sb.rpc('parceiros_resumo');(pr.data||[]).forEach(x=>S.parcRes[x.id]=x);S.parcOk=true}catch(x){S.parc=[];S.parcRes={};S.parcOk=false}
     try{const o=await sb.from('opinioes').select('*').order('criado_em',{ascending:false}).limit(300);if(o.error)throw o.error;S.opi=o.data;S.opiOk=true}catch(x){S.opi=[];S.opiOk=false}
     try{const dp=await sb.from('despesas').select('*').order('data',{ascending:false}).limit(500);if(dp.error)throw dp.error;S.desp=dp.data.map(x=>({...x,valor:+x.valor}));S.finOk=true}catch(x){S.desp=[];S.finOk=false}
     S.cnt={};c.data.forEach(x=>S.cnt[x.produto_id]=x.contado);
@@ -1570,7 +1616,7 @@ function calcClientes(){const m={},lim=new Date();lim.setFullYear(lim.getFullYea
 function nivelAuto(c,pr=P()){const r=pr.regras;if(!c)return'VAREJO';if(c.tot12>=r.ouro)return'OURO';if(c.tot12>=r.prata||c.compras12>=r.prata_compras)return'PRATA';return'VAREJO'}
 function nivelDe(k){const man=S.clientes[k]?.nivel;return man||nivelAuto(S.cli[k])}
 const sumido=c=>c.tot>=80&&c.semComprar!=null&&c.semComprar>120;
-let cliFiltro='Todos',cliTodos=false,cliAberto=null,cupFiltro='todos';
+let cliFiltro='Todos',cliTodos=false,cliAberto=null,cliHistTodos=false,cupFiltro='todos';
 /* troca o nome do cliente em todo lugar (cadastro, vendas, encomendas e cupons) */
 async function renomeiaCliente(velho,novoTxt){const novo=chave(novoTxt),pat=String(velho).trim().replace(/[\\%_]/g,m=>'\\'+m);
   const r=await sb.from('clientes').select('*').ilike('nome',pat);const antigo=(r.data||[])[0];
@@ -1582,6 +1628,101 @@ async function renomeiaCliente(velho,novoTxt){const novo=chave(novoTxt),pat=Stri
   if(antigo&&chave(antigo.nome)!==novo)must(await sb.from('clientes').delete().eq('nome',antigo.nome));
   else if(antigo&&antigo.nome!==novo)await sb.from('clientes').update({nome:novo}).eq('nome',antigo.nome)}
 function contaN(el,para){if(MENOS_MOV()||!para){el.textContent=para;return}const t0=performance.now();const f=t=>{const p=Math.min(1,(t-t0)/700);el.textContent=Math.round(para*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+/* ===== parceiros / influenciadores (afiliados) ===== */
+let PARC_ED=null,PARC_PIN={},PARC_ABRE={},PARC_PED={},PARC_NOVO=null;
+const linkParc=c=>VITRINE_URL+'?ref='+encodeURIComponent(c);
+const linkPainelParc=c=>VITRINE_URL.replace(/catalogo\.html$/,'parceiro.html')+'?c='+encodeURIComponent(c);
+const codParc=t=>semAc(String(t||'')).toUpperCase().replace(/[^A-Z0-9]/g,'');
+const pinAleat=()=>String(Math.floor(1000+Math.random()*9000));
+const comTxt=p=>p.comissao_tipo==='REAIS'?brlR(p.comissao_valor)+' por pedido':(+p.comissao_valor).toLocaleString('pt-BR')+'% de cada pedido';
+const nomeParc=id=>{const p=(S.parc||[]).find(x=>x.id===id);return p?cap(p.nome):'parceiro'};
+function msgAcesso(p,pin){return `Oi ${cap(p.nome).split(' ')[0]}! Agora você é parceiro(a) da DKM 💜\n\n🔗 *Seu link para divulgar:*\n${linkParc(p.codigo)}\n${p.desconto>0&&p.cupom?`\n🎟️ *Cupom para seus seguidores:* ${p.cupom} (${(+p.desconto).toLocaleString('pt-BR')}% de desconto)\n`:''}\n💰 *Sua comissão:* ${comTxt(p)} que for entregue e pago (quem comprar pelo seu link${p.cupom&&p.desconto>0?' ou com o seu cupom':''}).\n\n📊 *Acompanhe suas vendas e sua comissão:*\n${linkPainelParc(p.codigo)}\nCódigo: ${p.codigo}\nPIN: ${pin||'(te passo à parte)'}`}
+function renderParceiros(){const box=$('#parcPainel');if(!box)return;
+  const L=S.parc||[],R=S.parcRes||{},at=L.filter(p=>p.ativo);
+  const soma=k=>L.reduce((a,p)=>a+(+(R[p.id]||{})[k]||0),0);
+  const cab=`<div class="g-top"><i>🤝</i><div style="flex:1"><h2>Parceiros e influenciadores</h2><p class="note">Quem divulga a DKM ganha comissão pelos pedidos que traz. Eles entram numa página só deles e veem <b>só os próprios pedidos e a comissão</b> (nada de custo, fornecedor ou outros clientes).</p></div>${S.parcOk?`<button class="btn pri" type="button" data-pnovo>+ Novo parceiro</button>`:''}</div>`;
+  if(!S.parcOk){box.innerHTML=cab+'<div class="empty">Rode o <b>17-parceiros.sql</b> no Supabase para ligar os parceiros.</div>';return}
+  const tiles=`<div class="pc-kpi"><div><i>🤝</i><b class="num">${at.length}</b><span>parceiro${at.length===1?'':'s'} ativo${at.length===1?'':'s'}</span></div><div><i>🛍️</i><b class="num">${soma('mes_pedidos')}</b><span>pedidos no mês</span></div><div><i>📈</i><b class="num">${brl0(soma('mes_vendido'))}</b><span>vendido no mês</span></div><div class="pc-kpi-pagar"><i>💸</i><b class="num">${brl(soma('saldo'))}</b><span>comissão a pagar</span></div></div>`;
+  const form=PARC_ED?formParc(PARC_ED==='novo'?null:L.find(p=>p.id===PARC_ED)):'';
+  const cards=L.slice().sort((a,b)=>(b.ativo-a.ativo)||((+(R[b.id]||{}).mes_vendido||0)-(+(R[a.id]||{}).mes_vendido||0))).map((p,i)=>cardParc(p,R[p.id]||{},i)).join('');
+  box.innerHTML=cab+tiles+form+(L.length?`<div class="pc-grade">${cards}</div>`:(PARC_ED?'':`<div class="pc-vazio"><b>Nenhum parceiro ainda</b><p>Cadastre a primeira influenciadora: ela ganha um link, um cupom com o nome dela e uma página para acompanhar as vendas.</p><button class="btn pri" type="button" data-pnovo>+ Cadastrar parceiro</button></div>`));
+  ligaParc(box)}
+function cardParc(p,r,i){const ab=PARC_ABRE[p.id]||'',pin=PARC_PIN[p.id],ini=iniciais(p.nome);
+  const st=x=>x.cancelada?['cancelado','p-mute']:x.liberada?['liberada ✓','p-good']:(x.status==='ENTREGUE'||x.etapa==='ENTREGUE')?['falta o pagamento','p-warn']:['aguardando entrega','p-warn'];
+  const peds=PARC_PED[p.id];
+  return `<article class="pc${p.ativo?'':' off'}${PARC_NOVO===p.id?' novo':''}" style="--i:${i}" data-pid="${p.id}">
+    <div class="pc-top"><span class="pc-av">${esc(ini)}</span><div class="pc-n"><b>${esc(cap(p.nome))}</b><span>${p.instagram?esc(p.instagram.startsWith('@')?p.instagram:'@'+p.instagram):'sem Instagram'} · desde ${dataBR(String(p.criado_em).slice(0,10))}</span></div><span class="pill ${p.ativo?'p-good':'p-mute'}">${p.ativo?'ativo':'pausado'}</span></div>
+    <div class="pc-chips"><span title="Link de divulgação">🔗 ?ref=${esc(p.codigo)}</span>${p.desconto>0&&p.cupom?`<span title="Cupom para os seguidores">🎟️ ${esc(p.cupom)} −${(+p.desconto).toLocaleString('pt-BR')}%</span>`:'<span class="mute">🎟️ sem cupom</span>'}<span title="Comissão">💰 ${esc(comTxt(p))}</span></div>
+    <div class="pc-st"><div><b class="num">${+r.mes_pedidos||0}</b><span>pedidos no mês</span><small>${+r.pedidos||0} no total</small></div><div><b class="num">${brl0(r.vendido)}</b><span>vendeu</span><small>${brl0(r.mes_vendido)} no mês</small></div><div><b class="num">${brl(r.liberada)}</b><span>comissão liberada</span><small>${brl(r.aguardando)} aguardando</small></div><div class="pc-saldo${(+r.saldo||0)>0.004?' tem':''}"><b class="num">${brl(r.saldo)}</b><span>a pagar</span><small>${brl(r.pago)} já pago</small></div></div>
+    ${pin?`<div class="pc-pin">🔑 PIN de acesso: <b>${esc(pin)}</b> <span class="note">anote ou mande agora: depois ele fica escondido</span></div>`:''}
+    <div class="pc-bts"><button class="btn sm" type="button" data-plink="${p.id}">📋 Copiar link</button><button class="btn sm" type="button" data-pacesso="${p.id}">💬 Mandar acesso</button>${(+r.saldo||0)>0.004?`<button class="btn sm pri" type="button" data-ppaga="${p.id}">💸 Paguei</button>`:''}<button class="btn sm" type="button" data-pver="${p.id}" aria-expanded="${ab==='ped'}">📦 Pedidos</button><button class="btn sm" type="button" data-ped="${p.id}">✏️ Editar</button><button class="btn sm" type="button" data-pativo="${p.id}">${p.ativo?'⏸ Pausar':'▶ Ativar'}</button></div>
+    ${ab==='pagar'?`<div class="pc-x pc-pagar"><b>Registrar pagamento para ${esc(cap(p.nome).split(' ')[0])}</b>${p.pix?`<div class="row-f" style="gap:6px"><span class="note">Pix: <b>${esc(p.pix)}</b></span><button class="link-bt" type="button" data-ppix="${p.id}">copiar</button></div>`:'<span class="note">Sem chave Pix cadastrada (dá para pôr em ✏️ Editar).</span>'}<div class="row-f" style="gap:6px;flex-wrap:nowrap"><input class="inp num" id="ppVal" inputmode="decimal" value="${(+r.saldo||0).toFixed(2).replace('.',',')}" style="max-width:140px"><button class="btn sm pri" type="button" data-ppok="${p.id}">✓ Confirmar</button><button class="btn sm" type="button" data-pfecha>Cancelar</button></div></div>`:''}
+    ${ab==='ped'?`<div class="pc-x">${!peds?'<p class="note">Carregando…</p>':peds.length?`<ul class="pc-peds">${peds.map(x=>{const[s,c]=st(x);return `<li><span class="pc-pv">${x.via==='CUPOM'?'🎟️':'🔗'}</span><span class="pc-pn"><b>nº ${esc(x.codigo)} · ${esc(x.cliente||'Cliente')}</b><small>${new Date(x.criado_em).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})} · ${x.itens} ite${+x.itens===1?'m':'ns'} · ${brl(x.total)}</small></span><span class="pc-pc"><b class="num">${brl(x.comissao)}</b><span class="pill ${c}">${s}</span></span></li>`}).join('')}</ul>`:'<p class="note">Ainda não veio nenhum pedido por este parceiro.</p>'}</div>`:''}
+  </article>`}
+function formParc(p){const n=!p,d=p||{nome:'',instagram:'',telefone:'',pix:'',codigo:'',cupom:'',desconto:10,comissao_tipo:'PCT',comissao_valor:10};
+  return `<div class="pc-form" id="pcForm" data-id="${n?'':p.id}"><div class="pc-fh"><b>${n?'✨ Novo parceiro':'✏️ Editar '+esc(cap(d.nome))}</b><button class="ic-bt" type="button" data-pfx aria-label="Fechar">✕</button></div>
+    <div class="pc-fg">
+      <div class="field"><label for="pfNome">Nome *</label><input class="inp" id="pfNome" value="${esc(d.nome)}" placeholder="Ex.: Jéssica Souza" autocomplete="off"></div>
+      <div class="field"><label for="pfInsta">Instagram</label><input class="inp" id="pfInsta" value="${esc(d.instagram)}" placeholder="@jessicamakes" autocomplete="off"></div>
+      <div class="field"><label for="pfFone">WhatsApp</label><input class="inp" id="pfFone" value="${esc(d.telefone)}" inputmode="tel" placeholder="62 99999-0000" autocomplete="off"></div>
+      <div class="field"><label for="pfPix">Chave Pix (para pagar a comissão)</label><input class="inp" id="pfPix" value="${esc(d.pix)}" autocomplete="off"></div>
+    </div>
+    <div class="pc-fs"><span class="pc-fl">🔗 Link de divulgação</span><div class="row-f" style="gap:8px;flex-wrap:nowrap;align-items:center"><span class="note" style="white-space:nowrap">?ref=</span><input class="inp" id="pfCod" value="${esc(d.codigo)}" placeholder="JESSICA" autocomplete="off" style="text-transform:uppercase;max-width:220px"></div><span class="note pc-prev" id="pfLink"></span></div>
+    <div class="pc-fs"><span class="pc-fl">🎟️ Desconto para os seguidores</span><div class="seg" role="group" id="pfDescSeg">${[0,5,10,15].map(v=>`<button type="button" data-pfd="${v}">${v?v+'%':'Sem cupom'}</button>`).join('')}<button type="button" data-pfd="x">Outro</button></div>
+      <div class="row-f" style="gap:8px;margin-top:8px;align-items:center" id="pfCupRow"><input class="inp num" id="pfDesc" inputmode="decimal" value="${+d.desconto||0}" style="max-width:80px" aria-label="Desconto em %"><span class="note">% · cupom</span><input class="inp" id="pfCup" value="${esc(d.cupom||'')}" placeholder="JESSICA10" autocomplete="off" style="text-transform:uppercase;max-width:180px" aria-label="Código do cupom"></div></div>
+    <div class="pc-fs"><span class="pc-fl">💰 Comissão do parceiro</span><div class="row-f" style="gap:8px"><div class="seg" role="group"><button type="button" data-pft="PCT" aria-pressed="${d.comissao_tipo!=='REAIS'}">% do pedido</button><button type="button" data-pft="REAIS" aria-pressed="${d.comissao_tipo==='REAIS'}">R$ por pedido</button></div><input class="inp num" id="pfCom" inputmode="decimal" value="${String(+d.comissao_valor||0).replace('.',',')}" style="max-width:90px" aria-label="Valor da comissão"></div><span class="note">Libera só quando o pedido é <b>entregue e pago</b>. Pedido cancelado não gera comissão.</span></div>
+    <div class="pc-sim" id="pfSim"></div>
+    <div class="pc-fs"><span class="pc-fl">🔑 PIN de 4 números para entrar na página do parceiro</span><div class="row-f" style="gap:8px;flex-wrap:nowrap"><input class="inp num" id="pfPin" inputmode="numeric" maxlength="4" value="${n?pinAleat():''}" placeholder="${n?'':'deixe vazio para manter o atual'}" style="max-width:${n?'120px':'240px'}" autocomplete="off"><button class="btn sm" type="button" id="pfPinNovo">🎲 ${n?'Outro':'Trocar PIN'}</button></div></div>
+    <p class="note" id="pfMsg" style="color:var(--bad,#e5484d);margin:0"></p>
+    <div class="row-f" style="gap:8px"><button class="btn pri" type="button" id="pfSalva">${n?'Cadastrar parceiro':'Salvar'}</button><button class="btn" type="button" data-pfx>Cancelar</button></div></div>`}
+function ligaForm(){const f=$('#pcForm');if(!f)return;const id=+f.dataset.id||null,velho=id&&S.parc.find(p=>p.id===id);let codMao=!!velho,cupMao=!!(velho&&velho.cupom),tipo=velho?velho.comissao_tipo:'PCT';
+  const desc=()=>Math.max(0,Math.min(100,dec($('#pfDesc').value)||0));
+  const sim=()=>{const cod=codParc($('#pfCod').value);$('#pfLink').innerHTML=cod?`${esc(linkParc(cod))}`:'Escreva o código (só letras e números).';
+    const ds=desc();$('#pfCupRow').style.display=ds>0?'':'none';$$('[data-pfd]',f).forEach(b=>b.setAttribute('aria-pressed',b.dataset.pfd==='x'?String(![0,5,10,15].includes(ds)):String(+b.dataset.pfd===ds)));
+    if(!cupMao)$('#pfCup').value=cod&&ds>0?cod+String(ds).replace(/[.,].*/,''):'';
+    const cv=dec($('#pfCom').value)||0,base=100,paga=base*(1-ds/100),com=tipo==='REAIS'?cv:paga*cv/100;
+    $('#pfSim').innerHTML=`<span>Num pedido de <b>${brlR(base)}</b>:</span><span>👤 o seguidor paga <b>${brlR(paga)}</b></span><span>🤝 comissão <b>${brlR(com)}</b></span><span>🏪 fica para a DKM <b>${brlR(paga-com)}</b></span>`};
+  $('#pfNome').oninput=()=>{if(!codMao)$('#pfCod').value=codParc(cap($('#pfNome').value).split(' ')[0]).slice(0,15);sim()};
+  $('#pfCod').oninput=()=>{codMao=true;sim()};$('#pfCup').oninput=()=>{cupMao=true};$('#pfDesc').oninput=sim;$('#pfCom').oninput=sim;
+  $$('[data-pfd]',f).forEach(b=>b.onclick=()=>{if(b.dataset.pfd==='x'){$('#pfDesc').value='';$('#pfCupRow').style.display='';$('#pfDesc').focus();return}$('#pfDesc').value=b.dataset.pfd;sim()});
+  $$('[data-pft]',f).forEach(b=>b.onclick=()=>{tipo=b.dataset.pft;$$('[data-pft]',f).forEach(x=>x.setAttribute('aria-pressed',x===b));if(tipo==='REAIS'&&dec($('#pfCom').value)>20)$('#pfCom').value='3';if(tipo==='PCT'&&!dec($('#pfCom').value))$('#pfCom').value='10';sim()});
+  $('#pfPinNovo').onclick=()=>{$('#pfPin').value=pinAleat();$('#pfPin').style.maxWidth='120px'};
+  $('#pfSalva').onclick=()=>busy($('#pfSalva'),async()=>{const m=$('#pfMsg');m.textContent='';
+    const nome=$('#pfNome').value.trim().replace(/\s+/g,' '),cod=codParc($('#pfCod').value),ds=desc(),cup=ds>0?codParc($('#pfCup').value):'',cv=dec($('#pfCom').value)||0,pin=$('#pfPin').value.replace(/\D/g,'');
+    if(!nome){m.textContent='Falta o nome.';$('#pfNome').focus();return}if(cod.length<3){m.textContent='O código do link precisa de 3 letras ou mais.';$('#pfCod').focus();return}
+    if(ds>0&&cup.length<3){m.textContent='Escreva o código do cupom.';$('#pfCup').focus();return}if((!velho||$('#pfPin').value)&&!/^\d{4}$/.test(pin)){m.textContent='O PIN precisa ter 4 números.';$('#pfPin').focus();return}
+    if(S.parc.some(p=>p.codigo===cod&&p.id!==id)){m.textContent='Esse código de link já é de outro parceiro.';return}
+    if(cup&&S.parc.some(p=>p.cupom===cup&&p.id!==id)){m.textContent='Esse cupom já é de outro parceiro.';return}
+    const cupOutro=cup&&S.cupons.find(c=>String(c.codigo).toUpperCase()===cup&&!/^Parceiro/.test(c.descricao||''));if(cupOutro&&!f.dataset.okcup){f.dataset.okcup=1;m.textContent=`Já existe um cupom ${cup} criado na aba Cupons. Toque em salvar de novo para usar esse mesmo cupom para o parceiro (o desconto vira ${ds}%).`;return}
+    const row={nome,codigo:cod,instagram:$('#pfInsta').value.trim(),telefone:$('#pfFone').value.replace(/\D/g,''),pix:$('#pfPix').value.trim(),cupom:cup||null,desconto:ds,comissao_tipo:tipo,comissao_valor:cv,...(velho?{}:{ativo:true}),...(pin?{pin_novo:pin}:{})};
+    const r=velho?await sb.from('parceiros').update(row).eq('id',id).select().single():await sb.from('parceiros').insert(row).select().single();
+    if(r.error){m.textContent=/duplicate|unique/i.test(r.error.message||'')?'Esse código já é de outro parceiro.':msgErro(r.error);return}
+    const p=r.data;
+    if(cup){const ja=S.cupons.find(c=>String(c.codigo).toUpperCase()===cup);const cr=ja?await sb.from('cupons').update({tipo:'PCT',valor:ds,ativo:p.ativo,cliente:null,usos_max:null,validade:null,expira_em:null,descricao:'Parceiro '+cap(nome)}).eq('codigo',ja.codigo)
+      :await sb.from('cupons').insert({codigo:cup,tipo:'PCT',valor:ds,cliente:null,validade:null,expira_em:null,usos_max:null,usos:0,ativo:p.ativo,descricao:'Parceiro '+cap(nome)});if(cr.error)toast('Parceiro salvo, mas o cupom deu erro: '+msgErro(cr.error))}
+    if(velho&&velho.cupom&&velho.cupom!==cup)await sb.from('cupons').update({ativo:false}).eq('codigo',velho.cupom);
+    if(pin)PARC_PIN[p.id]=pin;PARC_ED=null;PARC_NOVO=p.id;toast(velho?'✏️ Parceiro atualizado':`🤝 ${cap(nome).split(' ')[0]} agora é parceiro(a) da DKM!`);await carregar();
+    setTimeout(()=>{const c=$(`.pc[data-pid="${p.id}"]`);if(c)c.scrollIntoView({block:'center',behavior:'smooth'})},120)});
+  sim();if(!velho)$('#pfNome').focus()}
+function ligaParc(box){
+  $$('[data-pnovo]',box).forEach(b=>b.onclick=()=>{PARC_ED='novo';renderParceiros();$('#pcForm').scrollIntoView({block:'start',behavior:'smooth'})});
+  $$('[data-pfx]',box).forEach(b=>b.onclick=()=>{PARC_ED=null;renderParceiros()});
+  $$('[data-ped]',box).forEach(b=>b.onclick=()=>{PARC_ED=+b.dataset.ped;renderParceiros();$('#pcForm').scrollIntoView({block:'start',behavior:'smooth'})});
+  const P=id=>S.parc.find(p=>p.id===+id);
+  $$('[data-plink]',box).forEach(b=>b.onclick=()=>copy(linkParc(P(b.dataset.plink).codigo)));
+  $$('[data-ppix]',box).forEach(b=>b.onclick=()=>copy(P(b.dataset.ppix).pix));
+  $$('[data-pacesso]',box).forEach(b=>b.onclick=()=>{const p=P(b.dataset.pacesso),t=msgAcesso(p,PARC_PIN[p.id]),f=String(p.telefone||'').replace(/\D/g,'');
+    if(f.length>=10)window.open(`https://wa.me/${f.length<=11?'55'+f:f}?text=${encodeURIComponent(t)}`,'_blank');else{copy(t);toast('Mensagem copiada: cole no WhatsApp do parceiro')}});
+  $$('[data-ppaga]',box).forEach(b=>b.onclick=()=>{const id=+b.dataset.ppaga;PARC_ABRE[id]=PARC_ABRE[id]==='pagar'?'':'pagar';renderParceiros();const i=$('#ppVal');if(i){i.focus();i.select()}});
+  $$('[data-pfecha]',box).forEach(b=>b.onclick=()=>{PARC_ABRE[+b.closest('.pc').dataset.pid]='';renderParceiros()});
+  $$('[data-ppok]',box).forEach(b=>b.onclick=()=>busy(b,async()=>{const id=+b.dataset.ppok,v=dec($('#ppVal').value);if(!(v>0)){toast('Escreva o valor pago');return}
+    must(await sb.from('parceiro_pagamentos').insert({parceiro_id:id,valor:r2(v)}));PARC_ABRE[id]='';toast(`💸 Pagamento de ${brlR(v)} registrado para ${nomeParc(id).split(' ')[0]}`);await carregar()}));
+  $$('[data-pver]',box).forEach(b=>b.onclick=async()=>{const id=+b.dataset.pver;PARC_ABRE[id]=PARC_ABRE[id]==='ped'?'':'ped';renderParceiros();if(PARC_ABRE[id]!=='ped')return;
+    const r=await sb.rpc('dkm_parc_pedidos',{p_parc:id});PARC_PED[id]=(r.data||[]).sort((a,b)=>String(b.criado_em).localeCompare(String(a.criado_em)));if(r.error)toast(msgErro(r.error));renderParceiros()});
+  $$('[data-pativo]',box).forEach(b=>b.onclick=()=>busy(b,async()=>{const p=P(b.dataset.pativo),nv=!p.ativo;must(await sb.from('parceiros').update({ativo:nv}).eq('id',p.id));
+    if(p.cupom)await sb.from('cupons').update({ativo:nv}).eq('codigo',p.cupom);p.ativo=nv;toast(nv?`▶ ${cap(p.nome).split(' ')[0]} ativo de novo`:`⏸ ${cap(p.nome).split(' ')[0]} pausado: o link e o cupom param de valer`);await carregar()}));
+  ligaForm()}
+
 /* ===== opiniões dos clientes (vêm da vitrine) ===== */
 let OPF='todas';
 const FACE=['','😡','😕','😐','🙂','😍'],FACE_N=['','Péssimo','Ruim','Ok','Bom','Amei'],FACE_COR=['','#ef4444','#f97316','#eab308','#22c55e','#a855f7'];
@@ -1608,6 +1749,17 @@ function renderOpinioes(){const box=$('#opBoxP');if(!box)return;const L=S.opi||[
   $$('[data-opf]',box).forEach(b=>b.onclick=()=>{OPF=b.dataset.opf;renderOpinioes()});
   $$('[data-oplida]',box).forEach(b=>b.onclick=()=>busy(b,async()=>{const o=L.find(x=>String(x.id)===b.dataset.oplida);must(await sb.from('opinioes').update({lida:true}).eq('id',o.id));o.lida=true;renderOpinioes()}));
   $$('[data-opapaga]',box).forEach(b=>b.onclick=()=>{const o=L.find(x=>String(x.id)===b.dataset.opapaga);confirmBox(b.closest('.op-c').querySelector('.row-f'),'Apagar esta opinião?','Apagar',()=>busy(null,async()=>{must(await sb.from('opinioes').delete().eq('id',o.id));S.opi=S.opi.filter(x=>x!==o);renderOpinioes();toast('Opinião apagada')}))})}
+/* o que o cliente comprou: vendas agrupadas por pedido + encomendas em andamento */
+function histCliente(nome){const k=chave(nome);
+  const V=S.ven.filter(v=>chave(v.who)===k);const G={};
+  V.forEach(v=>{const dt=v.d||(v.em?String(v.em).slice(0,10):'');const id=v.ped||('d|'+dt);(G[id]=G[id]||{dt,it:[],tot:0,deve:0,em:v.em||''}).it.push(v);const g=G[id];g.tot+=v.val;if(v.st!=='PAGO')g.deve+=v.val;if(dt&&(!g.dt||dt>g.dt))g.dt=dt});
+  const L=Object.values(G).sort((a,b)=>(b.dt||'').localeCompare(a.dt||'')||String(b.em).localeCompare(String(a.em)));
+  let enc=[];try{enc=(ENC.lista||[]).filter(e=>chave(e.cliente)===k&&e.status!=='CANCELADA'&&e.status!=='ENTREGUE')}catch(x){}
+  const mostra=cliHistTodos?L:L.slice(0,5);
+  const enH=enc.map(e=>`<div class="hc-g hc-enc"><div class="hc-t"><b>📦 Encomenda nº ${esc(e.codigo)}</b><span class="pill p-warn">em andamento</span><b class="num">${brl(totEnc(e))}</b></div><ul>${itensDe(e).map(i=>`<li><span>${i.qtd}x ${esc(cap(i.nome))}</span><span class="num">${brl(i.qtd*(+i.preco||0))}</span></li>`).join('')}</ul></div>`).join('');
+  const vH=mostra.map((g,n)=>`<div class="hc-g" style="--i:${n}"><div class="hc-t"><b>${g.dt?dataBR(g.dt):'sem data'}</b>${g.deve>0.004?`<span class="pill p-warn">a receber ${brl(g.deve)}</span>`:'<span class="pill p-good">pago</span>'}<b class="num">${brl(g.tot)}</b></div>
+    <ul>${g.it.map(v=>`<li><span>${v.q}x ${esc(cap(v.p))}${nz(v.m)?' · '+esc(v.m):''}</span><span class="num">${brl(v.val)}</span></li>`).join('')}</ul></div>`).join('');
+  return `<div class="cc2-hist"><span class="hc-h">🧾 O que comprou${L.length?` <small>· ${L.length} pedido${L.length===1?'':'s'}</small>`:''}</span>${enH}${vH||(!enH?'<p class="note" style="margin:0">Nenhuma compra registrada ainda.</p>':'')}${L.length>mostra.length?`<button class="link-bt" type="button" data-histmais>Ver os ${L.length} pedidos ›</button>`:''}</div>`}
 function renderClientes(){
   const L=Object.values(S.cli),tot=L.reduce((a,c)=>a+c.tot,0)||1,top10=L.slice().sort((a,b)=>b.tot-a.tot).slice(0,10).reduce((a,c)=>a+c.tot,0);
   const ativos=L.filter(c=>c.semComprar!=null&&c.semComprar<=90).length,sum=L.filter(sumido),uma=L.filter(c=>c.compras===1).length,dev=L.filter(c=>c.deve>0);
@@ -1637,10 +1789,11 @@ function renderClientes(){
       ${ab?`<div class="cc2-mais">
         <div class="cc2-info"><span>🧾 <b>${c.compras}</b> compra${c.compras===1?'':'s'} no total</span><span>💰 <b>${brl0(c.tot)}</b> no total</span><span>📅 última: <b>${c.ult?dataBR(c.ult):'—'}</b></span>${fone?`<span>📱 <b>${esc(fone)}</b></span>`:''}</div>
         <label class="cc2-niv">Nível<select class="inp" data-niv="${esc(c.nome)}" aria-label="Nível de ${esc(cap(c.nome))}"><option value="">Automático (${NOME_NIVEL[nivelAuto(c)]})</option>${NIVEIS.map(x=>`<option value="${x}"${man===x?' selected':''}>${ICONE[x]} ${NOME_NIVEL[x]}</option>`).join('')}</select></label>
-        <div class="row-f" style="gap:6px"><button class="btn sm pri" type="button" data-cup="${esc(c.nome)}">🎟️ Mandar cupom</button>${fone.length>=10?`<a class="btn sm" href="https://wa.me/${fone.length<=11?'55'+fone:fone}" target="_blank" rel="noopener">💬 WhatsApp</a>`:''}<button class="btn sm" type="button" data-novoped="${esc(c.nome)}">🛒 Novo pedido</button><button class="btn sm" type="button" data-renome="${esc(c.nome)}">✏️ Mudar nome</button></div><div class="ren" hidden></div></div>`:''}
+        <div class="row-f" style="gap:6px"><button class="btn sm pri" type="button" data-cup="${esc(c.nome)}">🎟️ Mandar cupom</button>${fone.length>=10?`<a class="btn sm" href="https://wa.me/${fone.length<=11?'55'+fone:fone}" target="_blank" rel="noopener">💬 WhatsApp</a>`:''}<button class="btn sm" type="button" data-novoped="${esc(c.nome)}">🛒 Novo pedido</button><button class="btn sm" type="button" data-renome="${esc(c.nome)}">✏️ Mudar nome</button></div><div class="ren" hidden></div>${histCliente(c.nome)}</div>`:''}
     </article>`}).join(''):'<div class="panel"><div class="empty">Nenhum cliente nesse grupo.</div></div>')+(mostra.length<vis.length?`<div class="cli-mais"><button class="btn" type="button" id="cliMais">Ver todos os ${vis.length}</button></div>`:'');
   if($('#cliMais'))$('#cliMais').onclick=()=>{cliTodos=true;renderClientes()};
-  $$('[data-abre]').forEach(b=>b.onclick=()=>{cliAberto=cliAberto===b.dataset.abre?null:b.dataset.abre;renderClientes()});
+  $$('[data-abre]').forEach(b=>b.onclick=()=>{cliAberto=cliAberto===b.dataset.abre?null:b.dataset.abre;cliHistTodos=false;renderClientes()});
+  $$('[data-histmais]').forEach(b=>b.onclick=()=>{cliHistTodos=true;renderClientes()});
   $$('[data-renome]').forEach(b=>b.onclick=()=>{const velho=b.dataset.renome,box=b.closest('.row-f').nextElementSibling;box.hidden=false;
     box.innerHTML=`<label class="ren-l">Novo nome de <b>${esc(cap(velho))}</b></label><div class="row-f" style="gap:6px;flex-wrap:nowrap"><input class="inp" id="renInp" value="${esc(cap(velho))}" autocomplete="off" style="flex:1;min-width:0"><button class="btn sm pri" type="button" id="renOk">Salvar</button><button class="btn sm" type="button" id="renX">✕</button></div><p class="note" id="renAviso" style="margin:6px 0 0">Troca o nome nas vendas, encomendas, cupons e no cadastro.</p>`;
     const inp=$('#renInp');inp.focus();inp.select();$('#renX').onclick=()=>{box.hidden=true;box.innerHTML=''};
@@ -2548,7 +2701,7 @@ function encHTML(e){const its=itensDe(e),st=estagio(e),pend=pendentes(e).reduce(
   return `<article class="enc est-${st.toLowerCase()}"><div class="enc-top"><div><b class="enc-nome">${esc(cap(e.cliente))}</b><span class="note">nº ${esc(e.codigo)} · ${quando} · ${e.origem==='VITRINE'?'🛍️ vitrine':'✍️ lançada aqui'}</span></div><b class="num enc-tot">${brl(totEnc(e))}</b></div>
     ${st==='CANCELADA'?`<div class="enc-can"><i>✕</i>${/cancelado pelo cliente/i.test(e.obs||'')||e.cancelado_por==='CLIENTE'?'Cancelado pelo cliente':'Pedido cancelado'}</div>`:''}${st!=='CANCELADA'?`<ol class="trilha" style="--k:${k};--n:${P.length}">${P.map(([c,ic,n],j)=>`<li class="${j<k||st==='ENTREGUE'?'ok':j===k?'agora':''}"><i>${ic}</i><span>${n}</span></li>`).join('')}<span class="tr-linha"><em></em></span>${st==='rota'?'<span class="tr-caminhao" aria-hidden="true">🚚</span>':''}</ol>`:''}
     <ul class="enc-it">${linhas}</ul>${e.venda_pedido?'<span class="tag-venda">💚 venda lançada no financeiro</span>':st==='ENTREGUE'?'<span class="tag-venda falta">⚠️ venda ainda não lançada · toque em 🧾</span>':''}
-    ${[e.telefone?`<span>📱 ${esc(e.telefone)}</span>`:'',e.endereco?`<span>📍 ${esc(e.endereco)}</span>`:'',e.pagamento?`<span>💳 ${esc(e.pagamento)}</span>`:'',e.cupom?`<span>🎟️ ${esc(e.cupom)} − ${brl(e.desconto)}</span>`:'',e.obs?`<span>📝 ${esc(e.obs)}</span>`:''].filter(Boolean).length?`<div class="enc-ct">${[e.telefone?`<span>📱 ${esc(e.telefone)}</span>`:'',e.endereco?`<span>📍 ${esc(e.endereco)}</span>`:'',e.pagamento?`<span>💳 ${esc(e.pagamento)}</span>`:'',e.cupom?`<span>🎟️ ${esc(e.cupom)} − ${brl(e.desconto)}</span>`:'',e.obs?`<span>📝 ${esc(e.obs)}</span>`:''].filter(Boolean).join('')}</div>`:''}
+    ${[e.telefone?`<span>📱 ${esc(e.telefone)}</span>`:'',e.endereco?`<span>📍 ${esc(e.endereco)}</span>`:'',e.pagamento?`<span>💳 ${esc(e.pagamento)}</span>`:'',e.cupom?`<span>🎟️ ${esc(e.cupom)} − ${brl(e.desconto)}</span>`:'',e.parceiro_id?`<span class="enc-parc">🤝 indicado por ${esc(nomeParc(e.parceiro_id).split(' ')[0])}</span>`:'',e.obs?`<span>📝 ${esc(e.obs)}</span>`:''].filter(Boolean).length?`<div class="enc-ct">${[e.telefone?`<span>📱 ${esc(e.telefone)}</span>`:'',e.endereco?`<span>📍 ${esc(e.endereco)}</span>`:'',e.pagamento?`<span>💳 ${esc(e.pagamento)}</span>`:'',e.cupom?`<span>🎟️ ${esc(e.cupom)} − ${brl(e.desconto)}</span>`:'',e.parceiro_id?`<span class="enc-parc">🤝 indicado por ${esc(nomeParc(e.parceiro_id).split(' ')[0])}</span>`:'',e.obs?`<span>📝 ${esc(e.obs)}</span>`:''].filter(Boolean).join('')}</div>`:''}
     <div class="enc-pe">${pri}<span style="flex:1"></span>${sec}</div></article>`}
 
 function renderEncomendas(){
@@ -2694,7 +2847,7 @@ $('#enSalva').onclick=()=>{const cli=$('#enCli').value.trim();if(!cli){$('#enMsg
     must(await sb.from('encomenda_itens').insert(ENC.nova.map(o=>{const est=o.c.produto_id&&S.est.find(x=>x.id===o.c.produto_id);return{encomenda_id:id,catalogo_id:o.c.id,nome:o.c.nome,categoria:o.c.categoria,fornecedor:o.c.fornecedor||'',pronta:!!(est&&est.qt>0),qtd:o.q,preco:o.c.preco,custo:o.c.custo}})));
     ENC.nova=[];$('#enCli').value='';$('#enFone').value='';$('#enMsg').textContent='';$('#encNova').hidden=true;renderNova();toast('Encomenda nº '+cod+' salva');await carregarEncomendas()})};
 
-function renderAll(){renderOpinioes();renderControle();renderFinanceiro();renderPedidoStatic();renderBusca();repreco();renderCliInfo();renderCart();renderClientes();renderRepo();renderCompras();renderContagem();if(ENC.ok)renderEncomendas();if(contaModo==='contar')renderConta();renderSide()}
+function renderAll(){renderOpinioes();renderParceiros();renderControle();renderFinanceiro();renderPedidoStatic();renderBusca();repreco();renderCliInfo();renderCart();renderClientes();renderRepo();renderCompras();renderContagem();if(ENC.ok)renderEncomendas();if(contaModo==='contar')renderConta();renderSide()}
 iniciar();
 </script>
 </body>

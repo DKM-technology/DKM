@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<script>try{var t=localStorage.getItem('dkm-tema-vit')||'escuro';document.documentElement.setAttribute('data-tema',t)}catch(e){document.documentElement.setAttribute('data-tema','escuro')}</script>
+<script>try{if(localStorage.getItem('dkm-menos-mov')==='1')document.documentElement.classList.add('menos-mov')}catch(e){}</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b1c">
+<meta name="robots" content="noindex">
+<title>Parceiros DKM</title>
+<meta name="description" content="Área do parceiro DKM: acompanhe as vendas que você indicou e a sua comissão.">
+<link rel="icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800;900&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#0b0b1c;--surface:#15152a;--surface-2:#1d1d37;--ink:#ededf7;--muted:#a2a5c3;--line:#2b2b48;
+  --good:#3ecf8e;--warn:#f2b45a;--bad:#f2666a;--rosa:#d946ef;--roxo:#8b5cf6;--verm:#f43f5e;
+  --grad:linear-gradient(135deg,#8b5cf6,#d946ef 55%,#f43f5e);
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;--f-body:"IBM Plex Sans","Segoe UI",Roboto,sans-serif;color-scheme:dark}
+html[data-tema="claro"]{--bg:#f4f3fb;--surface:#ffffff;--surface-2:#f0eff8;--ink:#17172b;--muted:#5d607a;--line:#dddbeb;--good:#13945c;--warn:#a8650a;--bad:#d12c33;color-scheme:light}
+@media (prefers-color-scheme:light){html[data-tema="auto"]{--bg:#f4f3fb;--surface:#ffffff;--surface-2:#f0eff8;--ink:#17172b;--muted:#5d607a;--line:#dddbeb;--good:#13945c;--warn:#a8650a;--bad:#d12c33;color-scheme:light}}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
+body{margin:0;min-height:100vh;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14.5px;line-height:1.45;overflow-x:hidden}
+button,input{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:980px;margin:0 auto;padding:0 max(16px,env(safe-area-inset-left,0px)) 40px max(16px,env(safe-area-inset-right,0px))}
+.brilho{position:fixed;inset:-30vh -20vw auto;height:80vh;pointer-events:none;z-index:0;background:radial-gradient(40% 50% at 25% 40%,rgba(139,92,246,.28),transparent 70%),radial-gradient(35% 45% at 75% 30%,rgba(217,70,239,.22),transparent 70%);filter:blur(10px);animation:flutua 14s ease-in-out infinite alternate}
+@keyframes flutua{to{transform:translate3d(4vw,3vh,0) scale(1.08)}}
+main{position:relative;z-index:1}
+.topo{display:flex;align-items:center;gap:10px;padding:16px 0}
+.marca{font-family:var(--f-display);font-weight:900;font-size:22px;letter-spacing:.02em}
+.marca small{display:block;font-family:var(--f-body);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.topo .esp{flex:1}
+.bt{border:1px solid var(--line);background:var(--surface-2);border-radius:12px;padding:9px 14px;cursor:pointer;font-weight:600;display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:transform .15s,border-color .2s}
+.bt:hover{border-color:var(--rosa)}.bt:active{transform:scale(.97)}
+.bt.pri{border:0;color:#fff;background:var(--grad);box-shadow:0 8px 22px rgba(217,70,239,.35)}
+.bt.zap{border:0;color:#05230f;background:#25d366}
+.bt.ic{padding:9px 11px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:18px}
+/* login */
+.login{min-height:calc(100vh - 80px);display:grid;place-items:center;padding:20px 0}
+.lg-box{width:min(420px,100%);display:grid;gap:14px;text-align:center;animation:sobe .6s cubic-bezier(.2,.9,.3,1) both}
+@keyframes sobe{from{opacity:0;transform:translateY(18px) scale(.98)}}
+.lg-ic{width:84px;height:84px;margin:0 auto;border-radius:26px;display:grid;place-items:center;font-size:42px;background:var(--grad);box-shadow:0 18px 40px rgba(217,70,239,.4);animation:balanca 4s ease-in-out infinite}
+@keyframes balanca{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg) translateY(-4px)}}
+.lg-box h1{font-family:var(--f-display);font-size:28px;margin:4px 0 0;line-height:1.1}
+.lg-box p{margin:0;color:var(--muted)}
+.lg-f{display:grid;gap:10px;text-align:left}
+.lg-f label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.inp{width:100%;border:1.5px solid var(--line);background:var(--surface-2);border-radius:14px;padding:13px 14px;font-size:16px;outline:none;transition:border-color .2s,box-shadow .2s}
+.inp:focus{border-color:var(--rosa);box-shadow:0 0 0 4px rgba(217,70,239,.18)}
+#lCod{text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.pins{display:flex;gap:10px;justify-content:center}
+.pins input{width:58px;height:64px;text-align:center;font-size:26px;font-weight:800;border-radius:16px}
+.lg-msg{min-height:20px;color:var(--bad);font-weight:600;font-size:13.5px}
+.treme{animation:treme .4s}@keyframes treme{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.lg-lembra{display:flex;gap:8px;align-items:center;justify-content:center;color:var(--muted);font-size:13px}
+.lg-box .bt.pri{justify-content:center;padding:14px;font-size:16px;border-radius:16px}
+.lg-ajuda{font-size:12.5px}
+/* painel */
+.hero{display:grid;gap:6px;padding:8px 0 18px;animation:sobe .5s both}
+.hero h1{font-family:var(--f-display);font-size:clamp(26px,6vw,38px);margin:0;line-height:1.05}
+.hero h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{margin:0;color:var(--muted)}
+.rank{display:inline-flex;align-items:center;gap:6px;width:max-content;max-width:100%;padding:5px 12px;border-radius:99px;font-weight:700;font-size:13px;background:color-mix(in srgb,var(--warn) 16%,var(--surface));border:1px solid color-mix(in srgb,var(--warn) 45%,var(--line))}
+.saldo{position:relative;overflow:hidden;border:0;color:#fff;background:var(--grad);padding:22px;box-shadow:0 22px 50px rgba(139,92,246,.35);animation:sobe .55s .05s both}
+.saldo::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.25) 50%,transparent 65%) no-repeat;background-size:250% 100%;background-position:130% 0;animation:reflexo 6s ease-in-out infinite}
+@keyframes reflexo{0%,55%{background-position:130% 0}80%,100%{background-position:-30% 0}}
+.saldo .lb{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;opacity:.9}
+.saldo .v{font-family:var(--f-display);font-size:clamp(40px,11vw,60px);font-weight:900;line-height:1.05;margin:4px 0}
+.saldo .sub{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13.5px;opacity:.95}
+.saldo .moeda{position:absolute;right:18px;top:16px;font-size:54px;opacity:.9;animation:gira 5s ease-in-out infinite}
+@keyframes gira{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(8deg) translateY(-6px)}}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:14px 0}
+@media (max-width:640px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.st{padding:14px;border-radius:18px;background:var(--surface);border:1px solid var(--line);display:grid;gap:2px;animation:sobe .5s both;animation-delay:calc(.1s + var(--i)*60ms)}
+.st i{font-style:normal;font-size:22px}.st b{font-family:var(--f-display);font-size:22px}.st span{font-size:12.5px;color:var(--muted)}
+.duas{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:12px}
+@media (max-width:760px){.duas{grid-template-columns:minmax(0,1fr)}}
+.tit{display:flex;align-items:center;gap:8px;margin:0 0 12px;font-family:var(--f-display);font-size:18px}
+.tit small{font-family:var(--f-body);font-size:12.5px;color:var(--muted);font-weight:500}
+.link-box{display:flex;gap:8px;align-items:center;border:1.5px dashed color-mix(in srgb,var(--rosa) 55%,var(--line));border-radius:14px;padding:10px 10px 10px 14px;background:color-mix(in srgb,var(--rosa) 6%,var(--surface-2))}
+.link-box code{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13.5px;font-family:ui-monospace,Menlo,monospace}
+.cupom{position:relative;display:flex;align-items:stretch;border-radius:18px;overflow:hidden;margin-top:12px;background:var(--surface-2);border:1px solid var(--line)}
+.cupom .ld{display:grid;place-items:center;padding:14px 16px;color:#fff;background:var(--grad);font-family:var(--f-display);font-weight:900;font-size:26px;line-height:1;text-align:center;min-width:96px}
+.cupom .ld small{display:block;font-size:10px;letter-spacing:.14em;font-family:var(--f-body);font-weight:700}
+.cupom .rd{flex:1;display:grid;align-content:center;gap:2px;padding:12px 14px;border-left:2px dashed var(--line)}
+.cupom .rd b{font-family:ui-monospace,Menlo,monospace;font-size:20px;letter-spacing:.08em}
+.cupom .rd span{font-size:12.5px;color:var(--muted)}
+.cupom .bt{align-self:center;margin-right:10px}
+.acoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.regras{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.regras li{display:flex;gap:10px;align-items:flex-start}
+.regras li i{font-style:normal;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--surface-2);flex:none;font-size:17px}
+.regras b{display:block}.regras span{font-size:13px;color:var(--muted)}
+.filtros{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.filtros button{border:1px solid var(--line);background:var(--surface-2);border-radius:99px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600}
+.filtros button[aria-pressed="true"]{border-color:transparent;color:#fff;background:var(--grad)}
+.peds{display:grid;gap:8px}
+.pd{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;padding:12px;border-radius:16px;background:var(--surface-2);border:1px solid var(--line);animation:sobe .4s both;animation-delay:calc(var(--i)*35ms)}
+.pd.ok{border-color:color-mix(in srgb,var(--good) 40%,var(--line))}
+.pd.canc{opacity:.55}
+.pd-ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--surface);font-size:19px}
+.pd-n{display:grid;gap:3px;min-width:0}.pd-n b{font-size:14.5px}.pd-n small{color:var(--muted);font-size:12.5px}
+.passos{display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--muted);flex-wrap:wrap}
+.passos span{display:inline-flex;align-items:center;gap:3px}
+.passos span.f{color:var(--good);font-weight:700}
+.passos em{font-style:normal;opacity:.5}
+.pd-c{text-align:right;display:grid;gap:2px}.pd-c b{font-family:var(--f-display);font-size:17px}.pd-c small{font-size:11.5px;font-weight:700}
+.pd-c small.ok{color:var(--good)}.pd-c small.esp{color:var(--warn)}.pd-c small.x{color:var(--muted)}
+.vazio{text-align:center;padding:26px 12px;color:var(--muted)}
+.vazio b{display:block;color:var(--ink);font-size:16px;margin-bottom:4px}
+.pags{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.pags li{display:flex;justify-content:space-between;padding:10px 12px;border-radius:12px;background:var(--surface-2)}
+.pags b{color:var(--good)}
+.sec{margin-top:12px;animation:sobe .5s .2s both}
+.aviso-p{padding:12px 14px;border-radius:14px;background:color-mix(in srgb,var(--warn) 14%,var(--surface));border:1px solid color-mix(in srgb,var(--warn) 45%,var(--line));margin-bottom:12px;font-weight:600}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);opacity:0;background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:99px;font-weight:700;z-index:50;transition:.3s;pointer-events:none;max-width:calc(100vw - 32px);text-align:center}
+.toast.vem{transform:translate(-50%,0);opacity:1}
+.rodape{text-align:center;color:var(--muted);font-size:12px;margin-top:24px}
+html.menos-mov *,html.menos-mov *::before,html.menos-mov *::after{animation:none!important;transition:none!important}
+</style>
+</head>
+<body>
+<div class="brilho" aria-hidden="true"></div>
+<main class="wrap">
+  <header class="topo"><div class="marca">DKM<small>Parceiros</small></div><span class="esp"></span><button class="bt ic" id="btTema" type="button" aria-label="Trocar o tema">🌙</button><button class="bt" id="btSair" type="button" hidden>Sair</button></header>
+
+  <section class="login" id="vLogin">
+    <form class="lg-box" id="fLogin" autocomplete="off">
+      <div class="lg-ic" aria-hidden="true">🤝</div>
+      <h1>Área do parceiro</h1>
+      <p>Acompanhe as vendas que você indicou e a sua comissão.</p>
+      <div class="lg-f"><label for="lCod">Seu código</label><input class="inp" id="lCod" placeholder="Ex.: JESSICA" autocapitalize="characters" spellcheck="false" maxlength="20"></div>
+      <div class="lg-f"><label for="p0">PIN</label><div class="pins" id="pins"><input class="inp" id="p0" inputmode="numeric" maxlength="1" aria-label="PIN, número 1"><input class="inp" inputmode="numeric" maxlength="1" aria-label="PIN, número 2"><input class="inp" inputmode="numeric" maxlength="1" aria-label="PIN, número 3"><input class="inp" inputmode="numeric" maxlength="1" aria-label="PIN, número 4"></div></div>
+      <label class="lg-lembra"><input type="checkbox" id="lLembra" checked> Lembrar neste aparelho</label>
+      <div class="lg-msg" id="lMsg" role="alert"></div>
+      <button class="bt pri" id="lBtn" type="submit">Entrar</button>
+      <p class="lg-ajuda">Não tem o código ou esqueceu o PIN? Fale com a DKM no WhatsApp.</p>
+    </form>
+  </section>
+
+  <section id="vPainel" hidden></section>
+  <p class="rodape">DKM · você vê aqui só os pedidos que vieram por você.</p>
+</main>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const SUPABASE_URL='https://slfukomaoygdtmlwylua.supabase.co';
+const SUPABASE_KEY='sb_publishable_Hlg2yivd6O1XtxzBRR-1Iw_Jc-td4f7';
+const LOJA=/github\.io$/.test(location.hostname)?location.origin+location.pathname.replace(/parceiro\.html$/,'catalogo.html'):'https://dkm-technology.github.io/DKM/catalogo.html';
+const $=s=>document.querySelector(s),$$=(s,c)=>[...(c||document).querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const brl=v=>(+v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const reduz=()=>document.documentElement.classList.contains('menos-mov');
+let D=null,ACESSO=null,FILTRO='todos',tVivo=null;
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('vem');clearTimeout(toast.t);toast.t=setTimeout(()=>e.classList.remove('vem'),2200)}
+async function copia(t,ok){try{await navigator.clipboard.writeText(t)}catch(e){const a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(x){}a.remove()}toast(ok||'Copiado ✓')}
+/* tema */
+const TEMAS=['escuro','claro','auto'],ICT={escuro:'🌙',claro:'☀️',auto:'🖥️'};
+const poeTema=()=>{$('#btTema').textContent=ICT[document.documentElement.getAttribute('data-tema')]||'🌙'};poeTema();
+$('#btTema').onclick=()=>{const a=document.documentElement.getAttribute('data-tema')||'escuro',n=TEMAS[(TEMAS.indexOf(a)+1)%3];document.documentElement.setAttribute('data-tema',n);try{localStorage.setItem('dkm-tema-vit',n)}catch(e){}poeTema()};
+/* login */
+const pins=$$('#pins input');
+pins.forEach((i,k)=>{i.addEventListener('input',()=>{i.value=i.value.replace(/\D/g,'').slice(-1);if(i.value&&k<pins.length-1)pins[k+1].focus();if(pins.every(x=>x.value)&&$('#lCod').value.trim())$('#fLogin').requestSubmit()});
+  i.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!i.value&&k>0){pins[k-1].focus();pins[k-1].value=''}});
+  i.addEventListener('paste',e=>{const t=(e.clipboardData.getData('text')||'').replace(/\D/g,'');if(t.length>=4){e.preventDefault();pins.forEach((x,j)=>x.value=t[j]||'');pins[3].focus();$('#fLogin').requestSubmit()}})});
+try{const c=new URLSearchParams(location.search).get('c');if(c)$('#lCod').value=c.toUpperCase().replace(/[^A-Z0-9]/g,'')}catch(e){}
+async function busca(c,p){const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/parceiro_painel`,{method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_codigo:c,p_pin:p})});
+  if(r.status===404)return{ok:false,msg:'A área do parceiro ainda não foi ligada pela DKM.'};if(!r.ok)return{ok:false,msg:'Não deu para entrar agora. Tente de novo.'};return r.json()}
+$('#fLogin').onsubmit=async e=>{e.preventDefault();const c=$('#lCod').value.trim().toUpperCase().replace(/[^A-Z0-9]/g,''),p=pins.map(x=>x.value).join(''),m=$('#lMsg');
+  if(!c){m.textContent='Digite o seu código.';$('#lCod').focus();return}if(p.length<4){m.textContent='Digite os 4 números do PIN.';pins.find(x=>!x.value).focus();return}
+  m.textContent='';$('#lBtn').disabled=true;$('#lBtn').textContent='Entrando…';let r;try{r=await busca(c,p)}catch(x){r={ok:false,msg:'Sem internet. Tente de novo.'}}
+  $('#lBtn').disabled=false;$('#lBtn').textContent='Entrar';
+  if(!r.ok){m.textContent=r.msg||'Código ou PIN errado.';const b=$('#pins');b.classList.remove('treme');void b.offsetWidth;b.classList.add('treme');pins.forEach(x=>x.value='');pins[0].focus();return}
+  ACESSO={c,p};try{if($('#lLembra').checked)localStorage.setItem('dkm-parc',JSON.stringify(ACESSO));else localStorage.removeItem('dkm-parc')}catch(x){}
+  mostra(r)};
+$('#btSair').onclick=()=>{try{localStorage.removeItem('dkm-parc')}catch(e){}ACESSO=null;D=null;clearInterval(tVivo);$('#vPainel').hidden=true;$('#vLogin').hidden=false;$('#btSair').hidden=true;pins.forEach(x=>x.value='');pins[0].focus()};
+/* painel */
+function contaAte(el,v,fmt){if(reduz()){el.textContent=fmt(v);return}const t0=performance.now(),d=1100;const f=t=>{const p=Math.min(1,(t-t0)/d),e=1-Math.pow(1-p,3);el.textContent=fmt(v*e);if(p<1)requestAnimationFrame(f)};requestAnimationFrame(f)}
+const passo=p=>{const ent=p.status==='ENTREGUE'||p.etapa==='ENTREGUE';return `<div class="passos"><span class="f">✓ Pedido</span><em>›</em><span class="${ent?'f':''}">${ent?'✓':'○'} Entregue</span><em>›</em><span class="${p.liberada?'f':''}">${p.liberada?'✓':'○'} Pago</span></div>`};
+function mostra(r,silencioso){D=r;$('#vLogin').hidden=true;$('#btSair').hidden=false;const v=$('#vPainel');v.hidden=false;
+  const R=r.resumo||{},nm=String(r.nome||'').split(' ')[0],com=r.comissao_tipo==='REAIS'?brl(r.comissao_valor)+' por pedido':(+r.comissao_valor).toLocaleString('pt-BR')+'% de cada pedido';
+  const link=LOJA+'?ref='+encodeURIComponent(r.codigo);
+  const txt=r.cupom?`Comprei na DKM e amei 😍 Capinhas, películas, fones e carregadores com entrega rápida. Use meu cupom *${r.cupom}* e ganhe ${(+r.desconto).toLocaleString('pt-BR')}% de desconto: ${link}`:`Comprei na DKM e amei 😍 Capinhas, películas, fones e carregadores com entrega rápida. Olha o catálogo: ${link}`;
+  const P=r.pedidos||[],F={todos:()=>true,liberados:p=>p.liberada,aguardando:p=>!p.liberada&&!p.cancelada,cancelados:p=>p.cancelada};const V=P.filter(F[FILTRO]);
+  const nA=P.filter(F.aguardando).length,nL=P.filter(F.liberados).length,nC=P.filter(F.cancelados).length;
+  v.innerHTML=`<div class="hero"><p>Olá,</p><h1><span>${esc(nm)}</span> 👋</h1>${r.ativo?'':'<div class="aviso-p">⏸ Sua parceria está pausada: o link e o cupom não estão gerando comissão agora. Fale com a DKM.</div>'}
+    ${r.parceiros>1&&(+R.mes_pedidos||0)>0?`<span class="rank">${r.posicao===1?'🏆':r.posicao<=3?'🥈':'🚀'} Você está em ${r.posicao}º lugar entre ${r.parceiros} parceiros este mês</span>`:(+R.mes_pedidos||0)>0?`<span class="rank">🔥 ${R.mes_pedidos} pedido${R.mes_pedidos==1?'':'s'} por você este mês</span>`:''}</div>
+  <div class="card saldo"><span class="moeda" aria-hidden="true">💰</span><div class="lb">Comissão disponível</div><div class="v num" id="vSaldo">${brl(R.saldo)}</div>
+    <div class="sub"><span>⏳ ${brl(R.aguardando)} aguardando entrega/pagamento</span><span>✅ ${brl(R.pago)} já recebido</span></div></div>
+  <div class="stats">${[['🛍️','pedidos este mês',R.mes_pedidos,'n'],['📈','vendido este mês',R.mes_vendido,'r'],['💸','comissão do mês',R.mes_comissao,'r'],['🏁','vendido no total',R.vendido,'r']].map(([i,t,x,f],k)=>`<div class="st" style="--i:${k}"><i>${i}</i><b class="num" data-v="${+x||0}" data-f="${f}">${f==='n'?(+x||0):brl(x)}</b><span>${t}</span></div>`).join('')}</div>
+  <div class="duas">
+    <div class="card sec"><h2 class="tit">📣 Divulgue</h2>
+      <div class="link-box"><code>${esc(link)}</code><button class="bt ic" type="button" data-cp="link" aria-label="Copiar link">📋</button></div>
+      ${r.cupom?`<div class="cupom"><div class="ld">${(+r.desconto).toLocaleString('pt-BR')}%<small>OFF</small></div><div class="rd"><b>${esc(r.cupom)}</b><span>cupom dos seus seguidores</span></div><button class="bt ic" type="button" data-cp="cupom" aria-label="Copiar cupom">📋</button></div>`:''}
+      <div class="acoes"><a class="bt zap" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent(txt)}">💬 Mandar no WhatsApp</a><button class="bt" type="button" data-cp="txt">✍️ Copiar texto pronto</button>${navigator.share?'<button class="bt" type="button" data-cp="share">📤 Compartilhar</button>':''}</div>
+    </div>
+    <div class="card sec"><h2 class="tit">💡 Como você ganha</h2><ul class="regras">
+      <li><i>💰</i><div><b>${esc(com)}</b><span>de quem comprar pelo seu link${r.cupom?' ou com o seu cupom':''}.</span></div></li>
+      <li><i>📱</i><div><b>O link vale 30 dias</b><span>Se a pessoa entrar pelo seu link e comprar dias depois, ainda conta para você.</span></div></li>
+      <li><i>✅</i><div><b>Libera quando entrega e paga</b><span>A comissão fica disponível quando o pedido é entregue e pago. Cancelado não conta.</span></div></li>
+      <li><i>🏦</i><div><b>Pagamento no Pix</b><span>A DKM paga a comissão disponível e ela aparece aqui em “já recebido”.</span></div></li></ul></div>
+  </div>
+  <div class="card sec"><h2 class="tit">🧾 Pedidos que vieram por você <small>${P.filter(p=>!p.cancelada).length}</small></h2>
+    <div class="filtros" role="group">${[['todos','Todos'],['aguardando',`⏳ Aguardando (${nA})`],['liberados',`✅ Liberados (${nL})`],...(nC?[['cancelados',`Cancelados (${nC})`]]:[])].map(([k,t])=>`<button type="button" data-f="${k}" aria-pressed="${FILTRO===k}">${t}</button>`).join('')}</div>
+    <div class="peds">${V.map((p,i)=>`<div class="pd${p.liberada?' ok':''}${p.cancelada?' canc':''}" style="--i:${Math.min(i,14)}"><span class="pd-ic" title="${p.via==='CUPOM'?'Usou o seu cupom':'Entrou pelo seu link'}">${p.via==='CUPOM'?'🎟️':'🔗'}</span>
+      <div class="pd-n"><b>${esc(p.cliente||'Cliente')} · nº ${esc(p.codigo)}</b><small>${new Date(p.em).toLocaleDateString('pt-BR',{day:'2-digit',month:'short'})} · ${p.itens} ite${+p.itens===1?'m':'ns'} · pedido de ${brl(p.total)}</small>${p.cancelada?'':passo(p)}</div>
+      <div class="pd-c"><b class="num">${brl(p.comissao)}</b><small class="${p.cancelada?'x':p.liberada?'ok':'esp'}">${p.cancelada?'cancelado':p.liberada?'liberada':'aguardando'}</small></div></div>`).join('')||`<div class="vazio">${P.length?'<b>Nada neste filtro</b>':`<b>Seu primeiro pedido vem aí 🚀</b>Compartilhe o seu link${r.cupom?' ou o cupom':''} e acompanhe por aqui.`}</div>`}</div></div>
+  ${(r.pagamentos||[]).length?`<div class="card sec"><h2 class="tit">🏦 Pagamentos recebidos</h2><ul class="pags">${r.pagamentos.map(g=>`<li><span>${new Date(g.em).toLocaleDateString('pt-BR')}</span><b class="num">${brl(g.valor)}</b></li>`).join('')}</ul></div>`:''}`;
+  if(!silencioso){contaAte($('#vSaldo'),+R.saldo||0,brl);$$('.st b').forEach(b=>contaAte(b,+b.dataset.v,b.dataset.f==='n'?x=>Math.round(x):brl))}
+  $$('[data-f]',v).forEach(b=>b.onclick=()=>{FILTRO=b.dataset.f;mostra(D,true)});
+  $$('[data-cp]',v).forEach(b=>b.onclick=()=>{const k=b.dataset.cp;if(k==='link')copia(link,'Link copiado ✓');else if(k==='cupom')copia(r.cupom,'Cupom copiado ✓');else if(k==='txt')copia(txt,'Texto copiado: cole no seu status ou story ✓');else navigator.share({title:'DKM',text:txt}).catch(()=>{})});
+  clearInterval(tVivo);tVivo=setInterval(async()=>{if(document.hidden||!ACESSO)return;try{const x=await busca(ACESSO.c,ACESSO.p);if(x.ok&&JSON.stringify(x)!==JSON.stringify(D))mostra(x,true)}catch(e){}},60000)}
+/* entra sozinho se lembrou */
+(async()=>{let g=null;try{g=JSON.parse(localStorage.getItem('dkm-parc')||'null')}catch(e){}
+  const c=new URLSearchParams(location.search).get('c');if(g&&g.c&&g.p&&(!c||c.toUpperCase()===g.c)){ACESSO=g;try{const r=await busca(g.c,g.p);if(r.ok){mostra(r);return}}catch(e){}}
+  ($('#lCod').value?pins[0]:$('#lCod')).focus()})();
+</script>
+</body>
+</html>
