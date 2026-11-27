@@ -1105,6 +1105,21 @@ html.menos-mov .ref-boas{transition:opacity .2s}html.menos-mov .rb-av{animation:
 #pFoto .ilustra{position:absolute;left:10px;top:10px;right:10px;width:max-content;max-width:calc(100% - 20px);background:rgba(15,15,35,.82);color:#fff;font-size:12.5px;font-weight:700;padding:6px 10px;border-radius:99px;backdrop-filter:blur(4px)}
 @keyframes encEntra{from{opacity:0;transform:translateY(6px) scale(.97)}}
 html.menos-mov .pv-enc{animation:none}
+
+/* "na sua sacola" dentro do produto */
+.p-nasac{margin:10px 0 2px;padding:12px;border-radius:16px;border:1px solid color-mix(in srgb,var(--good) 40%,var(--line));background:color-mix(in srgb,var(--good) 7%,var(--surface-2));display:grid;gap:10px}
+.ns-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}.ns-h b{font-size:14px}.ns-h span{font-size:12.5px;color:var(--muted)}
+.ns-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.ns-i{display:grid;gap:8px;padding:10px;border-radius:12px;background:var(--surface);border:1px solid var(--line)}
+.ns-i.novo{animation:nsEntra .5s cubic-bezier(.3,1.5,.5,1);border-color:var(--good)}
+@keyframes nsEntra{from{opacity:0;transform:scale(.7)}}
+.ns-n{display:grid;gap:1px;min-width:0}.ns-n b{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.ns-n small{font-size:11.5px;color:var(--muted)}
+.ns-q{display:flex;align-items:center;justify-content:space-between;background:var(--surface-2);border-radius:10px;padding:2px}
+.ns-q button{width:32px;height:30px;border:0;border-radius:8px;background:transparent;color:var(--ink);font-size:16px;cursor:pointer}.ns-q button:hover{background:var(--line)}
+.ns-q b{font-size:14px}
+.ns-pe{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.ns-pe span{font-size:12px;color:var(--muted)}
+.ns-ver{border:0;background:none;color:var(--good-tx,var(--good));font-weight:700;cursor:pointer;padding:4px 0;margin-left:auto}
+html.menos-mov .ns-i.novo{animation:none}
 </style>
 </head>
 <body>
@@ -1202,6 +1217,7 @@ html.menos-mov .pv-enc{animation:none}
       <div class="p-preco"><div id="pPrecoBox"><b class="num" id="pPreco"></b></div><span id="pPrazo"></span></div>
       <div class="p-var" id="pVar" hidden></div>
       <div class="p-cupom" id="pCupom"></div>
+      <div class="p-nasac" id="pNaSac" hidden></div>
       <div class="p-qtd"><b>Quantidade</b><span class="qtd grande"><button type="button" id="pMenos" aria-label="Menos um">−</button><span class="num" id="pQ">1</span><button type="button" id="pMais" aria-label="Mais um">+</button></span></div>
       <div class="p-bts"><button class="btn pri" type="button" id="pAdd">Adicionar à sacola</button><button class="btn" type="button" id="pJa">Comprar agora</button></div>
       <div class="p-mini"><a id="pZap" href="#" target="_blank" rel="noopener">💬 Perguntar no WhatsApp</a><button type="button" id="pShare">🔗 Compartilhar</button></div>
@@ -1310,7 +1326,7 @@ async function carregar(){
     const r=await fetch(`${SUPABASE_URL}/rest/v1/rpc/catalogo_publico`,{method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:'{}'});
     if(!r.ok)throw new Error('HTTP '+r.status);
     const j=await r.json();CFG=j.config||{};ITENS=(j.itens||[]).map(x=>({...x,preco:+x.preco,_b:sem(x.nome+' '+x.categoria)}));
-    Object.keys(SAC).forEach(id=>{if(!ITENS.some(x=>String(x.id)===id))delete SAC[id]});salva();
+    Object.keys(SAC).forEach(id=>{if(!ITENS.some(x=>String(x.id)===idK(id)))delete SAC[id]});salva();
     $('#estado').hidden=true;$('#estado').classList.remove('grade');
     if(CFG.titulo)$('#marca').firstChild.textContent=CFG.titulo;
     $('#sub').textContent=CFG.subtitulo||'Catálogo';
@@ -1329,7 +1345,7 @@ async function aoVivo(){if(document.visibilityState!=='visible')return;
     const antes=new Map(ITENS.map(x=>[x.id,x]));const mudou=new Set(novos.filter(x=>{const a=antes.get(x.id);return !a||a.preco!==x.preco||a.pronta!==x.pronta||a.foto!==x.foto}).map(x=>x.id));
     const sumiu=ITENS.filter(x=>!novos.some(y=>y.id===x.id)).length,entrou=novos.filter(x=>!antes.has(x.id)).length;
     CFG=j.config||CFG;ITENS=novos;for(const k in ARTE)delete ARTE[k];for(const k in CUPP)delete CUPP[k];
-    Object.keys(SAC).forEach(id=>{if(!ITENS.some(x=>String(x.id)===id)){delete SAC[id];delete SACM[id];delete SACF[id]}});salva();salvaM();
+    Object.keys(SAC).forEach(id=>{if(!ITENS.some(x=>String(x.id)===idK(id))){delete SAC[id];delete SACM[id];delete SACF[id]}});salva();salvaM();
     const y=scrollY;montaFamilias();montaCats();renderPrateleiras();filtra(false);renderSacola();scrollTo({top:y,behavior:'auto'});
     $$('.card').forEach(c=>{if(mudou.has(+c.dataset.id)){c.classList.remove('vivo');void c.offsetWidth;c.classList.add('vivo')}});
     if(PROD&&!$('#prod').hidden){const x=ITENS.find(i=>i.id===PROD.id);if(x){PROD=x;montaProd()}else fechaProd()}
@@ -1545,7 +1561,8 @@ let MODELO='';
 let SACM={};try{SACM=JSON.parse(localStorage.getItem('dkm-sacola-mod')||'{}')||{}}catch(e){SACM={}}
 /* item pedido "sob encomenda" para um aparelho que não tem pronto: guarda o nome do grupo (ex.: Película Privacidade) */
 let SACF={};try{SACF=JSON.parse(localStorage.getItem('dkm-sacola-fam')||'{}')||{}}catch(e){SACF={}}
-const nomeS=x=>SACF[x.id]||x.nome,prontaS=x=>x.pronta&&!SACF[x.id];
+/* na sacola, o item sob encomenda tem chave própria "id~MODELO": dá para pedir vários aparelhos do mesmo produto */
+const idK=k=>String(k).split('~')[0],nomeS=(x,k)=>SACF[k??x.id]||x.nome,prontaS=(x,k)=>x.pronta&&!SACF[k??x.id];
 const salvaM=()=>{try{localStorage.setItem('dkm-sacola-mod',JSON.stringify(SACM));localStorage.setItem('dkm-sacola-fam',JSON.stringify(SACF))}catch(e){}};
 /* ===== FAMÍLIAS: películas e capinhas do mesmo tipo viram um produto só; o cliente escolhe o aparelho e a cor ===== */
 const PREF_MOD=new Set(['IPHONE','IP','ANDROID','SAMSUNG','GALAXY','MOTO','MOTOROLA','XIAOMI','REDMI','RM','POCO','PC','MI','NOTE','LG']);
@@ -1609,6 +1626,19 @@ function escolheMod(mk,auto){const F=FAM[VAR.k],M=F.mods.find(m=>m.k===mk);if(!M
   const pc=VAR.corF&&M.itens.find(o=>canonCor(o.cor)===VAR.corF);
   if(pc){VAR.sel=pc.x.id;PROD=pc.x}else if(M.itens.length===1){VAR.sel=M.itens[0].x.id;PROD=M.itens[0].x}else{VAR.sel=null;PROD=(M.itens.find(o=>o.x.pronta)||M.itens[0]).x}
   PQ=SAC[PROD.id]||1;montaProd()}
+/* chave do item aberto na sacola (sob encomenda para outro aparelho tem chave própria) */
+function kProd(){return PROD?(VAR&&VAR.enc&&VAR.txt.trim()?PROD.id+'~'+VAR.txt.trim().toUpperCase():String(PROD.id)):''}
+/* quadradinhos "na sua sacola" dentro do produto: o que já foi colocado deste produto, com + e − */
+let ULT_K='';
+function rotNaSac(k,x){if(SACF[k])return{t:SACM[k],s:'sob encomenda'};const F=FAM[FAM_DE[x.id]];
+  if(F){for(const M of F.mods){const o=M.itens.find(o=>o.x.id===x.id);if(o)return{t:M.label+(o.cor&&!F.umaCor?' · '+nomeCor(o.cor):''),s:x.pronta?'⚡ pronta':'sob encomenda'}}if(F.gen.includes(x))return{t:SACM[k]||bonito(x.nome),s:'sob encomenda'}}
+  return{t:bonito(x.nome),s:''}}
+function renderNaSac(){const box=$('#pNaSac');if(!box)return;const fk=PROD&&!$('#prod').hidden?(VAR?VAR.k:FAM_DE[PROD.id]):null;
+  const L=fk?itensSacola().filter(o=>FAM_DE[o.x.id]===fk):[];if(!L.length){box.hidden=true;box.innerHTML='';return}
+  const tot=L.reduce((a,o)=>a+o.q*o.x.preco,0),n=L.reduce((a,o)=>a+o.q,0);box.hidden=false;
+  box.innerHTML=`<div class="ns-h"><b>🧺 Na sua sacola</b><span class="num">${n} ite${n===1?'m':'ns'} · ${brl(tot)}</span></div><div class="ns-g">${L.map(({k,x,q})=>{const r=rotNaSac(k,x);
+    return `<div class="ns-i${k===ULT_K?' novo':''}"><span class="ns-n"><b>${esc(r.t)}</b><small>${r.s?esc(r.s)+' · ':''}${brl(x.preco)}</small></span><span class="ns-q"><button type="button" data-nsm="${esc(k)}" aria-label="Tirar um">${q===1?'🗑':'−'}</button><b class="num">${q}</b><button type="button" data-nsp="${esc(k)}" aria-label="Mais um">+</button></span></div>`}).join('')}</div>
+    <div class="ns-pe">${VAR?'<span>Quer outro aparelho? Digite acima e adicione.</span>':''}<button type="button" class="ns-ver" data-nsver>Ver sacola e finalizar ›</button></div>`;ULT_K=''}
 function renderVar(){const box=$('#pVar');if(!VAR||!FAM[VAR.k]){box.hidden=true;box.innerHTML='';box.dataset.k='';$('#prod').classList.remove('com-var');return}
   const F=FAM[VAR.k];box.hidden=false;$('#prod').classList.add('com-var');
   if(box.dataset.k!==VAR.k){box.dataset.k=VAR.k;
@@ -1620,7 +1650,7 @@ function renderVar(){const box=$('#pVar');if(!VAR||!FAM[VAR.k]){box.hidden=true;
     box.onclick=e=>{const b=e.target.closest('button');if(!b)return;
       if(b.dataset.genab!=null){VAR.genAb=true;renderVarLista();return}
       if(b.dataset.vcf){VAR.corF=VAR.corF===b.dataset.vcf?null:b.dataset.vcf;renderVarLista();return}
-      if(b.dataset.venc!=null){const x=repEnc(F);if(x){VAR.m=null;VAR.sel=x.id;VAR.gen=true;VAR.enc=true;PROD=x;PQ=SACF[x.id]&&SAC[x.id]?SAC[x.id]:1;montaProd()}return}
+      if(b.dataset.venc!=null){const x=repEnc(F);if(x){VAR.m=null;VAR.sel=x.id;VAR.gen=true;VAR.enc=true;PROD=x;PQ=SAC[kProd()]||1;montaProd()}return}
       VAR.enc=false;
       if(b.dataset.vm){escolheMod(b.dataset.vm);return}
       if(b.dataset.vc){const M=F.mods.find(m=>m.k===VAR.m),o=M&&M.itens.find(o=>String(o.x.id)===b.dataset.vc);if(o){VAR.sel=o.x.id;PROD=o.x;PQ=SAC[PROD.id]||1;montaProd()}return}
@@ -1774,10 +1804,10 @@ function voaDe(img){if(reduz())return;const top=$('#btCarrinho'),tr=top.getBound
   const dx=b.left+b.width/2-(a.left+a.width/2),dy=b.top+b.height/2-(a.top+a.height/2);
   v.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${dx*.55}px,${dy*.35-80}px) scale(.55)`,opacity:1,offset:.55},{transform:`translate(${dx}px,${dy}px) scale(.12)`,opacity:.3}],{duration:720,easing:'cubic-bezier(.5,0,.3,1)'}).finished.then(()=>{v.remove();[alvo,top].forEach(a=>{a.classList.remove('pula');void a.offsetWidth;a.classList.add('pula')})})}
 function muda(id,d,btn){id=String(id);SAC[id]=Math.max(0,(SAC[id]||0)+d);if(!SAC[id])delete SAC[id];salva();
-  {const x=ITENS.find(i=>String(i.id)===id);if(d>0&&MODELO&&x&&serveTodos(x))SACM[id]=MODELO;if(!SAC[id])delete SACM[id];delete SACF[id];salvaM()}
-  const x=ITENS.find(i=>String(i.id)===id);renderSacola();
+  {const x=ITENS.find(i=>String(i.id)===idK(id));if(d>0&&MODELO&&x&&serveTodos(x)&&!SACF[id])SACM[id]=MODELO;if(!SAC[id]){delete SACM[id];delete SACF[id]}salvaM()}
+  const x=ITENS.find(i=>String(i.id)===idK(id));renderSacola();renderNaSac();
   if(d>0&&btn)voaSacola(btn);
-  if(x)$$(`.card[data-id="${id}"]`).forEach(el=>{const t=document.createElement('div');t.innerHTML=cartao(x);const n=t.firstElementChild;n.classList.add('entra');el.replaceWith(n)})}
+  if(x)$$(`.card[data-id="${x.id}"]`).forEach(el=>{const t=document.createElement('div');t.innerHTML=cartao(x);const n=t.firstElementChild;n.classList.add('entra');el.replaceWith(n)})}
 document.querySelector('main').addEventListener('click',e=>{{const f=e.target.closest('.card.fam');if(f){abreFam(f.dataset.fam,MODELO||'');return}}const b=e.target.closest('.card button');if(b){if(b.dataset.p)muda(b.dataset.p,1,b);if(b.dataset.m)muda(b.dataset.m,-1);return}
   const c=e.target.closest('.card');if(c&&(e.target.closest('.foto')||e.target.closest('.nome')))abreProd(c.dataset.id)});
 $('#maisBtn').onclick=()=>{limite+=48;render()};
@@ -1795,20 +1825,20 @@ async function carregaMais(){try{const r=await fetch(`${SUPABASE_URL}/rest/v1/rp
 function montaTudo(){montaFamilias();montaCats();montaBanner();renderPrateleiras();filtra();renderSacola();
   const num=String(CFG.whatsapp||'5562991153874').replace(/\D/g,'');$('#zapFlutua').href=`https://wa.me/${num}?text=${encodeURIComponent('Olá! Vim pelo catálogo da DKM e quero tirar uma dúvida.')}`}
 
-function itensSacola(){return Object.entries(SAC).map(([id,q])=>({x:ITENS.find(i=>String(i.id)===id),q})).filter(o=>o.x)}
+function itensSacola(){return Object.entries(SAC).map(([k,q])=>({k,x:ITENS.find(i=>String(i.id)===idK(k)),q})).filter(o=>o.x)}
 function renderSacola(){
   const its=itensSacola(),n=its.reduce((a,o)=>a+o.q,0),tot=its.reduce((a,o)=>a+o.q*o.x.preco,0);
   if(CUP.cod&&chaveSac()!==CUP.chave&&chaveSac()!==CUP.pend)validaCupom();
   const desc=descAtual(),fim=Math.max(0,tot-desc);
   $('#barra').hidden=!n;{const ps=$('#abreSacola .pista');if(ps&&n)requestAnimationFrame(()=>ps.style.setProperty('--w',ps.clientWidth+'px'))}document.body.classList.toggle('com-barra',!!n);const nc=$('#nCarrinho');if(+nc.textContent!==n){nc.textContent=n;nc.classList.remove('pop');void nc.offsetWidth;nc.classList.add('pop')}nc.classList.toggle('zero',!n);$('#barraQtd').textContent=`Ver pedido · ${n} ite${n===1?'m':'ns'}`;$('#barraTot').innerHTML=desc?`<s class="old">${brl(tot)}</s>${brl(fim)}`:brl(tot);
-  $('#itens').innerHTML=its.length?its.map(({x,q})=>`<div class="it"><img src="${esc(imgDe(x))}" alt=""><div class="n">${esc(nomeS(x))}<small>${brl(x.preco)} · ${prontaS(x)?'pronta entrega':'sob encomenda'}${SACM[x.id]?` · <b class="mod-s">📱 ${SACF[x.id]?'para ':''}${esc(SACM[x.id])}</b>`:''}</small><button class="tira" type="button" data-rm="${x.id}">Remover</button></div><span class="qtd"><button type="button" data-m="${x.id}" aria-label="Tirar um">−</button><span class="num">${q}</span><button type="button" data-p="${x.id}" aria-label="Mais um">+</button></span></div>`).join(''):'<p class="nota">Seu pedido está vazio.</p>';
+  $('#itens').innerHTML=its.length?its.map(({k,x,q})=>`<div class="it"><img src="${esc(imgDe(x))}" alt=""><div class="n">${esc(nomeS(x,k))}<small>${brl(x.preco)} · ${prontaS(x,k)?'pronta entrega':'sob encomenda'}${SACM[k]?` · <b class="mod-s">📱 ${SACF[k]?'para ':''}${esc(SACM[k])}</b>`:''}</small><button class="tira" type="button" data-rm="${esc(k)}">Remover</button></div><span class="qtd"><button type="button" data-m="${esc(k)}" aria-label="Tirar um">−</button><span class="num">${q}</span><button type="button" data-p="${esc(k)}" aria-label="Mais um">+</button></span></div>`).join(''):'<p class="nota">Seu pedido está vazio.</p>';
   $('#totLinhas').hidden=!desc;$('#totCheio').textContent=brl(tot);$('#totDesc').textContent='− '+brl(desc);$('#totDescTxt').textContent='Cupom '+(CUP.r&&CUP.r.codigo||'');
   contaTotal(fim);
   const nome=$('#nome').value.trim(),obs=$('#obs').value.trim();
-  const linhas=its.map(({x,q})=>`• ${q}x ${nomeS(x)}${SACF[x.id]?'':` [cód. ${codDKM(x)}]`}${SACM[x.id]?` — ${SACF[x.id]?'para o':'modelo'} *${SACM[x.id]}*`:''} (${brl(x.preco)})${prontaS(x)?'':' *'}`);
+  const linhas=its.map(({k,x,q})=>`• ${q}x ${nomeS(x,k)}${SACF[k]?'':` [cód. ${codDKM(x)}]`}${SACM[k]?` — ${SACF[k]?'para o':'modelo'} *${SACM[k]}*`:''} (${brl(x.preco)})${prontaS(x,k)?'':' *'}`);
   const cod=n?codPedido():'';$('#pedNum').textContent=n?(PED.env?`Pedido nº ${cod} enviado. Mudou algo? Toque em enviar de novo.`:`Pedido nº ${cod}`):'';$('#pedNum').classList.toggle('ok',!!PED.env);
   const fone=$('#fone').value.trim(),end=$('#combinar').checked?'':$('#endereco').value.trim(),pg=PAGA+(PAGA==='Dinheiro'&&$('#troco').value.trim()?` (troco para R$ ${$('#troco').value.trim()})`:'');
-  const msg=`Olá! Quero fazer este pedido (nº ${cod}) no catálogo ${CFG.titulo||'DKM'}:\n\n${linhas.join('\n')}\n\n${desc?`Produtos: ${brl(tot)}\nCupom ${CUP.r.codigo}: − ${brl(desc)}\n*Total com desconto: ${brl(fim)}*`:`*Total: ${brl(tot)}*`}${its.some(o=>!prontaS(o.x))?'\n(* sob encomenda)':''}${nome?`\n\nNome: ${nome}`:''}${fone?`\nWhatsApp: ${fone}`:''}\nEntrega: ${end||'combinar pelo WhatsApp'}${pg?`\nPagamento: ${pg}`:''}${obs?`\nObs.: ${obs}`:''}\n\nAcompanhe o pedido: ${LINK_LOJA}#pedido-${cod}`;
+  const msg=`Olá! Quero fazer este pedido (nº ${cod}) no catálogo ${CFG.titulo||'DKM'}:\n\n${linhas.join('\n')}\n\n${desc?`Produtos: ${brl(tot)}\nCupom ${CUP.r.codigo}: − ${brl(desc)}\n*Total com desconto: ${brl(fim)}*`:`*Total: ${brl(tot)}*`}${its.some(o=>!prontaS(o.x,o.k))?'\n(* sob encomenda)':''}${nome?`\n\nNome: ${nome}`:''}${fone?`\nWhatsApp: ${fone}`:''}\nEntrega: ${end||'combinar pelo WhatsApp'}${pg?`\nPagamento: ${pg}`:''}${obs?`\nObs.: ${obs}`:''}\n\nAcompanhe o pedido: ${LINK_LOJA}#pedido-${cod}`;
   const num=String(CFG.whatsapp||'5562991153874').replace(/\D/g,'');
   $('#zap').href=`https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
   $('#scResumo').textContent=`${n} ite${n===1?'m':'ns'} · ${brl(fim)}`;
@@ -1825,7 +1855,7 @@ $('#limpar').onclick=()=>{SAC={};salva();SACM={};SACF={};salvaM();PED={};salvaPe
 $('#zap').addEventListener('click',e=>{const its=itensSacola();if(!its.length){e.preventDefault();return}
   if(!PAGA){e.preventDefault();const m=$('#msg3');m.textContent='Escolha a forma de pagamento.';$('#pagamentos').classList.remove('treme');void $('#pagamentos').offsetWidth;$('#pagamentos').classList.add('treme');return}
   renderSacola();const cod=PED.cod; /* renderSacola acerta o link antes de abrir */
-  const base={p_codigo:cod,p_cliente:$('#nome').value.trim(),p_obs:[$('#obs').value.trim(),its.filter(({x})=>SACM[x.id]).map(({x})=>(SACF[x.id]?SACF[x.id]+' (não tem pronto, buscar)':x.nome.slice(0,40))+': modelo '+SACM[x.id]).join('; ')].filter(Boolean).join(' | ').slice(0,300),p_itens:its.map(({x,q})=>({id:x.id,q,...(SACF[x.id]?{fam:SACF[x.id],mod:SACM[x.id]||''}:{})})),...(descAtual()?{p_cupom:CUP.r.codigo}:{})};
+  const base={p_codigo:cod,p_cliente:$('#nome').value.trim(),p_obs:[$('#obs').value.trim(),its.filter(({k})=>SACM[k]).map(({k,x})=>(SACF[k]?SACF[k]+' (não tem pronto, buscar)':x.nome.slice(0,40))+': modelo '+SACM[k]).join('; ')].filter(Boolean).join(' | ').slice(0,300),p_itens:its.map(({k,x,q})=>({id:x.id,q,...(SACF[k]?{fam:SACF[k],mod:SACM[k]||''}:{})})),...(descAtual()?{p_cupom:CUP.r.codigo}:{})};
   const extra={p_telefone:$('#fone').value.trim(),p_endereco:$('#combinar').checked?'Combinar pelo WhatsApp':$('#endereco').value.trim(),p_pagamento:PAGA+(PAGA==='Dinheiro'&&$('#troco').value.trim()?' (troco p/ R$ '+$('#troco').value.trim()+')':'')};
   const manda=b=>fetch(`${SUPABASE_URL}/rest/v1/rpc/registrar_encomenda`,{method:'POST',keepalive:true,headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify(b)});
   const marcaRef=()=>{if(REF&&REF.c)return fetch(`${SUPABASE_URL}/rest/v1/rpc/marcar_indicacao`,{method:'POST',keepalive:true,headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_codigo:cod,p_ref:REF.c})}).catch(()=>{})};
@@ -1915,7 +1945,7 @@ function abreProd(id,troca,daFam){const x=ITENS.find(i=>String(i.id)===String(id
   setTimeout(()=>$('#pFecha').focus({preventScroll:true}),50)}
 function fechaProd(){if($('#prod').hidden)return;VAR=null;$('#pVar').dataset.k='';$('#prod').hidden=true;$('#fundoProd').hidden=true;$('#pFoto').classList.remove('zoom');if($('#sacola').hidden)document.body.style.overflow='';
   if(location.hash.startsWith('#produto-'))try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}}
-function montaProd(){const x=PROD,u=imgDe(x),mais=MAIS[x.id]||0,ja=SAC[x.id]||0;
+function montaProd(){const x=PROD,u=imgDe(x),mais=MAIS[x.id]||0,ja=SAC[kProd()]||0;
   $('#pFoto').innerHTML=u?`<img src="${esc(u)}" alt="${esc(x.nome)}"><span class="dica">${matchMedia('(hover:hover)').matches?'passe o mouse para ampliar':'toque para ampliar'}</span>`:'<span class="sem">DKM</span>';
   $('#pSelos').innerHTML=(x.pronta?'<span class="pr">⚡ Pronta entrega</span>':'<span>Sob encomenda</span>')+(x.destaque?'<span class="de">⭐ Destaque</span>':'')+(mais>=3?`<span class="de">🔥 ${mais} pedidos recentes</span>`:'');
   $('#pNome').textContent=x.nome;$('#pCat').innerHTML=`${esc(x.categoria)} · <span class="cod-v2">cód. ${codDKM(x)}</span>`;
@@ -1927,7 +1957,7 @@ function montaProd(){const x=PROD,u=imgDe(x),mais=MAIS[x.id]||0,ja=SAC[x.id]||0;
   $('#pZap').href=`https://wa.me/${num}?text=${encodeURIComponent(`Olá! Tenho uma dúvida sobre este produto do catálogo DKM: ${x.nome} (${brl(x.preco)})`)}`;
   const g=grupoDe(x);const rel=ITENS.filter(y=>y.id!==x.id&&y.categoria===x.categoria);const rel2=g>=0?ITENS.filter(y=>y.id!==x.id&&y.categoria!==x.categoria&&grupoDe(y)===g):[];
   const R=agrupa(ordena([...rel,...rel2]).filter(y=>!VAR||FAM_DE[y.id]!==VAR.k)).slice(0,12);$('#pRelBox').hidden=!R.length;$('#pRel').innerHTML=R.map(cartao).join('');
-  renderVar()}
+  renderVar();renderNaSac()}
 function montaCupomProd(){const c=$('#pCupom');if(!c)return;const r=CUP.r;
   if(CUP.cod&&r&&r.ok)c.innerHTML=`<div class="mini-ticket"><span aria-hidden="true">🎟️</span><span>Cupom <b>${esc(r.codigo)}</b> ativo: ${rotulo(r).replace('−','')} de desconto. O valor final aparece na sacola.</span></div>`;
   else{const err=CUP.cod&&r&&!r.ok;c.innerHTML=`${err?'':'<button type="button" class="cup-chama" data-chama><span class="ic" aria-hidden="true">🎟️</span><span class="tx"><b>Tem cupom de desconto?</b><small>Toque aqui e economize no seu pedido</small></span><span class="seta" aria-hidden="true">›</span></button>'}<div class="cupom-form cup-novo"${err?'':' hidden'}><span class="cup-ic" aria-hidden="true">🎟️</span><input id="pCupCod" placeholder="Digite o código do cupom" autocomplete="off" aria-label="Código do cupom" maxlength="30" value="${esc(err?CUP.cod:'')}"><button type="button" id="pCupOk">Aplicar</button></div>${err?`<p class="cupom-msg">${esc(r.msg)}</p>`:''}`;ligaChama(c)}
@@ -1944,13 +1974,17 @@ function ligaProd(){
   const mudaQ=dq=>{const n=Math.min(99,Math.max(1,PQ+dq));if(n===PQ)return;PQ=n;const q=$('#pQ');q.textContent=PQ;q.classList.remove('pulaQ','desceQ');void q.offsetWidth;q.classList.add(dq>0?'pulaQ':'desceQ');precoBox('qtd')};
   $('#pMenos').onclick=()=>mudaQ(-1);$('#pMais').onclick=()=>mudaQ(1);
   const falta=()=>{if(!VAR||VAR.sel)return false;const v=$('#pVar');v.classList.remove('treme');void v.offsetWidth;v.classList.add('treme');v.scrollIntoView({block:'center',behavior:reduz()?'auto':'smooth'});setTimeout(()=>{const i=$('#pVarQ');if(i&&!VAR.m)i.focus({preventScroll:true})},300);return true};
-  const poe=()=>{const x=PROD;const antes=SAC[x.id]||0;SAC[x.id]=PQ;salva();
-    if(VAR&&VAR.gen&&VAR.txt.trim()){SACM[x.id]=VAR.txt.trim().toUpperCase();if(VAR.enc)SACF[x.id]=FAM[VAR.k].nome;else delete SACF[x.id];salvaM()}
-    else if(SACF[x.id]){delete SACF[x.id];delete SACM[x.id];salvaM()}renderSacola();
+  const poe=()=>{const x=PROD,k=kProd();ULT_K=k;const antes=SAC[k]||0;SAC[k]=PQ;salva();
+    if(VAR&&VAR.gen&&VAR.txt.trim()){SACM[k]=VAR.txt.trim().toUpperCase();if(VAR.enc)SACF[k]=FAM[VAR.k].nome;salvaM()}
+    renderSacola();renderNaSac();
     $$(`.card[data-id="${x.id}"]`).forEach(el=>{const t=document.createElement('div');t.innerHTML=cartao(x);el.replaceWith(t.firstElementChild)});
     if(PQ>antes)voaDe($('#pFoto img'));return antes};
-  $('#pAdd').onclick=()=>{if(falta())return;poe();const b=$('#pAdd');b.classList.add('feito');b.innerHTML='✓ Na sacola';setTimeout(()=>{if(PROD){b.classList.remove('feito');b.innerHTML='Atualizar sacola'}},1600)};
+  $('#pAdd').onclick=()=>{if(falta())return;poe();const b=$('#pAdd');b.classList.add('feito');b.innerHTML='✓ Na sacola';
+    if(VAR){const k=VAR.k;setTimeout(()=>{if(!VAR||VAR.k!==k||!PROD)return;b.classList.remove('feito');VAR.txt='';VAR.m=null;VAR.sel=null;VAR.gen=false;VAR.enc=false;VAR.genAb=false;PQ=1;$('#pQ').textContent=1;
+      const i=$('#pVarQ');if(i){i.value='';const x=$('#pVarX');if(x)x.hidden=true}const f=$('#pFoto .ilustra');if(f)f.remove();renderVar();renderNaSac()},1100);return}
+    setTimeout(()=>{if(PROD){b.classList.remove('feito');b.innerHTML='Atualizar sacola'}},1600)};
   $('#pJa').onclick=()=>{if(falta())return;poe();fechaProd();setTimeout(abreSacola,reduz()?0:350)};
+$('#pNaSac').onclick=e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.nsm)muda(b.dataset.nsm,-1);if(b.dataset.nsp)muda(b.dataset.nsp,1);if(b.dataset.nsver!=null){fechaProd();setTimeout(abreSacola,reduz()?0:300)}};
   $('#pShare').onclick=async()=>{const url=location.origin+location.pathname+'#produto-'+PROD.id;
     try{if(navigator.share){await navigator.share({title:PROD.nome,text:`${PROD.nome} por ${brl(PROD.preco)} na DKM`,url});return}}catch(e){if(e&&e.name==='AbortError')return}
     try{await navigator.clipboard.writeText(url);$('#pShare').textContent='✓ Link copiado';setTimeout(()=>$('#pShare').innerHTML='🔗 Compartilhar',1800)}catch(e){prompt&&0}};
