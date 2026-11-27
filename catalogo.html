@@ -1095,6 +1095,16 @@ html.menos-mov .op-cutuca,html.menos-mov .oc-f button{transition:none;animation:
 .rb-tx{display:grid;gap:2px;min-width:0;flex:1}.rb-tx b{font-size:15px}.rb-tx small{font-size:12.5px;opacity:.92;line-height:1.35}
 .ref-boas>button{border:0;background:rgba(255,255,255,.18);color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;flex:none}
 html.menos-mov .ref-boas{transition:opacity .2s}html.menos-mov .rb-av{animation:none}
+
+/* pedir sob encomenda para aparelho que não tem pronto */
+.pv-enc{display:flex;align-items:center;gap:12px;width:100%;text-align:left;margin:4px 0 10px;padding:12px 14px;border-radius:14px;border:1.5px solid var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--surface-2));cursor:pointer;color:var(--ink);transition:transform .15s,box-shadow .2s;animation:encEntra .4s cubic-bezier(.3,1.4,.5,1)}
+.pv-enc:hover{transform:translateY(-1px);box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 30%,transparent)}
+.pv-enc i{font-style:normal;font-size:22px}.pv-enc span{display:grid;gap:2px;flex:1;min-width:0}.pv-enc b{font-size:14.5px}.pv-enc small{font-size:12px;color:var(--muted)}
+.pv-enc em{font-style:normal;font-weight:800;font-size:18px;color:var(--acc-tx,var(--accent))}
+.pv-enc[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}.pv-enc[aria-pressed="true"] small,.pv-enc[aria-pressed="true"] em{color:#fff}
+#pFoto .ilustra{position:absolute;left:10px;top:10px;right:10px;width:max-content;max-width:calc(100% - 20px);background:rgba(15,15,35,.82);color:#fff;font-size:12.5px;font-weight:700;padding:6px 10px;border-radius:99px;backdrop-filter:blur(4px)}
+@keyframes encEntra{from{opacity:0;transform:translateY(6px) scale(.97)}}
+html.menos-mov .pv-enc{animation:none}
 </style>
 </head>
 <body>
@@ -1319,7 +1329,7 @@ async function aoVivo(){if(document.visibilityState!=='visible')return;
     const antes=new Map(ITENS.map(x=>[x.id,x]));const mudou=new Set(novos.filter(x=>{const a=antes.get(x.id);return !a||a.preco!==x.preco||a.pronta!==x.pronta||a.foto!==x.foto}).map(x=>x.id));
     const sumiu=ITENS.filter(x=>!novos.some(y=>y.id===x.id)).length,entrou=novos.filter(x=>!antes.has(x.id)).length;
     CFG=j.config||CFG;ITENS=novos;for(const k in ARTE)delete ARTE[k];for(const k in CUPP)delete CUPP[k];
-    Object.keys(SAC).forEach(id=>{if(!ITENS.some(x=>String(x.id)===id)){delete SAC[id];delete SACM[id]}});salva();salvaM();
+    Object.keys(SAC).forEach(id=>{if(!ITENS.some(x=>String(x.id)===id)){delete SAC[id];delete SACM[id];delete SACF[id]}});salva();salvaM();
     const y=scrollY;montaFamilias();montaCats();renderPrateleiras();filtra(false);renderSacola();scrollTo({top:y,behavior:'auto'});
     $$('.card').forEach(c=>{if(mudou.has(+c.dataset.id)){c.classList.remove('vivo');void c.offsetWidth;c.classList.add('vivo')}});
     if(PROD&&!$('#prod').hidden){const x=ITENS.find(i=>i.id===PROD.id);if(x){PROD=x;montaProd()}else fechaProd()}
@@ -1533,7 +1543,10 @@ function modeloBusca(){const t=$('#q').value.trim();if(!t)return '';const ws=sem
 const serveTodos=x=>{const g=grupoDe(x),gn=g>=0?GRUPOS[g].n:'';return (gn==='Películas'||gn==='Capinhas')&&!TEM_MODELO.test(x.nome)&&!NAO_E_CEL.test(x.nome)};
 let MODELO='';
 let SACM={};try{SACM=JSON.parse(localStorage.getItem('dkm-sacola-mod')||'{}')||{}}catch(e){SACM={}}
-const salvaM=()=>{try{localStorage.setItem('dkm-sacola-mod',JSON.stringify(SACM))}catch(e){}};
+/* item pedido "sob encomenda" para um aparelho que não tem pronto: guarda o nome do grupo (ex.: Película Privacidade) */
+let SACF={};try{SACF=JSON.parse(localStorage.getItem('dkm-sacola-fam')||'{}')||{}}catch(e){SACF={}}
+const nomeS=x=>SACF[x.id]||x.nome,prontaS=x=>x.pronta&&!SACF[x.id];
+const salvaM=()=>{try{localStorage.setItem('dkm-sacola-mod',JSON.stringify(SACM));localStorage.setItem('dkm-sacola-fam',JSON.stringify(SACF))}catch(e){}};
 /* ===== FAMÍLIAS: películas e capinhas do mesmo tipo viram um produto só; o cliente escolhe o aparelho e a cor ===== */
 const PREF_MOD=new Set(['IPHONE','IP','ANDROID','SAMSUNG','GALAXY','MOTO','MOTOROLA','XIAOMI','REDMI','RM','POCO','PC','MI','NOTE','LG']);
 const CORES={'verde exercito':'#4b5d2a','verde militar':'#4b5d2a','azul marinho':'#1e3a8a','azul bebe':'#93c5fd','rosa bebe':'#f9c5d1','verde agua':'#7dd3c0',
@@ -1602,11 +1615,13 @@ function renderVar(){const box=$('#pVar');if(!VAR||!FAM[VAR.k]){box.hidden=true;
     box.innerHTML=`<label class="pv-l" for="pVarQ">📱 ${/rel[oó]gio/i.test(F.nome)?'Qual o tamanho do seu relógio?':'Qual é o seu aparelho?'}</label>
       <div class="pv-busca"><input id="pVarQ" autocomplete="off" placeholder="${/rel[oó]gio/i.test(F.nome)?'Ex.: 41mm, 45mm':'Digite: A15, iPhone 13, Note 12…'}"><button type="button" id="pVarX" aria-label="Limpar" hidden>×</button></div>
       <div class="pv-cores pv-corf" id="pvCorF" hidden></div><div class="pv-chips" id="pvChips"></div><div class="pv-cores" id="pvCores" hidden></div><div class="pv-nao" id="pvNao" hidden></div>`;
-    const i=$('#pVarQ');i.value=VAR.txt;i.oninput=()=>{VAR.txt=i.value;$('#pVarX').hidden=!i.value;renderVarLista();acertaVar(true)};
+    const i=$('#pVarQ');i.value=VAR.txt;i.oninput=()=>{VAR.txt=i.value;if(VAR.enc){VAR.enc=false;VAR.gen=false;VAR.sel=null}$('#pVarX').hidden=!i.value;renderVarLista();acertaVar(true)};
     $('#pVarX').onclick=()=>{i.value='';VAR.txt='';$('#pVarX').hidden=true;renderVarLista();i.focus()};$('#pVarX').hidden=!VAR.txt;
     box.onclick=e=>{const b=e.target.closest('button');if(!b)return;
       if(b.dataset.genab!=null){VAR.genAb=true;renderVarLista();return}
       if(b.dataset.vcf){VAR.corF=VAR.corF===b.dataset.vcf?null:b.dataset.vcf;renderVarLista();return}
+      if(b.dataset.venc!=null){const x=repEnc(F);if(x){VAR.m=null;VAR.sel=x.id;VAR.gen=true;VAR.enc=true;PROD=x;PQ=SACF[x.id]&&SAC[x.id]?SAC[x.id]:1;montaProd()}return}
+      VAR.enc=false;
       if(b.dataset.vm){escolheMod(b.dataset.vm);return}
       if(b.dataset.vc){const M=F.mods.find(m=>m.k===VAR.m),o=M&&M.itens.find(o=>String(o.x.id)===b.dataset.vc);if(o){VAR.sel=o.x.id;PROD=o.x;PQ=SAC[PROD.id]||1;montaProd()}return}
       if(b.dataset.vg){const x=ITENS.find(y=>String(y.id)===b.dataset.vg);if(x){VAR.m=null;VAR.sel=x.id;VAR.gen=true;PROD=x;PQ=SAC[x.id]||1;montaProd()}}}}
@@ -1614,6 +1629,9 @@ function renderVar(){const box=$('#pVar');if(!VAR||!FAM[VAR.k]){box.hidden=true;
   /* enquanto não escolhe, mostra o nome do grupo e "a partir de" */
   if(VAR.sel&&!VAR.gen){const M=F.mods.find(m=>m.k===VAR.m),o=M&&M.itens.find(o=>String(o.x.id)===String(VAR.sel));if(M)$('#pNome').textContent=`${F.nome} · ${M.label}${o&&o.cor&&!F.umaCor?' · '+nomeCor(o.cor):''}`}
   if(VAR.sel&&VAR.gen)$('#pNome').textContent=bonito(PROD.nome.replace(/\s+ff[a-z0-9]+$/i,''));
+  if(VAR.sel&&VAR.enc){$('#pNome').textContent=`${F.nome} · ${VAR.txt.trim().toUpperCase()}`;$('#pCat').innerHTML='📦 Sob encomenda para o seu aparelho';$('#pSelos').innerHTML='<span>Sob encomenda</span>';
+    $('#pPrazo').innerHTML='A DKM busca para o seu aparelho e confirma o prazo com você no WhatsApp.';
+    if(!$('#pFoto .ilustra'))$('#pFoto').insertAdjacentHTML('beforeend',`<span class="ilustra">📷 Foto ilustrativa · o seu vem para o ${esc(VAR.txt.trim().toUpperCase())}</span>`)}
   if(!VAR.sel){$('#pNome').textContent=F.nome;$('#pCat').innerHTML=`${F.mods.length} ${/rel[oó]gio/i.test(F.nome)?'tamanhos':'aparelhos'}${F.min!==F.max?` · a partir de ${brl(F.min)}`:''}`}
   const b=$('#pAdd');b.classList.toggle('falta',!VAR.sel);$('#pJa').classList.toggle('falta',!VAR.sel);
   if(!VAR.sel)b.innerHTML=VAR.m&&F.temCor?'Escolha a cor':/rel[oó]gio/i.test(F.nome)?'Escolha o tamanho':'Escolha o aparelho'}
@@ -1632,7 +1650,10 @@ function renderVarLista(){const F=FAM[VAR.k],t=normMod(VAR.txt);
     if(!aberto&&F.gen.length){nb.innerHTML=`<button type="button" class="pv-abre" data-genab>Não achou o seu aparelho? <b>Ver opções sob encomenda ›</b></button>`;return}
     nb.innerHTML=`${semNada?`<p>Não temos o <b>${esc(VAR.txt.trim())}</b> pronto aqui.</p>`:`<p class="pv-dica">Não achou o seu aparelho?</p>`}
       ${F.gen.length?`<span class="pv-l2">${semNada?'Fazemos sob encomenda para ele:':'Fazemos sob encomenda:'}</span><div class="pv-gen">${F.gen.map(x=>`<button type="button" data-vg="${x.id}" aria-pressed="${VAR.gen&&String(VAR.sel)===String(x.id)}"><b>${esc(bonito(x.nome.replace(/\s+ff[a-z0-9]+$/i,'')))}</b><span>${brl(x.preco)}</span></button>`).join('')}</div>${semNada?'':'<small>Escreva o seu aparelho acima para ele ir junto no pedido.</small>'}`
-        :`<a class="pv-zap" target="_blank" rel="noopener" href="https://wa.me/${num}?text=${encodeURIComponent(`Olá! Vocês têm ${F.nome} para ${VAR.txt.trim()||'o meu aparelho'}?`)}">💬 Perguntar se temos para o seu</a>`}`}else{nb.hidden=true;nb.innerHTML=''}}
+        :`${semNada?`<button type="button" class="pv-enc" data-venc aria-pressed="${!!VAR.enc}"><i>🛒</i><span><b>Pedir para o meu ${esc(VAR.txt.trim().toUpperCase())}</b><small>Sob encomenda · ${brl(repEnc(F).preco)} · a DKM busca e confirma com você</small></span><em>${VAR.enc?'✓':'›'}</em></button>`:''}<a class="pv-zap" target="_blank" rel="noopener" href="https://wa.me/${num}?text=${encodeURIComponent(`Olá! Vocês têm ${F.nome} para ${VAR.txt.trim()||'o meu aparelho'}?`)}">💬 ${semNada?'Prefiro perguntar antes no WhatsApp':'Perguntar se temos para o seu'}</a>`}`}else{nb.hidden=true;nb.innerHTML=''}}
+/* item que representa o grupo num pedido sob encomenda: o preço mais comum do grupo, de preferência de fornecedor */
+function repEnc(F){const L=F.itens||[];if(!L.length)return null;const c={};L.forEach(x=>c[x.preco]=(c[x.preco]||0)+1);
+  const pr=+Object.entries(c).sort((a,b)=>b[1]-a[1]||a[0]-b[0])[0][0];const M=L.filter(x=>x.preco===pr);return M.find(x=>!x.pronta)||M[0]}
 function filtra(anima){
   const q=termos();lista=ordena(ITENS.filter(x=>passa(x,q)));MODELO=ehCodigo()?'':modeloBusca();
   if(MODELO&&(cat==='Todos'||cat==='Películas'||cat==='Capinhas')){const ja=new Set(lista.map(x=>x.id));const extra=ordena(ITENS.filter(x=>!ja.has(x.id)&&serveTodos(x)&&(cat==='Todos'||GRUPOS[grupoDe(x)].n===cat)&&passa(x,[],true)));
@@ -1753,7 +1774,7 @@ function voaDe(img){if(reduz())return;const top=$('#btCarrinho'),tr=top.getBound
   const dx=b.left+b.width/2-(a.left+a.width/2),dy=b.top+b.height/2-(a.top+a.height/2);
   v.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${dx*.55}px,${dy*.35-80}px) scale(.55)`,opacity:1,offset:.55},{transform:`translate(${dx}px,${dy}px) scale(.12)`,opacity:.3}],{duration:720,easing:'cubic-bezier(.5,0,.3,1)'}).finished.then(()=>{v.remove();[alvo,top].forEach(a=>{a.classList.remove('pula');void a.offsetWidth;a.classList.add('pula')})})}
 function muda(id,d,btn){id=String(id);SAC[id]=Math.max(0,(SAC[id]||0)+d);if(!SAC[id])delete SAC[id];salva();
-  {const x=ITENS.find(i=>String(i.id)===id);if(d>0&&MODELO&&x&&serveTodos(x))SACM[id]=MODELO;if(!SAC[id])delete SACM[id];salvaM()}
+  {const x=ITENS.find(i=>String(i.id)===id);if(d>0&&MODELO&&x&&serveTodos(x))SACM[id]=MODELO;if(!SAC[id])delete SACM[id];delete SACF[id];salvaM()}
   const x=ITENS.find(i=>String(i.id)===id);renderSacola();
   if(d>0&&btn)voaSacola(btn);
   if(x)$$(`.card[data-id="${id}"]`).forEach(el=>{const t=document.createElement('div');t.innerHTML=cartao(x);const n=t.firstElementChild;n.classList.add('entra');el.replaceWith(n)})}
@@ -1780,14 +1801,14 @@ function renderSacola(){
   if(CUP.cod&&chaveSac()!==CUP.chave&&chaveSac()!==CUP.pend)validaCupom();
   const desc=descAtual(),fim=Math.max(0,tot-desc);
   $('#barra').hidden=!n;{const ps=$('#abreSacola .pista');if(ps&&n)requestAnimationFrame(()=>ps.style.setProperty('--w',ps.clientWidth+'px'))}document.body.classList.toggle('com-barra',!!n);const nc=$('#nCarrinho');if(+nc.textContent!==n){nc.textContent=n;nc.classList.remove('pop');void nc.offsetWidth;nc.classList.add('pop')}nc.classList.toggle('zero',!n);$('#barraQtd').textContent=`Ver pedido · ${n} ite${n===1?'m':'ns'}`;$('#barraTot').innerHTML=desc?`<s class="old">${brl(tot)}</s>${brl(fim)}`:brl(tot);
-  $('#itens').innerHTML=its.length?its.map(({x,q})=>`<div class="it"><img src="${esc(imgDe(x))}" alt=""><div class="n">${esc(x.nome)}<small>${brl(x.preco)} · ${x.pronta?'pronta entrega':'sob encomenda'}${SACM[x.id]?` · <b class="mod-s">📱 ${esc(SACM[x.id])}</b>`:''}</small><button class="tira" type="button" data-rm="${x.id}">Remover</button></div><span class="qtd"><button type="button" data-m="${x.id}" aria-label="Tirar um">−</button><span class="num">${q}</span><button type="button" data-p="${x.id}" aria-label="Mais um">+</button></span></div>`).join(''):'<p class="nota">Seu pedido está vazio.</p>';
+  $('#itens').innerHTML=its.length?its.map(({x,q})=>`<div class="it"><img src="${esc(imgDe(x))}" alt=""><div class="n">${esc(nomeS(x))}<small>${brl(x.preco)} · ${prontaS(x)?'pronta entrega':'sob encomenda'}${SACM[x.id]?` · <b class="mod-s">📱 ${SACF[x.id]?'para ':''}${esc(SACM[x.id])}</b>`:''}</small><button class="tira" type="button" data-rm="${x.id}">Remover</button></div><span class="qtd"><button type="button" data-m="${x.id}" aria-label="Tirar um">−</button><span class="num">${q}</span><button type="button" data-p="${x.id}" aria-label="Mais um">+</button></span></div>`).join(''):'<p class="nota">Seu pedido está vazio.</p>';
   $('#totLinhas').hidden=!desc;$('#totCheio').textContent=brl(tot);$('#totDesc').textContent='− '+brl(desc);$('#totDescTxt').textContent='Cupom '+(CUP.r&&CUP.r.codigo||'');
   contaTotal(fim);
   const nome=$('#nome').value.trim(),obs=$('#obs').value.trim();
-  const linhas=its.map(({x,q})=>`• ${q}x ${x.nome} [cód. ${codDKM(x)}]${SACM[x.id]?` — modelo *${SACM[x.id]}*`:''} (${brl(x.preco)})${x.pronta?'':' *'}`);
+  const linhas=its.map(({x,q})=>`• ${q}x ${nomeS(x)}${SACF[x.id]?'':` [cód. ${codDKM(x)}]`}${SACM[x.id]?` — ${SACF[x.id]?'para o':'modelo'} *${SACM[x.id]}*`:''} (${brl(x.preco)})${prontaS(x)?'':' *'}`);
   const cod=n?codPedido():'';$('#pedNum').textContent=n?(PED.env?`Pedido nº ${cod} enviado. Mudou algo? Toque em enviar de novo.`:`Pedido nº ${cod}`):'';$('#pedNum').classList.toggle('ok',!!PED.env);
   const fone=$('#fone').value.trim(),end=$('#combinar').checked?'':$('#endereco').value.trim(),pg=PAGA+(PAGA==='Dinheiro'&&$('#troco').value.trim()?` (troco para R$ ${$('#troco').value.trim()})`:'');
-  const msg=`Olá! Quero fazer este pedido (nº ${cod}) no catálogo ${CFG.titulo||'DKM'}:\n\n${linhas.join('\n')}\n\n${desc?`Produtos: ${brl(tot)}\nCupom ${CUP.r.codigo}: − ${brl(desc)}\n*Total com desconto: ${brl(fim)}*`:`*Total: ${brl(tot)}*`}${its.some(o=>!o.x.pronta)?'\n(* sob encomenda)':''}${nome?`\n\nNome: ${nome}`:''}${fone?`\nWhatsApp: ${fone}`:''}\nEntrega: ${end||'combinar pelo WhatsApp'}${pg?`\nPagamento: ${pg}`:''}${obs?`\nObs.: ${obs}`:''}\n\nAcompanhe o pedido: ${LINK_LOJA}#pedido-${cod}`;
+  const msg=`Olá! Quero fazer este pedido (nº ${cod}) no catálogo ${CFG.titulo||'DKM'}:\n\n${linhas.join('\n')}\n\n${desc?`Produtos: ${brl(tot)}\nCupom ${CUP.r.codigo}: − ${brl(desc)}\n*Total com desconto: ${brl(fim)}*`:`*Total: ${brl(tot)}*`}${its.some(o=>!prontaS(o.x))?'\n(* sob encomenda)':''}${nome?`\n\nNome: ${nome}`:''}${fone?`\nWhatsApp: ${fone}`:''}\nEntrega: ${end||'combinar pelo WhatsApp'}${pg?`\nPagamento: ${pg}`:''}${obs?`\nObs.: ${obs}`:''}\n\nAcompanhe o pedido: ${LINK_LOJA}#pedido-${cod}`;
   const num=String(CFG.whatsapp||'5562991153874').replace(/\D/g,'');
   $('#zap').href=`https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
   $('#scResumo').textContent=`${n} ite${n===1?'m':'ns'} · ${brl(fim)}`;
@@ -1799,19 +1820,19 @@ const abreSacola=()=>{if(PASSO===4){vaiPasso(1);PASSO_MAX=1}$('#sacola').hidden=
 const fechaSacola=()=>{$('#sacola').hidden=true;$('#fundoSacola').hidden=true;document.body.style.overflow=''};
 $('#abreSacola').onclick=abreSacola;$('#fecha').onclick=fechaSacola;$('#fundoSacola').onclick=fechaSacola;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(!$('#prod').hidden)fechaProd();else if(!$('#acomp').hidden)fechaAcomp();else{fechaSacola();fechaFiltro()}}});
-$('#limpar').onclick=()=>{SAC={};salva();SACM={};salvaM();PED={};salvaPed();renderSacola();render()};
+$('#limpar').onclick=()=>{SAC={};salva();SACM={};SACF={};salvaM();PED={};salvaPed();renderSacola();render()};
 /* ao enviar: grava a encomenda no banco (o WhatsApp abre do mesmo jeito, mesmo se a internet falhar aqui) */
 $('#zap').addEventListener('click',e=>{const its=itensSacola();if(!its.length){e.preventDefault();return}
   if(!PAGA){e.preventDefault();const m=$('#msg3');m.textContent='Escolha a forma de pagamento.';$('#pagamentos').classList.remove('treme');void $('#pagamentos').offsetWidth;$('#pagamentos').classList.add('treme');return}
   renderSacola();const cod=PED.cod; /* renderSacola acerta o link antes de abrir */
-  const base={p_codigo:cod,p_cliente:$('#nome').value.trim(),p_obs:[$('#obs').value.trim(),its.filter(({x})=>SACM[x.id]).map(({x})=>x.nome.slice(0,40)+': modelo '+SACM[x.id]).join('; ')].filter(Boolean).join(' | ').slice(0,300),p_itens:its.map(({x,q})=>({id:x.id,q})),...(descAtual()?{p_cupom:CUP.r.codigo}:{})};
+  const base={p_codigo:cod,p_cliente:$('#nome').value.trim(),p_obs:[$('#obs').value.trim(),its.filter(({x})=>SACM[x.id]).map(({x})=>(SACF[x.id]?SACF[x.id]+' (não tem pronto, buscar)':x.nome.slice(0,40))+': modelo '+SACM[x.id]).join('; ')].filter(Boolean).join(' | ').slice(0,300),p_itens:its.map(({x,q})=>({id:x.id,q,...(SACF[x.id]?{fam:SACF[x.id],mod:SACM[x.id]||''}:{})})),...(descAtual()?{p_cupom:CUP.r.codigo}:{})};
   const extra={p_telefone:$('#fone').value.trim(),p_endereco:$('#combinar').checked?'Combinar pelo WhatsApp':$('#endereco').value.trim(),p_pagamento:PAGA+(PAGA==='Dinheiro'&&$('#troco').value.trim()?' (troco p/ R$ '+$('#troco').value.trim()+')':'')};
   const manda=b=>fetch(`${SUPABASE_URL}/rest/v1/rpc/registrar_encomenda`,{method:'POST',keepalive:true,headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify(b)});
   const marcaRef=()=>{if(REF&&REF.c)return fetch(`${SUPABASE_URL}/rest/v1/rpc/marcar_indicacao`,{method:'POST',keepalive:true,headers:{apikey:SUPABASE_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_codigo:cod,p_ref:REF.c})}).catch(()=>{})};
   try{manda({...base,...extra}).then(r=>{if(!r.ok)return manda(base)}).then(marcaRef).catch(()=>{})}catch(e){} /* se o banco ainda não tem os campos novos, grava do jeito antigo */
   guardaPedido(cod,fim0());PED.env=Date.now();salvaPed();
   setTimeout(()=>{$('#okTxt').innerHTML=`Pedido nº <b>${esc(cod)}</b>. Confira a mensagem no WhatsApp e toque em enviar. Você acompanha tudo por aqui: <b>separando → saiu para entrega → entregue</b>.`;
-    vaiPasso(4);SAC={};salva();SACM={};salvaM();PED={};salvaPed();renderSacola();render();renderPrateleiras()},400)});
+    vaiPasso(4);SAC={};salva();SACM={};SACF={};salvaM();PED={};salvaPed();renderSacola();render();renderPrateleiras()},400)});
 function fim0(){const its=itensSacola();return Math.max(0,its.reduce((a,o)=>a+o.q*o.x.preco,0)-descAtual())}
 $('#nome').oninput=()=>{try{localStorage.setItem('dkm-nome',$('#nome').value)}catch(e){}renderSacola()};$('#obs').oninput=renderSacola;
 ['fone','endereco'].forEach(k=>{try{$('#'+k).value=localStorage.getItem('dkm-'+k)||''}catch(e){}$('#'+k).addEventListener('input',()=>{try{localStorage.setItem('dkm-'+k,$('#'+k).value)}catch(e){}renderSacola()})});
@@ -1924,7 +1945,8 @@ function ligaProd(){
   $('#pMenos').onclick=()=>mudaQ(-1);$('#pMais').onclick=()=>mudaQ(1);
   const falta=()=>{if(!VAR||VAR.sel)return false;const v=$('#pVar');v.classList.remove('treme');void v.offsetWidth;v.classList.add('treme');v.scrollIntoView({block:'center',behavior:reduz()?'auto':'smooth'});setTimeout(()=>{const i=$('#pVarQ');if(i&&!VAR.m)i.focus({preventScroll:true})},300);return true};
   const poe=()=>{const x=PROD;const antes=SAC[x.id]||0;SAC[x.id]=PQ;salva();
-    if(VAR&&VAR.gen&&VAR.txt.trim()){SACM[x.id]=VAR.txt.trim().toUpperCase();salvaM()}renderSacola();
+    if(VAR&&VAR.gen&&VAR.txt.trim()){SACM[x.id]=VAR.txt.trim().toUpperCase();if(VAR.enc)SACF[x.id]=FAM[VAR.k].nome;else delete SACF[x.id];salvaM()}
+    else if(SACF[x.id]){delete SACF[x.id];delete SACM[x.id];salvaM()}renderSacola();
     $$(`.card[data-id="${x.id}"]`).forEach(el=>{const t=document.createElement('div');t.innerHTML=cartao(x);el.replaceWith(t.firstElementChild)});
     if(PQ>antes)voaDe($('#pFoto img'));return antes};
   $('#pAdd').onclick=()=>{if(falta())return;poe();const b=$('#pAdd');b.classList.add('feito');b.innerHTML='✓ Na sacola';setTimeout(()=>{if(PROD){b.classList.remove('feito');b.innerHTML='Atualizar sacola'}},1600)};
